@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Disruptor-DamageBoy-IH</id>
+    <version>2.8.0.1</version>
+    <title>Disruptor-net</title>
+    <authors>Olivier Deheurles,  Damageboy</authors>
+    <owners>Olivier Deheurles,  Damageboy</owners>
+    <projectUrl>http://github.com/damageboy/Disruptor-net</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Port of LMAX Disruptor to .NET</description>
+    <language />
+    <tags>Concurrency Disruptor Latency Throughput</tags>
+  </metadata>
+</package>

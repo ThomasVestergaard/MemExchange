@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>AsyncIO</id>
+    <version>0.1.17.0</version>
+    <title>AsyncIO</title>
+    <authors>somdoron</authors>
+    <owners>somdoron</owners>
+    <projectUrl>http://github.com/somdoron/AsyncIO</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Portable completion port library for .Net</description>
+    <copyright>Copyright 2014</copyright>
+    <tags>IOCP CompletionPort Completion Port Socket IO Sockets Async</tags>
+  </metadata>
+</package>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>NetMQ</id>
+    <version>3.3.2.1</version>
+    <title>NetMQ</title>
+    <authors>NetMQ</authors>
+    <owners>NetMQ</owners>
+    <licenseUrl>https://github.com/zeromq/netmq/blob/master/COPYING.LESSER</licenseUrl>
+    <projectUrl>https://github.com/zeromq/netmq</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/zeromq/netmq/master/img/NetMQ.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A 100% native C# port of the lightweight high performance messaging library ZeroMQ</description>
+    <releaseNotes>Remove JetBrains.Annotation dependency</releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>ZeroMQ 0MQ CLRZMQ NetMQ Messaging ZMQ transport distributed</tags>
+    <dependencies>
+      <dependency id="AsyncIO" version="0.1.17.0" />
+    </dependencies>
+  </metadata>
+</package>

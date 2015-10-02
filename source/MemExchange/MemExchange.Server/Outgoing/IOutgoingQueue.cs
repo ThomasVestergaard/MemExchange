@@ -1,0 +1,14 @@
+﻿using MemExchange.Core.SharedDto.Orders;
+
+namespace MemExchange.Server.Outgoing
+{
+    public interface IOutgoingQueue
+    {
+        void Start();
+        void Stop();
+
+        void EnqueueAddedLimitOrder(LimitOrder limitOrder);
+        void EnqueueUpdatedLimitOrder(LimitOrder limitOrder);
+        void EnqueueDeletedLimitOrder(LimitOrder limitOrder);
+    }
+}
