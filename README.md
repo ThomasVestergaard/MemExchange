@@ -9,11 +9,11 @@ Project state: Early beta still in development.
 
 The project utilizes the following 3rd party libraries. All from nuget.
 
-Castle Windsor for dependency injection
-Disruptor.net for cross thread communication
-NetMQ for network communication
-NUnit for unit testing
-Rhinomocks for mocking
-Protobuf for zerializing
-Serilog for logging
-Topshelf for windows services
+- Castle Windsor for dependency injection
+- Disruptor.net for cross thread communication
+- NetMQ for network communication
+- NUnit for unit testing
+- Rhinomocks for mocking
+- Protobuf for zerializing
+- Serilog for logging
+- Topshelf for windows services
