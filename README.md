@@ -15,6 +15,6 @@ The project utilizes the following 3rd party libraries. All from nuget.
 - NetMQ for network communication
 - NUnit for unit testing
 - Rhinomocks for mocking
-- Protobuf for zerializing
+- Protobuf for serializing
 - Serilog for logging
 - Topshelf for windows services
