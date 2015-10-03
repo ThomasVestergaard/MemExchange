@@ -6,7 +6,12 @@ The exchange supports market order, limit orders and stop-limit orders.
 Theres is no authentication or other security measures build in. It's made solely for research, paper-trade and showcase purposes.
 
 Project state: Early beta still in development.
+
 Project website (blog): http://www.thomasvestergaard.com/blog/memexchange/what-is-memexchange/
+
+High level architechture.
+![alt tag](http://thomasvestergaard.com/media/1010/memexchange_high_level_architechture.jpg)
+
 
 The project utilizes the following 3rd party libraries. All from nuget.
 
