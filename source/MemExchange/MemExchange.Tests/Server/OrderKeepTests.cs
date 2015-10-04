@@ -6,6 +6,7 @@ using MemExchange.Server.Processor;
 using NUnit.Framework;
 using Rhino.Mocks;
 
+
 namespace MemExchange.Tests.Server
 {
     [TestFixture]
@@ -22,7 +23,7 @@ namespace MemExchange.Tests.Server
         [Test]
         public void ShouldAddOrderToCollection()
         {
-            var staticClient1 = new Client { ClientId = 1 };
+            var staticClient1 = new MemExchange.Server.Clients.Client { ClientId = 1 };
             clientRepositoryMock.Stub(a => a.GetOrAddClientFromId(Arg<int>.Is.Equal(1))).Return(staticClient1);
 
             var orderKeep = new OrderKeep(clientRepositoryMock);
@@ -49,8 +50,8 @@ namespace MemExchange.Tests.Server
         [Test]
         public void ShouldAddOrderToIndividualClientCollection()
         {
-            var staticClient1 = new Client { ClientId = 1 };
-            var staticClient2 = new Client { ClientId = 2 };
+            var staticClient1 = new MemExchange.Server.Clients.Client { ClientId = 1 };
+            var staticClient2 = new MemExchange.Server.Clients.Client { ClientId = 2 };
             clientRepositoryMock.Stub(a => a.GetOrAddClientFromId(Arg<int>.Is.Equal(1))).Return(staticClient1);
             clientRepositoryMock.Stub(a => a.GetOrAddClientFromId(Arg<int>.Is.Equal(2))).Return(staticClient2);
 
@@ -97,8 +98,8 @@ namespace MemExchange.Tests.Server
         [Test]
         public void AddLimitOrderShouldIncrementSequenceNumber()
         {
-            var staticClient1 = new Client { ClientId = 1 };
-            var staticClient2 = new Client { ClientId = 2 };
+            var staticClient1 = new MemExchange.Server.Clients.Client { ClientId = 1 };
+            var staticClient2 = new MemExchange.Server.Clients.Client { ClientId = 2 };
             clientRepositoryMock.Stub(a => a.GetOrAddClientFromId(Arg<int>.Is.Equal(1))).Return(staticClient1);
             clientRepositoryMock.Stub(a => a.GetOrAddClientFromId(Arg<int>.Is.Equal(2))).Return(staticClient2);
 
@@ -143,7 +144,7 @@ namespace MemExchange.Tests.Server
         [Test]
         public void UpdateLimitOrderShouldReturnNullWhenOrderIsNotFound()
         {
-            var staticClient1 = new Client { ClientId = 1 };
+            var staticClient1 = new MemExchange.Server.Clients.Client { ClientId = 1 };
             clientRepositoryMock.Stub(a => a.GetOrAddClientFromId(Arg<int>.Is.Equal(1))).Return(staticClient1);
 
             var orderKeep = new OrderKeep(clientRepositoryMock);
@@ -164,7 +165,7 @@ namespace MemExchange.Tests.Server
         [Test]
         public void UpdateLimitOrderShouldReturnOrderWhenOrderUpdated()
         {
-            var staticClient1 = new Client { ClientId = 1 };
+            var staticClient1 = new MemExchange.Server.Clients.Client { ClientId = 1 };
             clientRepositoryMock.Stub(a => a.GetOrAddClientFromId(Arg<int>.Is.Equal(1))).Return(staticClient1);
 
             var orderKeep = new OrderKeep(clientRepositoryMock);
@@ -196,7 +197,7 @@ namespace MemExchange.Tests.Server
         [Test]
         public void DeleteOrderShouldReturnFalseIfOrderIsNotFound()
         {
-            var staticClient1 = new Client { ClientId = 1 };
+            var staticClient1 = new MemExchange.Server.Clients.Client { ClientId = 1 };
             clientRepositoryMock.Stub(a => a.GetOrAddClientFromId(Arg<int>.Is.Equal(1))).Return(staticClient1);
 
             var orderKeep = new OrderKeep(clientRepositoryMock);
@@ -218,7 +219,7 @@ namespace MemExchange.Tests.Server
         [Test]
         public void DeleteOrderShouldReturnTrueWhenOrderIsDeleted()
         {
-            var staticClient1 = new Client { ClientId = 1 };
+            var staticClient1 = new MemExchange.Server.Clients.Client { ClientId = 1 };
             clientRepositoryMock.Stub(a => a.GetOrAddClientFromId(Arg<int>.Is.Equal(1))).Return(staticClient1);
 
             var orderKeep = new OrderKeep(clientRepositoryMock);

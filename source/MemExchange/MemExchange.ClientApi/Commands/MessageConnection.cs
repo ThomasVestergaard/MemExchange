@@ -39,6 +39,9 @@ namespace MemExchange.ClientApi.Commands
             if (message == null)
                 return;
 
+            if (ctx == null || pushSocket == null)
+                return;
+            
             try
             {
                 pushSocket.Send(serializer.Serialize(message));

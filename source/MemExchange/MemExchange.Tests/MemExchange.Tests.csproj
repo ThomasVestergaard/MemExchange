@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientUi\DependencyInjectionResolveTest.cs" />
     <Compile Include="Core\SerializationTests.cs" />
     <Compile Include="Core\SharedDtoTests\ClientToServerMessageTest.cs" />
     <Compile Include="Integration\ClientApiToServerPublisherIntegrationTests.cs" />
@@ -82,6 +83,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MemExchange.Client.UI\MemExchange.Client.UI.csproj">
+      <Project>{5907358d-7f17-49c3-8da4-f2ae58da2171}</Project>
+      <Name>MemExchange.Client.UI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MemExchange.ClientApi\MemExchange.ClientApi.csproj">
       <Project>{9d1764aa-5657-4adc-8ae2-66e799124862}</Project>
       <Name>MemExchange.ClientApi</Name>

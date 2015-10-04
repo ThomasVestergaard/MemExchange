@@ -1,0 +1,12 @@
+﻿<Window x:Class="MemExchange.Client.UI.Windows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:usercontrols="clr-namespace:MemExchange.Client.UI.Usercontrols"
+        Title="MemExchange client" Height="300" Width="300" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <usercontrols:NewLimitOrder DataContext="{Binding LimitOrderViewModel}" />
+            
+        </StackPanel>
+    </Grid>
+</Window>

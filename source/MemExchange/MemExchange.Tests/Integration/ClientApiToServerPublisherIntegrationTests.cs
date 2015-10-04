@@ -46,7 +46,7 @@ namespace MemExchange.Tests.Integration
             // Client
             clientMessageConnectionMock = MockRepository.GenerateMock<IMessageConnection>();
             clientMessageSubscriber = new ServerMessageSubscriber(loggerMock, new ProtobufSerializer());
-            client= new Client(clientMessageConnectionMock, clientMessageSubscriber);
+            client= new ClientApi.Client(clientMessageConnectionMock, clientMessageSubscriber);
             client.Start(88, "localhost", 9090, publishPort);
 
             Thread.Sleep(100);
