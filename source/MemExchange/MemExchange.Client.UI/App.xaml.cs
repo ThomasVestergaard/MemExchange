@@ -3,8 +3,6 @@ using MemExchange.Client.UI.Resources;
 using MemExchange.Client.UI.Setup;
 using MemExchange.Client.UI.Windows;
 using MemExchange.ClientApi;
-using MemExchange.ClientApi.Commands;
-using MemExchange.ClientApi.Stream;
 
 namespace MemExchange.Client.UI
 {
@@ -68,7 +66,8 @@ namespace MemExchange.Client.UI
 
         private void StartApplication(IConfiguration configuration)
         {
-            App.Configuration = configuration;
+            UiDispatcher.Init(Dispatcher);
+            Configuration = configuration;
 
             var dependencyInjection = new DependencyInjection();
             dependencyInjection.Initialize(configuration);

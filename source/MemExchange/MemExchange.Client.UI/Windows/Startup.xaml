@@ -43,7 +43,7 @@
                     <TextBlock Text="Start" TextAlignment="Center" Width="40" />
                 </StackPanel>
             </Button>
-            <Button Margin="6,10,10,10" Command="{Binding CancelCommand }" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" IsCancel="True">
+            <Button Margin="6,11,10,0" Command="{Binding CancelCommand }" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" IsCancel="True">
                 <StackPanel Orientation="Horizontal" Width="60" >
                     <Image Source="{Binding Source={x:Static icons:IconUriHelper.cancel_16x16}}" />
                     <TextBlock Text="Quit"  TextAlignment="Center" Width="40" />

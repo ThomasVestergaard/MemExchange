@@ -22,9 +22,9 @@ namespace MemExchange.Server.Processor
             var client = clientRepository.GetOrAddClientFromId(limitOrder.ClientId);
             if (!ClientLimitOrders.ContainsKey(client))
                 ClientLimitOrders.Add(client, new Dictionary<uint, LimitOrder>());
-            
-            ClientLimitOrders[client].Add(orderSequenceId, limitOrder);
+
             limitOrder.ExchangeOrderId = orderSequenceId;
+            ClientLimitOrders[client].Add(orderSequenceId, limitOrder);
             orderSequenceId++;
             
             return limitOrder;

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Input;
 using MemExchange.Client.UI.Annotations;
+using MemExchange.Client.UI.Resources;
 using MemExchange.ClientApi;
 using MemExchange.Core.SharedDto;
 using MemExchange.Core.SharedDto.Orders;
@@ -98,12 +100,24 @@ namespace MemExchange.Client.UI.Usercontrols.ActiveOrders
             }
         }
 
+        public ICommand CancelOrderCommand { get; set; }
+
         public LimitOrderViewModel(LimitOrder limitOrder, IClient client)
         {
             this.limitOrder = limitOrder;
             this.client = client;
             SetFields(limitOrder);
             this.client.LimitOrderChanged += client_LimitOrderChanged;
+
+            SetupCommandsAndBehaviour();
+        }
+
+        private void SetupCommandsAndBehaviour()
+        {
+            CancelOrderCommand = new RelayCommand(() =>
+            {
+                client.CancelLimitOrder(limitOrder.ExchangeOrderId);
+            });
         }
 
         private void SetFields(LimitOrder limitOrder)

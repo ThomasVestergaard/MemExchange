@@ -65,6 +65,7 @@
     <Compile Include="Setup\Configuration.cs" />
     <Compile Include="Setup\DependencyInjection.cs" />
     <Compile Include="Setup\IConfiguration.cs" />
+    <Compile Include="Setup\UiDispatcher.cs" />
     <Compile Include="Usercontrols\ActiveOrders\ActiveLimitOrdersView.xaml.cs">
       <DependentUpon>ActiveLimitOrdersView.xaml</DependentUpon>
     </Compile>

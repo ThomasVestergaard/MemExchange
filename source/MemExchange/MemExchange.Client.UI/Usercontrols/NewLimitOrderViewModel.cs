@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -111,7 +112,7 @@ namespace MemExchange.Client.UI.Usercontrols
                 }
 
                 exchangeApi.SubmitLimitOrder(symbol, parsedPrice, parsedQuantity, selectedWay);
-                MessageBox.Show("Order sent.");
+                Console.WriteLine("Order sent.");
             });
         }
 

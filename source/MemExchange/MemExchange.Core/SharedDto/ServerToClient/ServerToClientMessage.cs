@@ -28,7 +28,7 @@ namespace MemExchange.Core.SharedDto.ServerToClient
         public void Update(IServerToClientMessage other)
         {
             MessageType = other.MessageType;
-            LimitOrder = other.LimitOrder;
+            LimitOrder.Update(other.LimitOrder);
             ReceiverClientId = other.ReceiverClientId;
         }
     }

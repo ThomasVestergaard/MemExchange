@@ -83,6 +83,12 @@ namespace MemExchange.Tests.Integration
             });
 
             Assert.That(() => addedLimitOrders.Count, Is.EqualTo(1).After(500, 100));
+            Assert.AreEqual(newLimitOrder.ClientId, addedLimitOrders[0].ClientId);
+            Assert.AreEqual(newLimitOrder.Price, addedLimitOrders[0].Price);
+            Assert.AreEqual(newLimitOrder.ExchangeOrderId, addedLimitOrders[0].ExchangeOrderId);
+            Assert.AreEqual(newLimitOrder.Quantity, addedLimitOrders[0].Quantity);
+            Assert.AreEqual(newLimitOrder.Symbol, addedLimitOrders[0].Symbol);
+            Assert.AreEqual(newLimitOrder.Way, addedLimitOrders[0].Way);
         }
 
         [Test]

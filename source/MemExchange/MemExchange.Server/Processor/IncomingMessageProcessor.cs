@@ -27,7 +27,6 @@ namespace MemExchange.Server.Processor
                 break;
             }
 
-
             data.Reset();
         }
     }

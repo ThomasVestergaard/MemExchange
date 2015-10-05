@@ -53,5 +53,15 @@ namespace MemExchange.Core.SharedDto.Orders
 
             return true;
         }
+
+        public void Update(LimitOrder other)
+        {
+            Symbol = other.Symbol;
+            Quantity = other.Quantity;
+            Price = other.Price;
+            Way = other.Way;
+            ExchangeOrderId = other.ExchangeOrderId;
+            ClientId = other.ClientId;
+        }
     }
 }
