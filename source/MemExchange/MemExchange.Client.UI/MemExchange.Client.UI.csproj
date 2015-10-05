@@ -65,6 +65,11 @@
     <Compile Include="Setup\Configuration.cs" />
     <Compile Include="Setup\DependencyInjection.cs" />
     <Compile Include="Setup\IConfiguration.cs" />
+    <Compile Include="Usercontrols\ActiveOrders\ActiveLimitOrdersView.xaml.cs">
+      <DependentUpon>ActiveLimitOrdersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Usercontrols\ActiveOrders\ActiveOrdersViewModel.cs" />
+    <Compile Include="Usercontrols\ActiveOrders\LimitOrderViewModel.cs" />
     <Compile Include="Usercontrols\NewLimitOrder.xaml.cs">
       <DependentUpon>NewLimitOrder.xaml</DependentUpon>
     </Compile>
@@ -81,6 +86,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Usercontrols\ActiveOrders\ActiveLimitOrdersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Usercontrols\NewLimitOrder.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
