@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows.Threading;
@@ -23,6 +24,19 @@ namespace MemExchange.Client.UI.Usercontrols.ActiveOrders
             LimitOrders = new ObservableCollection<LimitOrderViewModel>();
 
             this.client.LimitOrderAccepted += client_LimitOrderAccepted;
+            this.client.LimitOrderDeleted += client_LimitOrderDeleted;
+        }
+
+        void client_LimitOrderDeleted(object sender, Core.SharedDto.Orders.LimitOrder e)
+        {
+            UiDispatcher.Dispatcher.Invoke(() =>
+            {
+                var order = LimitOrders.FirstOrDefault(a => a.OrderId == e.ExchangeOrderId);
+                if (order == null)
+                    return;
+
+                LimitOrders.Remove(order);
+            });
         }
 
         void client_LimitOrderAccepted(object sender, Core.SharedDto.Orders.LimitOrder e)
@@ -31,8 +45,6 @@ namespace MemExchange.Client.UI.Usercontrols.ActiveOrders
             {
                 LimitOrders.Add(new LimitOrderViewModel(e, client));
             });
-
-
         }
 
         [NotifyPropertyChangedInvocator]

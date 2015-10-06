@@ -119,7 +119,7 @@ namespace MemExchange.Client.UI.Usercontrols.ActiveOrders
                 client.CancelLimitOrder(limitOrder.ExchangeOrderId);
             });
         }
-
+        
         private void SetFields(LimitOrder limitOrder)
         {
             Symbol = limitOrder.Symbol;

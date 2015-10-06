@@ -10,6 +10,8 @@ namespace MemExchange.Core.SharedDto.ServerToClient
         public ServerToClientMessageTypeEnum MessageType { get; set; }
         [ProtoMember(2)]
         public LimitOrder LimitOrder { get; set; }
+        [ProtoMember(3)]
+        public string Message { get; set; }
 
         public int ReceiverClientId { get; set; }
 
@@ -22,6 +24,7 @@ namespace MemExchange.Core.SharedDto.ServerToClient
         public void Reset()
         {
             MessageType = ServerToClientMessageTypeEnum.NotSet;
+            Message = string.Empty;
             LimitOrder.Reeset();
         }
 
@@ -29,6 +32,7 @@ namespace MemExchange.Core.SharedDto.ServerToClient
         {
             MessageType = other.MessageType;
             LimitOrder.Update(other.LimitOrder);
+            Message = other.Message;
             ReceiverClientId = other.ReceiverClientId;
         }
     }

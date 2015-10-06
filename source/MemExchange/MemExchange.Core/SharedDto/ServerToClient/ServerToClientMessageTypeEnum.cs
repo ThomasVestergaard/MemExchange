@@ -8,7 +8,8 @@ namespace MemExchange.Core.SharedDto.ServerToClient
         NotSet = 1,
         OrderAccepted = 2,
         OrderChanged = 3,
-        OrderDeleted = 4
+        OrderDeleted = 4,
+        Message = 5
 
     }
 }

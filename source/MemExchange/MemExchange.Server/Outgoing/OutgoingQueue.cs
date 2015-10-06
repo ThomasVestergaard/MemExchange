@@ -50,6 +50,14 @@ namespace MemExchange.Server.Outgoing
             messageRingBuffer.Publish(next);
         }
 
+        public void EnqueueMessage(int clientId, string message)
+        {
+            serverToClientMessage.ReceiverClientId = clientId;
+            serverToClientMessage.MessageType = ServerToClientMessageTypeEnum.Message;
+            serverToClientMessage.Message = message;
+            Enqueue();
+        }
+
         public void EnqueueAddedLimitOrder(LimitOrder limitOrder)
         {
             serverToClientMessage.ReceiverClientId = limitOrder.ClientId;

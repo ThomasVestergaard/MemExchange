@@ -7,6 +7,7 @@ namespace MemExchange.Core.SharedDto.ServerToClient
         int ReceiverClientId { get; set; }
         ServerToClientMessageTypeEnum MessageType { get; set; }
         LimitOrder LimitOrder { get; set; }
+        string Message { get; set; }
         void Update(IServerToClientMessage other);
         void Reset();
     }

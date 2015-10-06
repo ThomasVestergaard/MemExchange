@@ -10,5 +10,6 @@ namespace MemExchange.Server.Outgoing
         void EnqueueAddedLimitOrder(LimitOrder limitOrder);
         void EnqueueUpdatedLimitOrder(LimitOrder limitOrder);
         void EnqueueDeletedLimitOrder(LimitOrder limitOrder);
+        void EnqueueMessage(int clientId, string message);
     }
 }

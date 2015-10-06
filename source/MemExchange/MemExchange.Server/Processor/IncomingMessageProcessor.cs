@@ -20,11 +20,20 @@ namespace MemExchange.Server.Processor
             {
                 case ClientToServerMessageTypeEnum.PlaceOrder:
                     if (!data.LimitOrder.ValidatesForAdd())
+                    {
+
                         break;
+                    }
+                        
 
                     var addResult = orderKeep.AddLimitOrder(data.LimitOrder);
                     outgoingQueue.EnqueueAddedLimitOrder(addResult);
                 break;
+
+                case ClientToServerMessageTypeEnum.CancelOrder:
+
+
+                    break;
             }
 
             data.Reset();
