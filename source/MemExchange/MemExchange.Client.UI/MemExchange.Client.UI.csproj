@@ -70,6 +70,7 @@
       <DependentUpon>ActiveLimitOrdersView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Usercontrols\ActiveOrders\ActiveOrdersViewModel.cs" />
+    <Compile Include="Usercontrols\ActiveOrders\EditLimitOrderViewModel.cs" />
     <Compile Include="Usercontrols\ActiveOrders\LimitOrderViewModel.cs" />
     <Compile Include="Usercontrols\NewLimitOrder.xaml.cs">
       <DependentUpon>NewLimitOrder.xaml</DependentUpon>

@@ -65,6 +65,26 @@ namespace MemExchange.Core.SharedDto.Orders
             return true;
         }
 
+        public bool ValidatesForModify()
+        {
+            if (string.IsNullOrEmpty(Symbol))
+                return false;
+
+            if (Quantity <= 0)
+                return false;
+
+            if (Price <= 0)
+                return false;
+
+            if (ClientId <= 0)
+                return false;
+
+            if (ExchangeOrderId <= 0)
+                return false;
+
+            return true;
+        }
+
         public void Update(LimitOrder other)
         {
             Symbol = other.Symbol;

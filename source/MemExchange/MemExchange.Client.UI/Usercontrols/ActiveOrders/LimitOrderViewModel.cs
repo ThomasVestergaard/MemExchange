@@ -101,6 +101,7 @@ namespace MemExchange.Client.UI.Usercontrols.ActiveOrders
         }
 
         public ICommand CancelOrderCommand { get; set; }
+        public ICommand ModifyOrderCommand { get; set; }
 
         public LimitOrderViewModel(LimitOrder limitOrder, IClient client)
         {
@@ -117,6 +118,13 @@ namespace MemExchange.Client.UI.Usercontrols.ActiveOrders
             CancelOrderCommand = new RelayCommand(() =>
             {
                 client.CancelLimitOrder(limitOrder.ExchangeOrderId);
+            });
+
+            ModifyOrderCommand = new RelayCommand(() =>
+            {
+                var editViewModel = new EditLimitOrderViewModel(limitOrder, client);
+                
+
             });
         }
         

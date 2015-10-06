@@ -85,16 +85,40 @@ namespace MemExchange.ClientApi
             });
         }
 
-        public void ModifyLimitOrder(long exchangeOrderId, double newPrice, int newQuantity)
+        public void ModifyLimitOrder(uint exchangeOrderId, double newPrice, int newQuantity)
         {
             if (!isStarted)
                 return;
+
+            messageConnection.SendMessage(new ClientToServerMessage
+            {
+                ClientId = clientId,
+                LimitOrder = new LimitOrder
+                {
+                    ClientId = clientId,
+                    ExchangeOrderId = exchangeOrderId,
+                    Price = newPrice,
+                    Quantity = newQuantity
+                },
+                MessageType = ClientToServerMessageTypeEnum.ModifyOrder
+            });
         }
 
-        public void CancelLimitOrder(long exchangeOrderId)
+        public void CancelLimitOrder(uint exchangeOrderId)
         {
             if (!isStarted)
                 return;
+
+            messageConnection.SendMessage(new ClientToServerMessage
+            {
+                ClientId = clientId,
+                LimitOrder = new LimitOrder
+                {
+                    ClientId = clientId,
+                    ExchangeOrderId = exchangeOrderId,
+                },
+                MessageType = ClientToServerMessageTypeEnum.CancelOrder
+            });
         }
     }
 }

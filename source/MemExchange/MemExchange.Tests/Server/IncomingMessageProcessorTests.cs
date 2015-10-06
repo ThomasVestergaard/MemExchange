@@ -64,6 +64,29 @@ namespace MemExchange.Tests.Server
         }
 
         [Test]
+        public void ShouldNotCallOrderKeepWhenLimitOrderIsInvalid()
+        {
+            var processor = new IncomingMessageProcessor(orderKeepMock, outgoingQueueMock);
+
+            var limitOrder = new LimitOrder();
+            limitOrder.Reeset();
+            limitOrder.Symbol = "QQQ";
+            limitOrder.Price = -1;
+            limitOrder.Quantity = -1;
+            limitOrder.ClientId = 1;
+            limitOrder.Way = WayEnum.Sell;
+
+            processor.OnNext(new ClientToServerMessage
+            {
+                ClientId = 1,
+                LimitOrder = limitOrder,
+                MessageType = ClientToServerMessageTypeEnum.PlaceOrder
+            }, 1, true);
+
+            orderKeepMock.AssertWasNotCalled(a => a.AddLimitOrder(Arg<LimitOrder>.Is.Anything));
+        }
+
+        [Test]
         public void OutputQueueShouldBeCalledWithOutputFromOrderKeepOnValidLimitOrder()
         {
             var processor = new IncomingMessageProcessor(orderKeepMock, outgoingQueueMock);
@@ -94,6 +117,44 @@ namespace MemExchange.Tests.Server
             }, 1, true);
 
             outgoingQueueMock.AssertWasCalled(a => a.EnqueueAddedLimitOrder(Arg<LimitOrder>.Is.Equal(orderKeepReturnOrder)));
+        }
+
+        [Test]
+        public void ShouldNotCallOrderKeepWhenLimitOrderIsInvalidOnCancelOrder()
+        {
+            var processor = new IncomingMessageProcessor(orderKeepMock, outgoingQueueMock);
+
+            var limitOrder = new LimitOrder();
+            limitOrder.Reeset();
+
+            processor.OnNext(new ClientToServerMessage
+            {
+                ClientId = 1,
+                LimitOrder = limitOrder,
+                MessageType = ClientToServerMessageTypeEnum.CancelOrder
+            }, 1, true);
+
+            orderKeepMock.AssertWasNotCalled(a => a.AddLimitOrder(Arg<LimitOrder>.Is.Anything));
+        }
+
+        [Test]
+        public void ShouldCallOrderKeepWhenLimitOrderIsValidOnCancelOrder()
+        {
+            var processor = new IncomingMessageProcessor(orderKeepMock, outgoingQueueMock);
+
+            var limitOrder = new LimitOrder();
+            limitOrder.Reeset();
+            limitOrder.ClientId = 1;
+            limitOrder.ExchangeOrderId = 50;
+
+            processor.OnNext(new ClientToServerMessage
+            {
+                ClientId = 1,
+                LimitOrder = limitOrder,
+                MessageType = ClientToServerMessageTypeEnum.CancelOrder
+            }, 1, true);
+
+            orderKeepMock.AssertWasCalled(a => a.DeleteLimitOrder(Arg<LimitOrder>.Is.Equal(limitOrder)));
         }
     }
 }
