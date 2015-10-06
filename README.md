@@ -16,7 +16,7 @@ High level architechture.
 The project utilizes the following 3rd party libraries. All from nuget.
 
 - Castle Windsor for dependency injection
-- Disruptor.net for cross thread communication
+- Disruptor.net for concurrency
 - NetMQ for network communication
 - NUnit for unit testing
 - Rhinomocks for mocking
