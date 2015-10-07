@@ -70,12 +70,15 @@
       <DependentUpon>ActiveLimitOrdersView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Usercontrols\ActiveOrders\ActiveOrdersViewModel.cs" />
-    <Compile Include="Usercontrols\ActiveOrders\EditLimitOrderViewModel.cs" />
+    <Compile Include="Windows\EditLimitOrderViewModel.cs" />
     <Compile Include="Usercontrols\ActiveOrders\LimitOrderViewModel.cs" />
     <Compile Include="Usercontrols\NewLimitOrder.xaml.cs">
       <DependentUpon>NewLimitOrder.xaml</DependentUpon>
     </Compile>
     <Compile Include="Usercontrols\NewLimitOrderViewModel.cs" />
+    <Compile Include="Windows\EditLimitOrderView.xaml.cs">
+      <DependentUpon>EditLimitOrderView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -93,6 +96,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Usercontrols\NewLimitOrder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\EditLimitOrderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

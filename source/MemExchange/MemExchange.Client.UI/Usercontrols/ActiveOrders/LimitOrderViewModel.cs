@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using MemExchange.Client.UI.Annotations;
 using MemExchange.Client.UI.Resources;
+using MemExchange.Client.UI.Windows;
 using MemExchange.ClientApi;
 using MemExchange.Core.SharedDto;
 using MemExchange.Core.SharedDto.Orders;
@@ -123,8 +124,9 @@ namespace MemExchange.Client.UI.Usercontrols.ActiveOrders
             ModifyOrderCommand = new RelayCommand(() =>
             {
                 var editViewModel = new EditLimitOrderViewModel(limitOrder, client);
-                
-
+                var editWindow = new EditLimitOrderView();
+                editWindow.DataContext = editViewModel;
+                editWindow.ShowDialog();
             });
         }
         
