@@ -1,6 +1,5 @@
 ﻿using Castle.MicroKernel.Registration;
 using Castle.Windsor;
-using MemExchange.Client.UI.Usercontrols.ActiveOrders;
 using MemExchange.ClientApi;
 using MemExchange.ClientApi.Commands;
 using MemExchange.ClientApi.Stream;
@@ -24,8 +23,6 @@ namespace MemExchange.Client.UI.Setup
             Container.Register(Component.For<ISerializer>().ImplementedBy<ProtobufSerializer>());
             Container.Register(Component.For<IMessageConnection>().ImplementedBy<MessageConnection>().LifestyleSingleton());
             Container.Register(Component.For<IServerMessageSubscriber>().ImplementedBy<ServerMessageSubscriber>().LifestyleSingleton());
-
-            Container.Register(Component.For<LimitOrderViewModel>());
         }
     }
 }

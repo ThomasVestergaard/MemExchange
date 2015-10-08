@@ -36,7 +36,7 @@ namespace MemExchange.Tests.Server
                 MessageType = ClientToServerMessageTypeEnum.PlaceOrder
             }, 1, true);
 
-            orderKeepMock.AssertWasNotCalled(a => a.AddLimitOrder(Arg<LimitOrder>.Is.Anything));
+            orderKeepMock.AssertWasNotCalled(a => a.AddLimitOrder(Arg<LimitOrder>.Is.Anything, out Arg<LimitOrder>.Out(new LimitOrder()).Dummy));
             outgoingQueueMock.AssertWasNotCalled(a => a.EnqueueAddedLimitOrder(Arg<LimitOrder>.Is.Anything));
         }
 
@@ -60,7 +60,7 @@ namespace MemExchange.Tests.Server
                 MessageType = ClientToServerMessageTypeEnum.PlaceOrder
             }, 1, true);
 
-            orderKeepMock.AssertWasCalled(a => a.AddLimitOrder(Arg<LimitOrder>.Is.Equal(limitOrder)));
+            orderKeepMock.AssertWasCalled(a => a.AddLimitOrder(Arg<LimitOrder>.Is.Equal(limitOrder), out Arg<LimitOrder>.Out(new LimitOrder()).Dummy));
         }
 
         [Test]
@@ -83,7 +83,7 @@ namespace MemExchange.Tests.Server
                 MessageType = ClientToServerMessageTypeEnum.PlaceOrder
             }, 1, true);
 
-            orderKeepMock.AssertWasNotCalled(a => a.AddLimitOrder(Arg<LimitOrder>.Is.Anything));
+            orderKeepMock.AssertWasNotCalled(a => a.AddLimitOrder(Arg<LimitOrder>.Is.Anything, out Arg<LimitOrder>.Out(new LimitOrder()).Dummy));
         }
 
         [Test]
@@ -98,8 +98,7 @@ namespace MemExchange.Tests.Server
             orderKeepReturnOrder.Quantity = 10;
             orderKeepReturnOrder.ClientId = 1;
             orderKeepReturnOrder.Way = WayEnum.Sell;
-
-            orderKeepMock.Stub(a => a.AddLimitOrder(Arg<LimitOrder>.Is.Anything)).Return(orderKeepReturnOrder);
+            
 
             var limitOrder = new LimitOrder();
             limitOrder.Reeset();
@@ -108,6 +107,9 @@ namespace MemExchange.Tests.Server
             limitOrder.Quantity = 10;
             limitOrder.ClientId = 1;
             limitOrder.Way = WayEnum.Sell;
+
+            LimitOrder addedOrder;
+            orderKeepMock.Stub(a => a.AddLimitOrder(limitOrder, out addedOrder)).OutRef(orderKeepReturnOrder);
 
             processor.OnNext(new ClientToServerMessage
             {
@@ -134,7 +136,7 @@ namespace MemExchange.Tests.Server
                 MessageType = ClientToServerMessageTypeEnum.CancelOrder
             }, 1, true);
 
-            orderKeepMock.AssertWasNotCalled(a => a.AddLimitOrder(Arg<LimitOrder>.Is.Anything));
+            orderKeepMock.AssertWasNotCalled(a => a.AddLimitOrder(Arg<LimitOrder>.Is.Anything, out Arg<LimitOrder>.Out(new LimitOrder()).Dummy));
         }
 
         [Test]

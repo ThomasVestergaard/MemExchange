@@ -67,9 +67,6 @@ namespace MemExchange.Core.SharedDto.Orders
 
         public bool ValidatesForModify()
         {
-            if (string.IsNullOrEmpty(Symbol))
-                return false;
-
             if (Quantity <= 0)
                 return false;
 

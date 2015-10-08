@@ -1,4 +1,5 @@
 ﻿using MemExchange.Core.SharedDto.ClientToServer;
+using MemExchange.Core.SharedDto.Orders;
 using MemExchange.Server.Outgoing;
 
 namespace MemExchange.Server.Processor
@@ -25,8 +26,9 @@ namespace MemExchange.Server.Processor
                         break;
                     }
 
-                    var addResult = orderKeep.AddLimitOrder(data.LimitOrder);
-                    outgoingQueue.EnqueueAddedLimitOrder(addResult);
+                    LimitOrder addedOrder;
+                    orderKeep.AddLimitOrder(data.LimitOrder, out addedOrder);
+                    outgoingQueue.EnqueueAddedLimitOrder(addedOrder);
                 break;
 
                 case ClientToServerMessageTypeEnum.CancelOrder:
@@ -51,10 +53,11 @@ namespace MemExchange.Server.Processor
                         break;
                     }
 
-                    var modifiedLimitOrder = orderKeep.TryUpdateLimitOrder(data.LimitOrder);
-                    if (modifiedLimitOrder != null)
-                        outgoingQueue.EnqueueUpdatedLimitOrder(modifiedLimitOrder);
-
+                    LimitOrder modifiedOrder;
+                    var modifyResult = orderKeep.TryUpdateLimitOrder(data.LimitOrder, out modifiedOrder);
+                    if (modifyResult)
+                        outgoingQueue.EnqueueUpdatedLimitOrder(modifiedOrder);
+                    
                     break;
             }
 

@@ -11,8 +11,8 @@ namespace MemExchange.Server.Processor
         /// </summary>
         Dictionary<IClient, Dictionary<uint, LimitOrder>> ClientLimitOrders { get; }
 
-        LimitOrder AddLimitOrder(LimitOrder limitOrder);
-        LimitOrder TryUpdateLimitOrder(LimitOrder limitOrder);
+        void AddLimitOrder(LimitOrder limitOrder, out LimitOrder addedOrder);
+        bool TryUpdateLimitOrder(LimitOrder limitOrder, out LimitOrder modifiedOrder);
         bool DeleteLimitOrder(LimitOrder limitOrder);
     }
 }

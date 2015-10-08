@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using MemExchange.Core.SharedDto;
 using MemExchange.Core.SharedDto.Orders;
 using MemExchange.Server.Clients;
@@ -36,7 +38,8 @@ namespace MemExchange.Tests.Server
                 Way = WayEnum.Buy
             };
 
-            orderKeep.AddLimitOrder(order);
+            LimitOrder addedOrder;
+            orderKeep.AddLimitOrder(order, out addedOrder);
 
             Assert.IsTrue(orderKeep.ClientLimitOrders.ContainsKey(staticClient1));
             Assert.AreEqual(1, orderKeep.ClientLimitOrders[staticClient1].Count);
@@ -83,9 +86,12 @@ namespace MemExchange.Tests.Server
                 Way = WayEnum.Buy
             };
 
-            orderKeep.AddLimitOrder(client1_order1);
-            orderKeep.AddLimitOrder(client1_order2);
-            orderKeep.AddLimitOrder(client2_order1);
+            LimitOrder added1;
+            LimitOrder added2;
+            LimitOrder added3;
+            orderKeep.AddLimitOrder(client1_order1, out added1);
+            orderKeep.AddLimitOrder(client1_order2, out added2);
+            orderKeep.AddLimitOrder(client2_order1, out added3);
 
             Assert.IsTrue(orderKeep.ClientLimitOrders.ContainsKey(staticClient1));
             Assert.IsTrue(orderKeep.ClientLimitOrders.ContainsKey(staticClient2));
@@ -95,6 +101,74 @@ namespace MemExchange.Tests.Server
 
         }
 
+        [Test]
+        public void ShouldAddOrderAndReturnFullOrderObject()
+        {
+            var staticClient1 = new MemExchange.Server.Clients.Client { ClientId = 1 };
+            var staticClient2 = new MemExchange.Server.Clients.Client { ClientId = 2 };
+            clientRepositoryMock.Stub(a => a.GetOrAddClientFromId(Arg<int>.Is.Equal(1))).Return(staticClient1);
+            clientRepositoryMock.Stub(a => a.GetOrAddClientFromId(Arg<int>.Is.Equal(2))).Return(staticClient2);
+
+            var orderKeep = new OrderKeep(clientRepositoryMock);
+            var order1 = new LimitOrder
+            {
+                ClientId = 1,
+                Price = 90,
+                Quantity = 10,
+                Symbol = "ABC",
+                Way = WayEnum.Buy
+            };
+
+            LimitOrder addedOrder;
+            orderKeep.AddLimitOrder(order1, out addedOrder);
+            Assert.IsNotNull(addedOrder);
+            Assert.AreEqual(1, addedOrder.ClientId);
+            Assert.AreEqual(90, addedOrder.Price);
+            Assert.AreEqual(10, addedOrder.Quantity);
+            Assert.AreEqual("ABC", addedOrder.Symbol);
+            Assert.AreEqual(WayEnum.Buy, addedOrder.Way);
+            Assert.IsTrue(addedOrder.ExchangeOrderId > 0);
+        }
+
+        [Test]
+        public void ShouldModifyOrderAndReturnFullOrderObject()
+        {
+            var staticClient1 = new MemExchange.Server.Clients.Client { ClientId = 1 };
+            var staticClient2 = new MemExchange.Server.Clients.Client { ClientId = 2 };
+            clientRepositoryMock.Stub(a => a.GetOrAddClientFromId(Arg<int>.Is.Equal(1))).Return(staticClient1);
+            clientRepositoryMock.Stub(a => a.GetOrAddClientFromId(Arg<int>.Is.Equal(2))).Return(staticClient2);
+
+            var orderKeep = new OrderKeep(clientRepositoryMock);
+            var order1 = new LimitOrder
+            {
+                ClientId = 1,
+                Price = 90,
+                Quantity = 10,
+                Symbol = "ABC",
+                Way = WayEnum.Buy
+            };
+
+            LimitOrder addedOrder;
+            orderKeep.AddLimitOrder(order1, out addedOrder);
+
+            var modify = new LimitOrder();
+            modify.ExchangeOrderId = addedOrder.ExchangeOrderId;
+            modify.Price = 80;
+            modify.Quantity = 20;
+            modify.ClientId = 1;
+
+            LimitOrder modified;
+            var modifyResult = orderKeep.TryUpdateLimitOrder(modify, out modified);
+            Assert.IsNotNull(modified);
+            Assert.AreEqual(addedOrder.ExchangeOrderId, modified.ExchangeOrderId);
+            Assert.AreEqual(1, modified.ClientId);
+            Assert.AreEqual(80, modified.Price);
+            Assert.AreEqual(20, modified.Quantity);
+            Assert.AreEqual("ABC", modified.Symbol);
+            Assert.AreEqual(WayEnum.Buy, modified.Way);
+            
+        }
+        
         [Test]
         public void AddLimitOrderShouldIncrementSequenceNumber()
         {
@@ -131,9 +205,13 @@ namespace MemExchange.Tests.Server
                 Way = WayEnum.Buy
             };
 
-            var add1 = orderKeep.AddLimitOrder(client1_order1);
-            var add2 = orderKeep.AddLimitOrder(client1_order2);
-            var add3 = orderKeep.AddLimitOrder(client2_order1);
+            LimitOrder add1;
+            LimitOrder add2;
+            LimitOrder add3;
+
+            orderKeep.AddLimitOrder(client1_order1, out add1);
+            orderKeep.AddLimitOrder(client1_order2, out add2);
+            orderKeep.AddLimitOrder(client2_order1, out add3);
 
             Assert.AreEqual(1, add1.ExchangeOrderId);
             Assert.AreEqual(2, add2.ExchangeOrderId);
@@ -158,8 +236,10 @@ namespace MemExchange.Tests.Server
                 Way = WayEnum.Buy
             };
 
-            var updateResult = orderKeep.TryUpdateLimitOrder(order);
-            Assert.IsNull(updateResult);
+            LimitOrder modifiedOrder;
+            var updateResult = orderKeep.TryUpdateLimitOrder(order, out modifiedOrder);
+            Assert.IsNull(modifiedOrder);
+            Assert.IsFalse(updateResult);
         }
 
         [Test]
@@ -178,7 +258,8 @@ namespace MemExchange.Tests.Server
                 Way = WayEnum.Buy
             };
 
-            var addedOrder = orderKeep.AddLimitOrder(order);
+            LimitOrder addedOrder;
+            orderKeep.AddLimitOrder(order, out addedOrder);
             
             Assert.AreEqual(1, orderKeep.ClientLimitOrders[staticClient1].Count);
             Assert.AreEqual(90, orderKeep.ClientLimitOrders[staticClient1].Values.First().Price);
@@ -187,8 +268,10 @@ namespace MemExchange.Tests.Server
             addedOrder.Quantity = 99;
             addedOrder.Price = 50.22d;
 
-            var updateResult = orderKeep.TryUpdateLimitOrder(order);
-            Assert.IsNotNull(updateResult);
+            LimitOrder modifiedOrder;
+            var updateResult = orderKeep.TryUpdateLimitOrder(addedOrder, out modifiedOrder);
+            Assert.IsNotNull(modifiedOrder);
+            Assert.IsTrue(updateResult);
             Assert.AreEqual(1, orderKeep.ClientLimitOrders[staticClient1].Count);
             Assert.AreEqual(50.22d, orderKeep.ClientLimitOrders[staticClient1].Values.First().Price);
             Assert.AreEqual(99, orderKeep.ClientLimitOrders[staticClient1].Values.First().Quantity);
@@ -214,8 +297,7 @@ namespace MemExchange.Tests.Server
             var deleteResult = orderKeep.DeleteLimitOrder(order);
             Assert.IsFalse(deleteResult);
         }
-
-
+        
         [Test]
         public void DeleteOrderShouldReturnTrueWhenOrderIsDeleted()
         {
@@ -232,11 +314,73 @@ namespace MemExchange.Tests.Server
                 Way = WayEnum.Buy
             };
 
-            var addResult = orderKeep.AddLimitOrder(order);
+            LimitOrder addResult;
+            orderKeep.AddLimitOrder(order, out addResult);
 
             var deleteResult = orderKeep.DeleteLimitOrder(addResult);
             Assert.IsTrue(deleteResult);
             Assert.AreEqual(0, orderKeep.ClientLimitOrders[staticClient1].Count);
+        }
+
+        [Test]
+        public void OrderAddPerformanceMeasureTest()
+        {
+            var clientStub = new MemExchange.Server.Clients.Client {ClientId = 1};
+            clientRepositoryMock.Stub(a => a.GetOrAddClientFromId(1)).Return(clientStub);
+            var orderKeep = new OrderKeep(clientRepositoryMock);
+            
+            var order = new LimitOrder
+            {
+                ClientId = 1,
+                Price = 90,
+                Quantity = 10,
+                Symbol = "ABC",
+                Way = WayEnum.Buy
+            };
+
+            var sw = new Stopwatch();
+            sw.Start();
+
+            LimitOrder addedOrder;
+            LimitOrder modifiedOrder;
+            for (int i = 0; i < 50000; i++)
+            {
+                
+                orderKeep.AddLimitOrder(order, out addedOrder);
+
+                addedOrder.Quantity = 20;
+                addedOrder.Price = 100;
+                
+                orderKeep.TryUpdateLimitOrder(addedOrder, out modifiedOrder);
+                orderKeep.DeleteLimitOrder(addedOrder);
+
+            }
+
+            sw.Stop();
+            var elapsed = sw.ElapsedMilliseconds;
+
+            double perItem = (double)elapsed / (double)50000;
+            Console.WriteLine("First 50k:");
+            Console.WriteLine("Total ms: " + elapsed);
+            Console.WriteLine("Per item: " + perItem);
+            Console.WriteLine("");
+
+            sw = new Stopwatch();
+            sw.Start();
+
+            for (int i = 0; i < 50000; i++)
+            {
+                orderKeep.AddLimitOrder(order, out addedOrder);
+            }
+
+            sw.Stop();
+            elapsed = sw.ElapsedMilliseconds;
+
+            perItem = (double)elapsed / (double)50000;
+            Console.WriteLine("Second 50k:");
+            Console.WriteLine("Total ms: " + elapsed);
+            Console.WriteLine("Per item: " + perItem);
+            Console.WriteLine("");
         }
 
     }

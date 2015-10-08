@@ -17,36 +17,44 @@ namespace MemExchange.Server.Processor
             ClientLimitOrders = new Dictionary<IClient, Dictionary<uint, LimitOrder>>();
         }
 
-        public LimitOrder AddLimitOrder(LimitOrder limitOrder)
+        public void AddLimitOrder(LimitOrder limitOrder, out LimitOrder addedOrder)
         {
+            addedOrder = new LimitOrder();
             var client = clientRepository.GetOrAddClientFromId(limitOrder.ClientId);
             if (!ClientLimitOrders.ContainsKey(client))
                 ClientLimitOrders.Add(client, new Dictionary<uint, LimitOrder>());
 
-            limitOrder.ExchangeOrderId = orderSequenceId;
-            ClientLimitOrders[client].Add(orderSequenceId, limitOrder);
-            orderSequenceId++;
+            var collectionLimitOrder = new LimitOrder();
+            collectionLimitOrder.Update(limitOrder);
+            collectionLimitOrder.ExchangeOrderId = orderSequenceId;
+            ClientLimitOrders[client].Add(orderSequenceId, collectionLimitOrder);
             
-            return limitOrder;
+            addedOrder.Update(collectionLimitOrder);
+            orderSequenceId++;
         }
 
-        public LimitOrder TryUpdateLimitOrder(LimitOrder limitOrder)
+        public bool TryUpdateLimitOrder(LimitOrder limitOrder, out LimitOrder modifiedOrder)
         {
+            modifiedOrder = null;
+            bool toReturn = true;
+
             if (limitOrder.ExchangeOrderId <= 0)
-                return null;
+                return false;
 
             var client = clientRepository.GetOrAddClientFromId(limitOrder.ClientId);
             if (!ClientLimitOrders.ContainsKey(client))
-                return null;
+                return false;
 
             if (!ClientLimitOrders[client].ContainsKey(limitOrder.ExchangeOrderId))
-                return null;
+                return false;
 
+            modifiedOrder = new LimitOrder();
             var order = ClientLimitOrders[client][limitOrder.ExchangeOrderId];
             order.Price = limitOrder.Price;
             order.Quantity = limitOrder.Quantity;
+            modifiedOrder.Update(order);
 
-            return order;
+            return true;
         }
 
         public bool DeleteLimitOrder(LimitOrder limitOrder)
