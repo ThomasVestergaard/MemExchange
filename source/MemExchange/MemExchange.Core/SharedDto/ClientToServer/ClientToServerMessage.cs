@@ -32,7 +32,7 @@ namespace MemExchange.Core.SharedDto.ClientToServer
         {
             ClientId = other.ClientId;
             MessageType = other.MessageType;
-            LimitOrder = other.LimitOrder;
+            LimitOrder.Update(other.LimitOrder);
 
         }
     }

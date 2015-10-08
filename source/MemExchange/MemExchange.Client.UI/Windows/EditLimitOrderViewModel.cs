@@ -81,7 +81,8 @@ namespace MemExchange.Client.UI.Windows
 
         private void SetupCommandsAndBehaviour()
         {
-            SendOrderCommand = new RelayCommand(() => client.ModifyLimitOrder(limitOrder.ExchangeOrderId, limitOrder.Price, limitOrder.Quantity));
+            SendOrderCommand = new RelayCommand(() => 
+                client.ModifyLimitOrder(limitOrder.ExchangeOrderId, limitOrder.Price, limitOrder.Quantity));
         }
 
         [NotifyPropertyChangedInvocator]

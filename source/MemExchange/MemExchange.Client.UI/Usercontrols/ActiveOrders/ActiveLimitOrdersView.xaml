@@ -35,7 +35,7 @@
                     <DataGridTemplateColumn >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Command="{Binding EditOrderCommand}" ToolTip="Edit order">
+                                <Button Command="{Binding ModifyOrderCommand}" ToolTip="Edit order">
                                     <Image Source="{Binding Source={x:Static icons:IconUriHelper.pencil_16x16}}" />
                                 </Button>
                             </DataTemplate>

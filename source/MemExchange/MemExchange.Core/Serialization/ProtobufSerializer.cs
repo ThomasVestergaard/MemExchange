@@ -33,19 +33,32 @@ namespace MemExchange.Core.Serialization
             return buf.Take(bodySize).ToArray();
         }
 
+        public byte[] Serialize_<T>(T inputInstance)
+        {
+            var buffer = new byte[bufferSize];
 
-        public T Deserialize<T>(byte[] serializedData)
+            using (var ms = new MemoryStream(buffer, 0, buffer.Length, false))
+            {
+                Serializer.SerializeWithLengthPrefix(ms, inputInstance, PrefixStyle.Fixed32);
+                bodySize = (int) ms.Position;
+            }
+
+            return buffer.Take(bodySize).ToArray();
+        }
+
+
+        public T Deserialize2<T>(byte[] serializedData)
         {
             deserializeStream.Write(serializedData, 0, serializedData.Length);
             deserializeStream.Seek(0, SeekOrigin.Begin);
             return (T)RuntimeTypeModel.Default.DeserializeWithLengthPrefix(deserializeStream, null, typeof(T), PrefixStyle.Fixed32, 0);
         }
 
-        public T Deserialize2<T>(byte[] serializedData)
+        public T Deserialize<T>(byte[] serializedData)
         {
             T deserialized;
             using (var stream = new MemoryStream(serializedData, 0, serializedData.Length, false))
-                deserialized = (T)RuntimeTypeModel.Default.DeserializeWithLengthPrefix(stream, null, typeof(T), PrefixStyle.Fixed32, 0);
+                return (T)RuntimeTypeModel.Default.DeserializeWithLengthPrefix(stream, null, typeof(T), PrefixStyle.Fixed32, 0);
 
             return deserialized;
         }
