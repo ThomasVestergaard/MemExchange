@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Disruptor;
 using Disruptor.Dsl;
@@ -52,6 +53,7 @@ namespace MemExchange.Server.Outgoing
 
         public void EnqueueMessage(int clientId, string message)
         {
+            serverToClientMessage.Reset();
             serverToClientMessage.ReceiverClientId = clientId;
             serverToClientMessage.MessageType = ServerToClientMessageTypeEnum.Message;
             serverToClientMessage.Message = message;
@@ -60,8 +62,9 @@ namespace MemExchange.Server.Outgoing
 
         public void EnqueueAddedLimitOrder(LimitOrder limitOrder)
         {
+            serverToClientMessage.Reset();
             serverToClientMessage.ReceiverClientId = limitOrder.ClientId;
-            serverToClientMessage.LimitOrder = limitOrder;
+            serverToClientMessage.LimitOrder.Update(limitOrder);
             serverToClientMessage.MessageType = ServerToClientMessageTypeEnum.OrderAccepted;
             Enqueue();
 
@@ -69,17 +72,28 @@ namespace MemExchange.Server.Outgoing
 
         public void EnqueueUpdatedLimitOrder(LimitOrder limitOrder)
         {
+            serverToClientMessage.Reset();
             serverToClientMessage.ReceiverClientId = limitOrder.ClientId;
-            serverToClientMessage.LimitOrder = limitOrder;
+            serverToClientMessage.LimitOrder.Update(limitOrder);
             serverToClientMessage.MessageType = ServerToClientMessageTypeEnum.OrderChanged;
             Enqueue();
         }
 
         public void EnqueueDeletedLimitOrder(LimitOrder limitOrder)
         {
+            serverToClientMessage.Reset();
             serverToClientMessage.ReceiverClientId = limitOrder.ClientId;
-            serverToClientMessage.LimitOrder = limitOrder;
+            serverToClientMessage.LimitOrder.Update(limitOrder);
             serverToClientMessage.MessageType = ServerToClientMessageTypeEnum.OrderDeleted;
+            Enqueue();
+        }
+
+        public void EnqueueOrderSnapshot(int clientId, List<LimitOrder> orders)
+        {
+            serverToClientMessage.Reset();
+            serverToClientMessage.ReceiverClientId = clientId;
+            serverToClientMessage.OrderList.AddRange(orders);
+            serverToClientMessage.MessageType = ServerToClientMessageTypeEnum.OrderSnapshop;
             Enqueue();
         }
     }

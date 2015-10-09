@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Castle.Components.DictionaryAdapter;
 using MemExchange.Core.SharedDto;
 using MemExchange.Core.SharedDto.Orders;
 using MemExchange.Server.Clients;
@@ -97,8 +99,6 @@ namespace MemExchange.Tests.Server
             Assert.IsTrue(orderKeep.ClientLimitOrders.ContainsKey(staticClient2));
             Assert.AreEqual(2, orderKeep.ClientLimitOrders[staticClient1].Count);
             Assert.AreEqual(1, orderKeep.ClientLimitOrders[staticClient2].Count);
-            
-
         }
 
         [Test]
@@ -381,6 +381,59 @@ namespace MemExchange.Tests.Server
             Console.WriteLine("Total ms: " + elapsed);
             Console.WriteLine("Per item: " + perItem);
             Console.WriteLine("");
+        }
+
+        [Test]
+        public void ShouldSetCurrectClientOrderCount()
+        {
+            var staticClient1 = new MemExchange.Server.Clients.Client { ClientId = 1 };
+            var staticClient2 = new MemExchange.Server.Clients.Client { ClientId = 2 };
+            clientRepositoryMock.Stub(a => a.GetOrAddClientFromId(Arg<int>.Is.Equal(1))).Return(staticClient1);
+            clientRepositoryMock.Stub(a => a.GetOrAddClientFromId(Arg<int>.Is.Equal(2))).Return(staticClient2);
+
+            var orderKeep = new OrderKeep(clientRepositoryMock);
+            var client1_order1 = new LimitOrder
+            {
+                ClientId = 1,
+                Price = 90,
+                Quantity = 10,
+                Symbol = "ABC",
+                Way = WayEnum.Buy
+            };
+
+            var client1_order2 = new LimitOrder
+            {
+                ClientId = 1,
+                Price = 90,
+                Quantity = 10,
+                Symbol = "DEF",
+                Way = WayEnum.Buy
+            };
+
+            var client2_order1 = new LimitOrder
+            {
+                ClientId = 2,
+                Price = 90,
+                Quantity = 10,
+                Symbol = "QQQ",
+                Way = WayEnum.Buy
+            };
+
+            LimitOrder added1;
+            LimitOrder added2;
+            LimitOrder added3;
+            orderKeep.AddLimitOrder(client1_order1, out added1);
+            orderKeep.AddLimitOrder(client1_order2, out added2);
+            orderKeep.AddLimitOrder(client2_order1, out added3);
+
+            var client1Orders = new List<LimitOrder>();
+            var client2Orders = new List<LimitOrder>();
+
+            orderKeep.GetClientOrders(1, out client1Orders);
+            orderKeep.GetClientOrders(2, out client2Orders);
+
+            Assert.AreEqual(2, client1Orders.Count);
+            Assert.AreEqual(1, client2Orders.Count);
         }
 
     }

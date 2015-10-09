@@ -22,13 +22,11 @@ namespace MemExchange.Server.Incoming
             this.messageProcessor = messageProcessor;
         }
 
-
         public void Start()
         {
             messageDisrupter = new Disruptor<IClientToServerMessage>(() => new ClientToServerMessage(), new SingleThreadedClaimStrategy(ringbufferSize), new SleepingWaitStrategy(), TaskScheduler.Default);
             messageDisrupter.HandleEventsWith(messageProcessor);
             messageRingBuffer = messageDisrupter.Start();
-
             logger.Info("Incoming message queue started.");
         }
 

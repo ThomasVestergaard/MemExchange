@@ -68,5 +68,15 @@ namespace MemExchange.Server.Processor
             
             return ClientLimitOrders[client].Remove(limitOrder.ExchangeOrderId);
         }
+
+        public void GetClientOrders(int clientId, out List<LimitOrder> clientOrders)
+        {
+            clientOrders = new List<LimitOrder>();
+            var client = clientRepository.GetOrAddClientFromId(clientId);
+            if (!ClientLimitOrders.ContainsKey(client))
+                return;
+
+            clientOrders.AddRange(ClientLimitOrders[client].Values);
+        }
     }
 }

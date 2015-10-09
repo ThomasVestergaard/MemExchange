@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 using MemExchange.ClientApi.Commands;
 using MemExchange.ClientApi.Stream;
 using MemExchange.Core.SharedDto;
@@ -13,6 +15,7 @@ namespace MemExchange.ClientApi
         public event EventHandler<LimitOrder> LimitOrderAccepted;
         public event EventHandler<LimitOrder> LimitOrderChanged;
         public event EventHandler<LimitOrder> LimitOrderDeleted;
+        public event EventHandler<List<LimitOrder>> LimitOrderSnapshot;
 
         private IMessageConnection messageConnection;
         private readonly IServerMessageSubscriber subscriber;
@@ -54,6 +57,12 @@ namespace MemExchange.ClientApi
                     EventHandler<LimitOrder> changedHandler = LimitOrderChanged;
                     if (changedHandler != null)
                         changedHandler(this, message.LimitOrder);
+                    break;
+
+                case ServerToClientMessageTypeEnum.OrderSnapshop:
+                    EventHandler<List<LimitOrder>> snapshotHandler = LimitOrderSnapshot;
+                    if (snapshotHandler != null)
+                        snapshotHandler(this, message.OrderList);
                     break;
             }
         }
@@ -118,6 +127,18 @@ namespace MemExchange.ClientApi
                     ExchangeOrderId = exchangeOrderId,
                 },
                 MessageType = ClientToServerMessageTypeEnum.CancelOrder
+            });
+        }
+
+        public void RequestOpenLimitOrders()
+        {
+            if (!isStarted)
+                return;
+
+            messageConnection.SendMessage(new ClientToServerMessage
+            {
+                ClientId = clientId,
+                MessageType = ClientToServerMessageTypeEnum.RequestOpenOrders
             });
         }
     }

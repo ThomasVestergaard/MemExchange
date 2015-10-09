@@ -14,5 +14,6 @@ namespace MemExchange.Server.Processor
         void AddLimitOrder(LimitOrder limitOrder, out LimitOrder addedOrder);
         bool TryUpdateLimitOrder(LimitOrder limitOrder, out LimitOrder modifiedOrder);
         bool DeleteLimitOrder(LimitOrder limitOrder);
+        void GetClientOrders(int clientId, out List<LimitOrder> clientOrders);
     }
 }

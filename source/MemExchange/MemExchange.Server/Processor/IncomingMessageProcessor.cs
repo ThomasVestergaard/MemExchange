@@ -1,4 +1,5 @@
-﻿using MemExchange.Core.SharedDto.ClientToServer;
+﻿using System.Collections.Generic;
+using MemExchange.Core.SharedDto.ClientToServer;
 using MemExchange.Core.SharedDto.Orders;
 using MemExchange.Server.Outgoing;
 
@@ -58,6 +59,15 @@ namespace MemExchange.Server.Processor
                     if (modifyResult)
                         outgoingQueue.EnqueueUpdatedLimitOrder(modifiedOrder);
                     
+                    break;
+
+                case ClientToServerMessageTypeEnum.RequestOpenOrders:
+                    if (data.ClientId <= 0)
+                        break;
+
+                    var orderList = new List<LimitOrder>();
+                    orderKeep.GetClientOrders(data.ClientId, out orderList);
+                    outgoingQueue.EnqueueOrderSnapshot(data.ClientId, orderList);
                     break;
             }
 
