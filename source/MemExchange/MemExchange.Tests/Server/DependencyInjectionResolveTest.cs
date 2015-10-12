@@ -1,4 +1,4 @@
-﻿using MemExchange.Server.Setup;
+﻿using MemExchange.Server.Common;
 using MemExchange.Tests.Tools;
 using NUnit.Framework;
 

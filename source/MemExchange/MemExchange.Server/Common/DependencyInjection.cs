@@ -4,11 +4,11 @@ using MemExchange.Core.Logging;
 using MemExchange.Core.Serialization;
 using MemExchange.Server.Clients;
 using MemExchange.Server.Incoming;
+using MemExchange.Server.Incoming.Logging;
 using MemExchange.Server.Outgoing;
 using MemExchange.Server.Processor;
 
-
-namespace MemExchange.Server.Setup
+namespace MemExchange.Server.Common
 {
     public class DependencyInjection
     {
@@ -27,6 +27,9 @@ namespace MemExchange.Server.Setup
             Container.Register(Component.For<IClientRepository>().ImplementedBy<ClientRepository>().LifestyleSingleton());
             Container.Register(Component.For<IOutgoingQueue>().ImplementedBy<OutgoingQueue>().LifestyleSingleton());
             Container.Register(Component.For<IMessagePublisher>().ImplementedBy<MessagePublisher>().LifestyleSingleton());
+            Container.Register(Component.For<IDateService>().ImplementedBy<DateService>());
+            Container.Register(Component.For<IPerformanceRecorder>().ImplementedBy<PerformanceRecorderTimedConsoleOutput>());
+            
         }
     }
 }

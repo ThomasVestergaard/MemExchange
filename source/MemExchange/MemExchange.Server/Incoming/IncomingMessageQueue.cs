@@ -4,6 +4,7 @@ using Disruptor;
 using Disruptor.Dsl;
 using MemExchange.Core.Logging;
 using MemExchange.Core.SharedDto.ClientToServer;
+using MemExchange.Server.Incoming.Logging;
 using MemExchange.Server.Processor;
 
 namespace MemExchange.Server.Incoming
@@ -13,19 +14,21 @@ namespace MemExchange.Server.Incoming
         private int ringbufferSize = (int)Math.Pow(256, 2);
         private readonly ILogger logger;
         private readonly IIncomingMessageProcessor messageProcessor;
-        private Disruptor<IClientToServerMessage> messageDisrupter;
-        private RingBuffer<IClientToServerMessage> messageRingBuffer;
+        private readonly IPerformanceRecorder performanceRecorder;
+        private Disruptor<ClientToServerMessageQueueItem> messageDisrupter;
+        private RingBuffer<ClientToServerMessageQueueItem> messageRingBuffer;
         
-        public IncomingMessageQueue(ILogger logger, IIncomingMessageProcessor messageProcessor)
+        public IncomingMessageQueue(ILogger logger, IIncomingMessageProcessor messageProcessor, IPerformanceRecorder performanceRecorder)
         {
             this.logger = logger;
             this.messageProcessor = messageProcessor;
+            this.performanceRecorder = performanceRecorder;
         }
 
         public void Start()
         {
-            messageDisrupter = new Disruptor<IClientToServerMessage>(() => new ClientToServerMessage(), new SingleThreadedClaimStrategy(ringbufferSize), new SleepingWaitStrategy(), TaskScheduler.Default);
-            messageDisrupter.HandleEventsWith(messageProcessor);
+            messageDisrupter = new Disruptor<ClientToServerMessageQueueItem>(() => new ClientToServerMessageQueueItem(), new SingleThreadedClaimStrategy(ringbufferSize), new SleepingWaitStrategy(), TaskScheduler.Default);
+            messageDisrupter.HandleEventsWith(messageProcessor).Then(performanceRecorder);
             messageRingBuffer = messageDisrupter.Start();
             logger.Info("Incoming message queue started.");
         }

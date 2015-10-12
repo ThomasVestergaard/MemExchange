@@ -1,7 +1,7 @@
 ﻿using MemExchange.Core.Logging;
+using MemExchange.Server.Common;
 using MemExchange.Server.Incoming;
 using MemExchange.Server.Outgoing;
-using MemExchange.Server.Setup;
 
 namespace MemExchange.Server
 {

@@ -1,9 +1,9 @@
 ﻿using Disruptor;
-using MemExchange.Core.SharedDto.ClientToServer;
+using MemExchange.Server.Incoming;
 
 namespace MemExchange.Server.Processor
 {
-    public interface IIncomingMessageProcessor : IEventHandler<IClientToServerMessage>
+    public interface IIncomingMessageProcessor : IEventHandler<ClientToServerMessageQueueItem>
     {
     }
 }

@@ -79,8 +79,13 @@
     <Compile Include="Clients\ClientRepository.cs" />
     <Compile Include="Clients\IClient.cs" />
     <Compile Include="Clients\IClientRepository.cs" />
+    <Compile Include="Common\DateService.cs" />
+    <Compile Include="Common\IDateService.cs" />
     <Compile Include="Incoming\ClientMessagePuller.cs" />
+    <Compile Include="Incoming\ClientToServerMessageQueueItem.cs" />
     <Compile Include="Incoming\IClientMessagePuller.cs" />
+    <Compile Include="Incoming\Logging\IPerformanceRecorder.cs" />
+    <Compile Include="Incoming\Logging\PerformanceRecorderTimedConsoleOutput.cs" />
     <Compile Include="Outgoing\IMessagePublisher.cs" />
     <Compile Include="Outgoing\IOutgoingQueue.cs" />
     <Compile Include="Outgoing\MessagePublisher.cs" />
@@ -93,7 +98,7 @@
     <Compile Include="Processor\OrderKeep.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Setup\DependencyInjection.cs" />
+    <Compile Include="Common\DependencyInjection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

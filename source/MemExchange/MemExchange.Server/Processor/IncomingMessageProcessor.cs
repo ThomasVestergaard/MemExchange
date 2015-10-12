@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using MemExchange.Core.SharedDto.ClientToServer;
 using MemExchange.Core.SharedDto.Orders;
+using MemExchange.Server.Common;
+using MemExchange.Server.Incoming;
 using MemExchange.Server.Outgoing;
 
 namespace MemExchange.Server.Processor
@@ -9,69 +11,72 @@ namespace MemExchange.Server.Processor
     {
         private readonly IOrderKeep orderKeep;
         private readonly IOutgoingQueue outgoingQueue;
+        private readonly IDateService dateService;
 
-        public IncomingMessageProcessor(IOrderKeep orderKeep, IOutgoingQueue outgoingQueue)
+        public IncomingMessageProcessor(IOrderKeep orderKeep, IOutgoingQueue outgoingQueue, IDateService dateService)
         {
             this.orderKeep = orderKeep;
             this.outgoingQueue = outgoingQueue;
+            this.dateService = dateService;
         }
 
-        public void OnNext(IClientToServerMessage data, long sequence, bool endOfBatch)
+        public void OnNext(ClientToServerMessageQueueItem data, long sequence, bool endOfBatch)
         {
-            switch (data.MessageType)
+            data.StartProcessTime = dateService.UtcNow();
+            switch (data.Message.MessageType)
             {
                 case ClientToServerMessageTypeEnum.PlaceOrder:
-                    if (!data.LimitOrder.ValidatesForAdd())
+                    if (!data.Message.LimitOrder.ValidatesForAdd())
                     {
-                        outgoingQueue.EnqueueMessage(data.ClientId, "Error: Limit order was rejected.");
+                        outgoingQueue.EnqueueMessage(data.Message.ClientId, "Error: Limit order was rejected.");
                         break;
                     }
 
                     LimitOrder addedOrder;
-                    orderKeep.AddLimitOrder(data.LimitOrder, out addedOrder);
+                    orderKeep.AddLimitOrder(data.Message.LimitOrder, out addedOrder);
                     outgoingQueue.EnqueueAddedLimitOrder(addedOrder);
                 break;
 
                 case ClientToServerMessageTypeEnum.CancelOrder:
-                    if (!data.LimitOrder.ValidateForDelete())
+                if (!data.Message.LimitOrder.ValidateForDelete())
                     {
-                        outgoingQueue.EnqueueMessage(data.ClientId, "Error: Cancellation of limit order was rejected.");
+                        outgoingQueue.EnqueueMessage(data.Message.ClientId, "Error: Cancellation of limit order was rejected.");
                         break;
                     }
 
-                    var orderWasDeleted = orderKeep.DeleteLimitOrder(data.LimitOrder);
+                var orderWasDeleted = orderKeep.DeleteLimitOrder(data.Message.LimitOrder);
                     if (orderWasDeleted)
                     {
-                        outgoingQueue.EnqueueDeletedLimitOrder(data.LimitOrder);
-                        outgoingQueue.EnqueueMessage(data.ClientId, "Limit order cancelled.");
+                        outgoingQueue.EnqueueDeletedLimitOrder(data.Message.LimitOrder);
+                        outgoingQueue.EnqueueMessage(data.Message.ClientId, "Limit order cancelled.");
                     }
                     break;
 
                 case ClientToServerMessageTypeEnum.ModifyOrder:
-                    if (!data.LimitOrder.ValidatesForModify())
+                    if (!data.Message.LimitOrder.ValidatesForModify())
                     {
-                        outgoingQueue.EnqueueMessage(data.ClientId, "Error: Modification of limit order was rejected.");
+                        outgoingQueue.EnqueueMessage(data.Message.ClientId, "Error: Modification of limit order was rejected.");
                         break;
                     }
 
                     LimitOrder modifiedOrder;
-                    var modifyResult = orderKeep.TryUpdateLimitOrder(data.LimitOrder, out modifiedOrder);
+                    var modifyResult = orderKeep.TryUpdateLimitOrder(data.Message.LimitOrder, out modifiedOrder);
                     if (modifyResult)
                         outgoingQueue.EnqueueUpdatedLimitOrder(modifiedOrder);
                     
                     break;
 
                 case ClientToServerMessageTypeEnum.RequestOpenOrders:
-                    if (data.ClientId <= 0)
+                    if (data.Message.ClientId <= 0)
                         break;
 
                     var orderList = new List<LimitOrder>();
-                    orderKeep.GetClientOrders(data.ClientId, out orderList);
-                    outgoingQueue.EnqueueOrderSnapshot(data.ClientId, orderList);
+                    orderKeep.GetClientOrders(data.Message.ClientId, out orderList);
+                    outgoingQueue.EnqueueOrderSnapshot(data.Message.ClientId, orderList);
                     break;
             }
 
-            data.Reset();
+            data.Message.Reset();
         }
     }
 }
