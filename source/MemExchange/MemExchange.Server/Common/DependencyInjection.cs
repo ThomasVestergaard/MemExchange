@@ -28,7 +28,7 @@ namespace MemExchange.Server.Common
             Container.Register(Component.For<IOutgoingQueue>().ImplementedBy<OutgoingQueue>().LifestyleSingleton());
             Container.Register(Component.For<IMessagePublisher>().ImplementedBy<MessagePublisher>().LifestyleSingleton());
             Container.Register(Component.For<IDateService>().ImplementedBy<DateService>());
-            Container.Register(Component.For<IPerformanceRecorder>().ImplementedBy<PerformanceRecorderTimedConsoleOutput>());
+            Container.Register(Component.For<IPerformanceRecorder>().ImplementedBy<PerformanceRecorderDirectConsoleOutput>());
             
         }
     }

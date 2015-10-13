@@ -74,6 +74,7 @@
     <Compile Include="Server\ClientRepositoryTests.cs" />
     <Compile Include="Server\DependencyInjectionResolveTest.cs" />
     <Compile Include="Server\IncomingMessageProcessorTests.cs" />
+    <Compile Include="Server\OrderBookSlotTests.cs" />
     <Compile Include="Server\OrderKeepTests.cs" />
     <Compile Include="Server\OutgoingQueueTests.cs" />
     <Compile Include="Tools\DependencyInjectionResolveTester.cs" />

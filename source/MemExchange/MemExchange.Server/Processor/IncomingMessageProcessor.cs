@@ -23,6 +23,7 @@ namespace MemExchange.Server.Processor
         public void OnNext(ClientToServerMessageQueueItem data, long sequence, bool endOfBatch)
         {
             data.StartProcessTime = dateService.UtcNow();
+
             switch (data.Message.MessageType)
             {
                 case ClientToServerMessageTypeEnum.PlaceOrder:

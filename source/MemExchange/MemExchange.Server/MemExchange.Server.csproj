@@ -85,11 +85,16 @@
     <Compile Include="Incoming\ClientToServerMessageQueueItem.cs" />
     <Compile Include="Incoming\IClientMessagePuller.cs" />
     <Compile Include="Incoming\Logging\IPerformanceRecorder.cs" />
-    <Compile Include="Incoming\Logging\PerformanceRecorderTimedConsoleOutput.cs" />
+    <Compile Include="Incoming\Logging\PerformanceRecorderDirectConsoleOutput.cs" />
     <Compile Include="Outgoing\IMessagePublisher.cs" />
     <Compile Include="Outgoing\IOutgoingQueue.cs" />
     <Compile Include="Outgoing\MessagePublisher.cs" />
     <Compile Include="Outgoing\OutgoingQueue.cs" />
+    <Compile Include="Processor\Books\IOrderBook.cs" />
+    <Compile Include="Processor\Books\IOrderBookSlot.cs" />
+    <Compile Include="Processor\Books\OrderBookSlot.cs" />
+    <Compile Include="Processor\Executions\Execution.cs" />
+    <Compile Include="Processor\Executions\IExecution.cs" />
     <Compile Include="Processor\IIncomingMessageProcessor.cs" />
     <Compile Include="Incoming\IIncomingMessageQueue.cs" />
     <Compile Include="Processor\IncomingMessageProcessor.cs" />

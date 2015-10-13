@@ -3,11 +3,11 @@ using MemExchange.Server.Common;
 
 namespace MemExchange.Server.Incoming.Logging
 {
-    public class PerformanceRecorderTimedConsoleOutput : IPerformanceRecorder
+    public class PerformanceRecorderDirectConsoleOutput : IPerformanceRecorder
     {
         private readonly IDateService dateService;
 
-        public PerformanceRecorderTimedConsoleOutput(IDateService dateService)
+        public PerformanceRecorderDirectConsoleOutput(IDateService dateService)
         {
             this.dateService = dateService;
         }
