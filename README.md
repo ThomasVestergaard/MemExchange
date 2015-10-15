@@ -23,3 +23,6 @@ The project utilizes the following 3rd party libraries. All from nuget.
 - Protobuf for serializing
 - Serilog for logging
 - Topshelf for windows services
+
+#License
+See the [LICENSE](https://github.com/ThomasVestergaard/MemExchange/blob/master/LICENSE.md) file for license rights and limitations (MIT).
