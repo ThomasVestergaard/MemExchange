@@ -21,6 +21,9 @@ Project website (blog): http://www.thomasvestergaard.com/blog/memexchange/what-i
 - Client should receive executions on own orders.
 - Client should receive level 1 order book data (bid/ask updates, aggregated level 1 quantities and trades made)
 
+#Notes about order matching algorithms
+- Limit orders are matched on best possible price. Example: If a buy side limit order comes in at a price of $10 and the only sell liquidity is available at $9, the order will be matched in the middle at $9.5 giving both parties a better execution.
+- Stop-limit orders are matched at the nearest available liquidity when the trigger price is touched. The method is some times referred to as a "Market on touch" algorithm.
 
 #3rd party libraries
 - Castle Windsor for dependency injection
