@@ -9,12 +9,20 @@ Project state: Early beta still in development.
 
 Project website (blog): http://www.thomasvestergaard.com/blog/memexchange/what-is-memexchange/
 
-High level architechture.
+#High level architechture.
 ![alt tag](http://thomasvestergaard.com/media/1010/memexchange_high_level_architechture.jpg)
 
+#Client side features
+- Client should be able to post orders (Limit, stop-limit, market - Limit order is done)
+- Client should be able to modify orders (Limit, stop-limit - Limit order is done)
+- Client should be able to delete orders (Limit, stop-limit - Limit order is done)
+- Client should be able to reqeust snapshop of open orders (done)
+- Client should receive updates to orders when they are either modified, deleted, added (done)
+- Client should receive executions on own orders.
+- Client should receive level 1 order book data (bid/ask updates, aggregated level 1 quantities and trades made)
 
-The project utilizes the following 3rd party libraries. All from nuget.
 
+#3rd party libraries
 - Castle Windsor for dependency injection
 - Disruptor.net for concurrency
 - NetMQ for network communication
