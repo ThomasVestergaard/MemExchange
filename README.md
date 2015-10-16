@@ -9,6 +9,8 @@ Project state: Early beta still in development.
 
 Project website (blog): http://www.thomasvestergaard.com/blog/memexchange/what-is-memexchange/
 
+Running locally (blog): http://thomasvestergaard.com/blog/memexchange/getting-started-with-memexchange/
+
 #High level architechture.
 ![alt tag](http://thomasvestergaard.com/media/1010/memexchange_high_level_architechture.jpg)
 
