@@ -10,7 +10,9 @@ namespace MemExchange.Core.SharedDto.ServerToClient
         OrderChanged = 3,
         OrderDeleted = 4,
         Message = 5,
-        OrderSnapshop = 6
+        OrderSnapshot = 6,
+        Execution = 7,
+        Level1 = 8
 
     }
 }

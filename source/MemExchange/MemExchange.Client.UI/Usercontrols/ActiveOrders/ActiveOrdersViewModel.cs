@@ -39,7 +39,7 @@ namespace MemExchange.Client.UI.Usercontrols.ActiveOrders
             });
         }
 
-        void client_LimitOrderSnapshot(object sender, System.Collections.Generic.List<LimitOrder> e)
+        void client_LimitOrderSnapshot(object sender, System.Collections.Generic.List<LimitOrderDto> e)
         {
             UiDispatcher.Dispatcher.Invoke(() =>
             {
@@ -55,7 +55,7 @@ namespace MemExchange.Client.UI.Usercontrols.ActiveOrders
             });
         }
 
-        void client_LimitOrderDeleted(object sender, LimitOrder e)
+        void client_LimitOrderDeleted(object sender, LimitOrderDto e)
         {
             UiDispatcher.Dispatcher.Invoke(() =>
             {
@@ -68,7 +68,7 @@ namespace MemExchange.Client.UI.Usercontrols.ActiveOrders
             });
         }
 
-        void client_LimitOrderAccepted(object sender, LimitOrder e)
+        void client_LimitOrderAccepted(object sender, LimitOrderDto e)
         {
             UiDispatcher.Dispatcher.Invoke(() =>
             {

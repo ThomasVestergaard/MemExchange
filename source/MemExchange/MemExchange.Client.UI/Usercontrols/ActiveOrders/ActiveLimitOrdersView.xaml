@@ -9,6 +9,8 @@
     <Grid>
         <StackPanel Orientation="Vertical">
             <ToolBar>
+                
+                
                 <Button Command="{Binding RefreshCommand}" ToolTip="Add instrument">
                     <Image Source="{Binding Source={x:Static icons:IconUriHelper.arrow_refresh_16x16}}" />
                 </Button>

@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemExchange.Core", "MemExchange.Core\MemExchange.Core.csproj", "{D22C6C04-EC1B-4B6C-998B-7E8F2A3EC099}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemExchange.Server", "MemExchange.Server\MemExchange.Server.csproj", "{51426C3A-C5E5-4F71-9A2C-CD286F698CEF}"
@@ -10,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemExchange.ClientApi", "MemExchange.ClientApi\MemExchange.ClientApi.csproj", "{9D1764AA-5657-4ADC-8AE2-66E799124862}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemExchange.Client.UI", "MemExchange.Client.UI\MemExchange.Client.UI.csproj", "{5907358D-7F17-49C3-8DA4-F2AE58DA2171}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemExchange.PerformanceTestClient", "MemExchange.PerformanceTestClient\MemExchange.PerformanceTestClient.csproj", "{FD2CBE95-7AA2-43D3-9862-3087F1C431F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +41,10 @@ Global
 		{5907358D-7F17-49C3-8DA4-F2AE58DA2171}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5907358D-7F17-49C3-8DA4-F2AE58DA2171}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5907358D-7F17-49C3-8DA4-F2AE58DA2171}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD2CBE95-7AA2-43D3-9862-3087F1C431F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD2CBE95-7AA2-43D3-9862-3087F1C431F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD2CBE95-7AA2-43D3-9862-3087F1C431F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD2CBE95-7AA2-43D3-9862-3087F1C431F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

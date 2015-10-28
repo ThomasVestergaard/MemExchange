@@ -7,6 +7,7 @@ using MemExchange.Server.Incoming;
 using MemExchange.Server.Incoming.Logging;
 using MemExchange.Server.Outgoing;
 using MemExchange.Server.Processor;
+using MemExchange.Server.Processor.Book;
 
 namespace MemExchange.Server.Common
 {
@@ -23,12 +24,13 @@ namespace MemExchange.Server.Common
             Container.Register(Component.For<IClientMessagePuller>().ImplementedBy<ClientMessagePuller>().LifestyleSingleton());
             Container.Register(Component.For<IIncomingMessageQueue>().ImplementedBy<IncomingMessageQueue>().LifestyleSingleton());
             Container.Register(Component.For<IIncomingMessageProcessor>().ImplementedBy<IncomingMessageProcessor>().LifestyleSingleton());
-            Container.Register(Component.For<IOrderKeep>().ImplementedBy<OrderKeep>().LifestyleSingleton());
+            Container.Register(Component.For<IOrderRepository>().ImplementedBy<OrderRepository>().LifestyleSingleton());
             Container.Register(Component.For<IClientRepository>().ImplementedBy<ClientRepository>().LifestyleSingleton());
             Container.Register(Component.For<IOutgoingQueue>().ImplementedBy<OutgoingQueue>().LifestyleSingleton());
             Container.Register(Component.For<IMessagePublisher>().ImplementedBy<MessagePublisher>().LifestyleSingleton());
             Container.Register(Component.For<IDateService>().ImplementedBy<DateService>());
             Container.Register(Component.For<IPerformanceRecorder>().ImplementedBy<PerformanceRecorderDirectConsoleOutput>());
+            Container.Register(Component.For<IOrderDispatcher>().ImplementedBy<OrderDispatcher>().LifestyleSingleton());
             
         }
     }

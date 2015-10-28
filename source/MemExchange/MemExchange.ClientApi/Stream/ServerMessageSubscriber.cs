@@ -35,7 +35,7 @@ namespace MemExchange.ClientApi.Stream
             subscribeSocket = ctx.CreateSubscriberSocket();
             subscribeSocket.Connect(string.Format("tcp://{0}:{1}", serverAddress, serverPublishPort));
             subscribeSocket.Subscribe(clientId.ToString());
-
+            subscribeSocket.Subscribe("a");
             isRunning = true;
             receiveThread = new Thread(Run);
             receiveThread.Name = "ClientMessageListenThread";

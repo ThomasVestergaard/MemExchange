@@ -13,11 +13,11 @@ namespace MemExchange.Core.SharedDto.ClientToServer
         public ClientToServerMessageTypeEnum MessageType { get; set; }
 
         [ProtoMember(3)]
-        public LimitOrder LimitOrder { get; set; }
+        public LimitOrderDto LimitOrder { get; set; }
 
         public ClientToServerMessage()
         {
-            LimitOrder = new LimitOrder();
+            LimitOrder = new LimitOrderDto();
             Reset();
         }
 

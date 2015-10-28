@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using MemExchange.Core.SharedDto.Level1;
 using MemExchange.Core.SharedDto.Orders;
 
 namespace MemExchange.Core.SharedDto.ServerToClient
@@ -7,10 +8,12 @@ namespace MemExchange.Core.SharedDto.ServerToClient
     {
         int ReceiverClientId { get; set; }
         ServerToClientMessageTypeEnum MessageType { get; set; }
-        LimitOrder LimitOrder { get; set; }
-        List<LimitOrder> OrderList { get; set; }
+        LimitOrderDto LimitOrder { get; set; }
+        List<LimitOrderDto> OrderList { get; set; }
         string Message { get; set; }
         void Update(IServerToClientMessage other);
         void Reset();
+        ExecutionDto Execution { get; set; }
+        MarketBestBidAskDto Level1 { get; set; }
     }
 }

@@ -1,23 +1,27 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MemExchange.Core.SharedDto.ClientToServer;
 using MemExchange.Core.SharedDto.Orders;
 using MemExchange.Server.Common;
 using MemExchange.Server.Incoming;
 using MemExchange.Server.Outgoing;
+using MemExchange.Server.Processor.Book;
 
 namespace MemExchange.Server.Processor
 {
     public class IncomingMessageProcessor : IIncomingMessageProcessor
     {
-        private readonly IOrderKeep orderKeep;
+        private readonly IOrderRepository ordeRepository;
         private readonly IOutgoingQueue outgoingQueue;
         private readonly IDateService dateService;
+        private readonly IOrderDispatcher dispatcher;
 
-        public IncomingMessageProcessor(IOrderKeep orderKeep, IOutgoingQueue outgoingQueue, IDateService dateService)
+        public IncomingMessageProcessor(IOrderRepository ordeRepository, IOutgoingQueue outgoingQueue, IDateService dateService, IOrderDispatcher dispatcher)
         {
-            this.orderKeep = orderKeep;
+            this.ordeRepository = ordeRepository;
             this.outgoingQueue = outgoingQueue;
             this.dateService = dateService;
+            this.dispatcher = dispatcher;
         }
 
         public void OnNext(ClientToServerMessageQueueItem data, long sequence, bool endOfBatch)
@@ -33,9 +37,13 @@ namespace MemExchange.Server.Processor
                         break;
                     }
 
-                    LimitOrder addedOrder;
-                    orderKeep.AddLimitOrder(data.Message.LimitOrder, out addedOrder);
-                    outgoingQueue.EnqueueAddedLimitOrder(addedOrder);
+                    var newLimitOrder = ordeRepository.NewLimitOrder(data.Message.LimitOrder);
+                    newLimitOrder.RegisterDeleteNotificationHandler(outgoingQueue.EnqueueDeletedLimitOrder);
+                    newLimitOrder.RegisterModifyNotificationHandler(outgoingQueue.EnqueueUpdatedLimitOrder);
+                    newLimitOrder.RegisterFilledNotification(outgoingQueue.EnqueueDeletedLimitOrder);
+                    newLimitOrder.RegisterFilledNotification((order) => order.Delete());
+
+                    dispatcher.HandleAddOrder(newLimitOrder);
                 break;
 
                 case ClientToServerMessageTypeEnum.CancelOrder:
@@ -45,11 +53,11 @@ namespace MemExchange.Server.Processor
                         break;
                     }
 
-                var orderWasDeleted = orderKeep.DeleteLimitOrder(data.Message.LimitOrder);
-                    if (orderWasDeleted)
+                    var orderToDelete = ordeRepository.TryGetOrder(data.Message.LimitOrder.ExchangeOrderId);
+                    if (orderToDelete != null)
                     {
-                        outgoingQueue.EnqueueDeletedLimitOrder(data.Message.LimitOrder);
-                        outgoingQueue.EnqueueMessage(data.Message.ClientId, "Limit order cancelled.");
+                        orderToDelete.Delete();
+                        outgoingQueue.EnqueueDeletedLimitOrder(orderToDelete);
                     }
                     break;
 
@@ -60,19 +68,16 @@ namespace MemExchange.Server.Processor
                         break;
                     }
 
-                    LimitOrder modifiedOrder;
-                    var modifyResult = orderKeep.TryUpdateLimitOrder(data.Message.LimitOrder, out modifiedOrder);
-                    if (modifyResult)
-                        outgoingQueue.EnqueueUpdatedLimitOrder(modifiedOrder);
-                    
+                    var orderToModify = ordeRepository.TryGetOrder(data.Message.LimitOrder.ExchangeOrderId);
+                    if (orderToModify != null)
+                        orderToModify.Modify(data.Message.LimitOrder.Quantity, data.Message.LimitOrder.Price);
                     break;
 
                 case ClientToServerMessageTypeEnum.RequestOpenOrders:
                     if (data.Message.ClientId <= 0)
                         break;
 
-                    var orderList = new List<LimitOrder>();
-                    orderKeep.GetClientOrders(data.Message.ClientId, out orderList);
+                    var orderList = ordeRepository.GetClientOrders(data.Message.ClientId);
                     outgoingQueue.EnqueueOrderSnapshot(data.Message.ClientId, orderList);
                     break;
             }

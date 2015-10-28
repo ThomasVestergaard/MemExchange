@@ -62,10 +62,10 @@ namespace MemExchange.Tests.Integration
         [Test]
         public void ClientShouldRaiseLimitOrderAddedEvent()
         {
-            var addedLimitOrders = new List<LimitOrder>();
+            var addedLimitOrders = new List<LimitOrderDto>();
             client.LimitOrderAccepted += (sender, order) => addedLimitOrders.Add(order);
 
-            var newLimitOrder = new LimitOrder
+            var newLimitOrder = new LimitOrderDto
             {
                 ClientId = 88,
                 Price = 10,
@@ -94,10 +94,10 @@ namespace MemExchange.Tests.Integration
         [Test]
         public void ClientShouldRaiseLimitOrderModifiedEvent()
         {
-            var modifiedLimitOrders = new List<LimitOrder>();
+            var modifiedLimitOrders = new List<LimitOrderDto>();
             client.LimitOrderChanged += (sender, order) => modifiedLimitOrders.Add(order);
 
-            var newLimitOrder = new LimitOrder
+            var newLimitOrder = new LimitOrderDto
             {
                 ClientId = 88,
                 Price = 10,
@@ -120,10 +120,10 @@ namespace MemExchange.Tests.Integration
         [Test]
         public void ClientShouldRaiseLimitOrderDeletedEvent()
         {
-            var deletedLimitOrders = new List<LimitOrder>();
+            var deletedLimitOrders = new List<LimitOrderDto>();
             client.LimitOrderDeleted += (sender, order) => deletedLimitOrders.Add(order);
 
-            var newLimitOrder = new LimitOrder
+            var newLimitOrder = new LimitOrderDto
             {
                 ClientId = 88,
                 Price = 10,

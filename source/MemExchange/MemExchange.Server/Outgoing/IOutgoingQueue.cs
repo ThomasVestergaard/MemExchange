@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
-using MemExchange.Core.SharedDto.Orders;
+using MemExchange.Server.Processor.Book;
+using MemExchange.Server.Processor.Book.Executions;
+using MemExchange.Server.Processor.Book.Orders;
 
 namespace MemExchange.Server.Outgoing
 {
@@ -8,10 +10,12 @@ namespace MemExchange.Server.Outgoing
         void Start();
         void Stop();
 
-        void EnqueueAddedLimitOrder(LimitOrder limitOrder);
-        void EnqueueUpdatedLimitOrder(LimitOrder limitOrder);
-        void EnqueueDeletedLimitOrder(LimitOrder limitOrder);
+        void EnqueueAddedLimitOrder(ILimitOrder limitOrder);
+        void EnqueueUpdatedLimitOrder(ILimitOrder limitOrder, int oldQuantity, double oldPrice);
+        void EnqueueDeletedLimitOrder(ILimitOrder limitOrder);
         void EnqueueMessage(int clientId, string message);
-        void EnqueueOrderSnapshot(int clientId, List<LimitOrder> orders);
+        void EnqueueOrderSnapshot(int clientId, List<ILimitOrder> orders);
+        void EnqueueClientExecution(INewExecution execution);
+        void EnqueueLevel1Update(IOrderBookBestBidAsk orderBookBestBidAsk);
     }
 }

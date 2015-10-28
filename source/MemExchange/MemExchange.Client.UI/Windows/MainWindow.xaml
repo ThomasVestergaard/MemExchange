@@ -3,10 +3,17 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:usercontrols="clr-namespace:MemExchange.Client.UI.Usercontrols"
         xmlns:activeorders="clr-namespace:MemExchange.Client.UI.Usercontrols.ActiveOrders"
+        xmlns:executions="clr-namespace:MemExchange.Client.UI.Usercontrols.Executions"
+        xmlns:l1="clr-namespace:MemExchange.Client.UI.Usercontrols.Level1"
         Title="MemExchange client" Height="459" Width="640" WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Grid>
         <StackPanel Orientation="Vertical">
-            <usercontrols:NewLimitOrder DataContext="{Binding LimitOrderViewModel}" Margin="10" />
+            <StackPanel Orientation="Horizontal">
+                <usercontrols:NewLimitOrder DataContext="{Binding LimitOrderViewModel}" Margin="10" />
+                <executions:ClientExecutionsView DataContext="{Binding ExecutionsViewModel}" />
+                <l1:Level1View DataContext="{Binding L1ViewModel}" />
+            </StackPanel>
+            
             <activeorders:ActiveLimitOrdersView DataContext="{Binding ActiveOrdersViewModel}" Margin="10"  />
             
         </StackPanel>

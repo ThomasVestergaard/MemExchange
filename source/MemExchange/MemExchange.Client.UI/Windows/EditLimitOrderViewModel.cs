@@ -11,7 +11,7 @@ namespace MemExchange.Client.UI.Windows
 {
     public class EditLimitOrderViewModel : INotifyPropertyChanged
     {
-        private LimitOrder limitOrder;
+        private LimitOrderDto limitOrder;
         private readonly IClient client;
         
         public event PropertyChangedEventHandler PropertyChanged;
@@ -62,7 +62,7 @@ namespace MemExchange.Client.UI.Windows
         
         public ICommand SendOrderCommand { get; set; }
 
-        public EditLimitOrderViewModel(LimitOrder limitOrder, IClient client)
+        public EditLimitOrderViewModel(LimitOrderDto limitOrder, IClient client)
         {
             this.limitOrder = limitOrder;
             this.client = client;

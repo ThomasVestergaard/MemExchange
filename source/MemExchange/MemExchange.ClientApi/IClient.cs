@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using MemExchange.Core.SharedDto;
+using MemExchange.Core.SharedDto.Level1;
 using MemExchange.Core.SharedDto.Orders;
 
 namespace MemExchange.ClientApi
 {
     public interface IClient
     {
-        event EventHandler<LimitOrder> LimitOrderAccepted;
-        event EventHandler<LimitOrder> LimitOrderChanged;
-        event EventHandler<LimitOrder> LimitOrderDeleted;
-        event EventHandler<List<LimitOrder>> LimitOrderSnapshot;
+        event EventHandler<LimitOrderDto> LimitOrderAccepted;
+        event EventHandler<LimitOrderDto> LimitOrderChanged;
+        event EventHandler<LimitOrderDto> LimitOrderDeleted;
+        event EventHandler<List<LimitOrderDto>> LimitOrderSnapshot;
+        event EventHandler<ExecutionDto> NewExecution;
+        event EventHandler<MarketBestBidAskDto> Level1Updated;
 
         void Start(int clientId, string serverAddress, int serverCommandPort, int serverPublishPort);
         void Stop();

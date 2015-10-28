@@ -5,6 +5,7 @@ using MemExchange.ClientApi.Commands;
 using MemExchange.ClientApi.Stream;
 using MemExchange.Core.SharedDto;
 using MemExchange.Core.SharedDto.ClientToServer;
+using MemExchange.Core.SharedDto.Level1;
 using MemExchange.Core.SharedDto.Orders;
 using MemExchange.Core.SharedDto.ServerToClient;
 
@@ -12,10 +13,12 @@ namespace MemExchange.ClientApi
 {
     public class Client : IClient
     {
-        public event EventHandler<LimitOrder> LimitOrderAccepted;
-        public event EventHandler<LimitOrder> LimitOrderChanged;
-        public event EventHandler<LimitOrder> LimitOrderDeleted;
-        public event EventHandler<List<LimitOrder>> LimitOrderSnapshot;
+        public event EventHandler<LimitOrderDto> LimitOrderAccepted;
+        public event EventHandler<LimitOrderDto> LimitOrderChanged;
+        public event EventHandler<LimitOrderDto> LimitOrderDeleted;
+        public event EventHandler<List<LimitOrderDto>> LimitOrderSnapshot;
+        public event EventHandler<ExecutionDto> NewExecution;
+        public event EventHandler<MarketBestBidAskDto> Level1Updated;
 
         private IMessageConnection messageConnection;
         private readonly IServerMessageSubscriber subscriber;
@@ -42,27 +45,39 @@ namespace MemExchange.ClientApi
             switch (message.MessageType)
             {
                 case ServerToClientMessageTypeEnum.OrderAccepted:
-                    EventHandler<LimitOrder> acceptedHandler = LimitOrderAccepted;
+                    EventHandler<LimitOrderDto> acceptedHandler = LimitOrderAccepted;
                     if (acceptedHandler != null)
                         acceptedHandler(this, message.LimitOrder);
                     break;
 
                 case ServerToClientMessageTypeEnum.OrderDeleted:
-                    EventHandler<LimitOrder> deletedHandler = LimitOrderDeleted;
+                    EventHandler<LimitOrderDto> deletedHandler = LimitOrderDeleted;
                     if (deletedHandler != null)
                         deletedHandler(this, message.LimitOrder);
                     break;
 
                 case ServerToClientMessageTypeEnum.OrderChanged:
-                    EventHandler<LimitOrder> changedHandler = LimitOrderChanged;
+                    EventHandler<LimitOrderDto> changedHandler = LimitOrderChanged;
                     if (changedHandler != null)
                         changedHandler(this, message.LimitOrder);
                     break;
 
-                case ServerToClientMessageTypeEnum.OrderSnapshop:
-                    EventHandler<List<LimitOrder>> snapshotHandler = LimitOrderSnapshot;
+                case ServerToClientMessageTypeEnum.OrderSnapshot:
+                    EventHandler<List<LimitOrderDto>> snapshotHandler = LimitOrderSnapshot;
                     if (snapshotHandler != null)
                         snapshotHandler(this, message.OrderList);
+                    break;
+
+                case ServerToClientMessageTypeEnum.Execution:
+                    EventHandler<ExecutionDto> executionHandler = NewExecution;
+                    if (executionHandler != null)
+                        executionHandler(this, message.Execution);
+                    break;
+
+                case ServerToClientMessageTypeEnum.Level1:
+                    EventHandler<MarketBestBidAskDto> level1Handler = Level1Updated;
+                    if (level1Handler != null)
+                        level1Handler(this, message.Level1);
                     break;
             }
         }
@@ -82,13 +97,13 @@ namespace MemExchange.ClientApi
             messageConnection.SendMessage(new ClientToServerMessage
             {
                 ClientId = clientId,
-                LimitOrder = new LimitOrder
+                LimitOrder = new LimitOrderDto
                 {
                     ClientId = clientId,
                     Price = price,
                     Quantity = quantity,
                     Symbol = symbol,
-                    Way = WayEnum.Buy
+                    Way = way
                 },
                 MessageType = ClientToServerMessageTypeEnum.PlaceOrder
             });
@@ -102,7 +117,7 @@ namespace MemExchange.ClientApi
             messageConnection.SendMessage(new ClientToServerMessage
             {
                 ClientId = clientId,
-                LimitOrder = new LimitOrder
+                LimitOrder = new LimitOrderDto
                 {
                     ClientId = clientId,
                     ExchangeOrderId = exchangeOrderId,
@@ -121,7 +136,7 @@ namespace MemExchange.ClientApi
             messageConnection.SendMessage(new ClientToServerMessage
             {
                 ClientId = clientId,
-                LimitOrder = new LimitOrder
+                LimitOrder = new LimitOrderDto
                 {
                     ClientId = clientId,
                     ExchangeOrderId = exchangeOrderId,

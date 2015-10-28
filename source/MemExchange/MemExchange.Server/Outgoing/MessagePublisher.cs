@@ -24,6 +24,7 @@ namespace MemExchange.Server.Outgoing
         {
             ctx = NetMQContext.Create();
             publishSocket = ctx.CreatePublisherSocket();
+
             publishSocket.Bind("tcp://*:" + publishPort);
             
             logger.Info("Message publisher started on port " + publishPort);
@@ -38,12 +39,21 @@ namespace MemExchange.Server.Outgoing
         public void Publish(int clientId, ServerToClientMessage serverToClientMessage)
         {
             var serialized = serializer.Serialize(serverToClientMessage);
-            publishSocket.SendMore(clientId.ToString()).Send(serialized);
+            publishSocket.SendMoreFrame(clientId.ToString()).SendFrame(serialized);
+        }
+
+        public void Publish(ServerToClientMessage serverToClientMessage)
+        {
+            var serialized = serializer.Serialize(serverToClientMessage);
+            publishSocket.SendMoreFrame("a").SendFrame(serialized);
         }
 
         public void OnNext(ServerToClientMessage data, long sequence, bool endOfBatch)
         {
-            Publish(data.ReceiverClientId, data);
+            if (data.ReceiverClientId > 0)
+                Publish(data.ReceiverClientId, data);
+            else if (data.ReceiverClientId == 0)
+                Publish(data);
         }
     }
 }

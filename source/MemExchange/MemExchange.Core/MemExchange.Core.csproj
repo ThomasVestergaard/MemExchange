@@ -72,12 +72,15 @@
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\SerilogLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serialization\DateTimeOffsetSurrugate.cs" />
     <Compile Include="Serialization\ISerializer.cs" />
     <Compile Include="Serialization\ProtobufSerializer.cs" />
     <Compile Include="SharedDto\ClientToServer\ClientToServerMessage.cs" />
     <Compile Include="SharedDto\ClientToServer\ClientToServerMessageTypeEnum.cs" />
     <Compile Include="SharedDto\ClientToServer\IClientToServerMessage.cs" />
-    <Compile Include="SharedDto\Orders\LimitOrder.cs" />
+    <Compile Include="SharedDto\Level1\MarketBestBidAskDto.cs" />
+    <Compile Include="SharedDto\Orders\ExecutionDto.cs" />
+    <Compile Include="SharedDto\Orders\LimitOrderDto.cs" />
     <Compile Include="SharedDto\ServerToClient\IServerToClientMessage.cs" />
     <Compile Include="SharedDto\ServerToClient\ServerToClientMessage.cs" />
     <Compile Include="SharedDto\ServerToClient\ServerToClientMessageTypeEnum.cs" />

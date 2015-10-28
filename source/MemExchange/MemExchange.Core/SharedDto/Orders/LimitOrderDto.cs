@@ -4,7 +4,7 @@ using ProtoBuf;
 namespace MemExchange.Core.SharedDto.Orders
 {
     [ProtoContract]
-    public class LimitOrder
+    public class LimitOrderDto
     {
         [ProtoMember(1)]
         public string Symbol { get; set; }
@@ -82,7 +82,7 @@ namespace MemExchange.Core.SharedDto.Orders
             return true;
         }
 
-        public void Update(LimitOrder other)
+        public void Update(LimitOrderDto other)
         {
             Symbol = other.Symbol;
             Quantity = other.Quantity;

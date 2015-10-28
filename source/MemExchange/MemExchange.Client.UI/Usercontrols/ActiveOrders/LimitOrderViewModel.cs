@@ -13,7 +13,7 @@ namespace MemExchange.Client.UI.Usercontrols.ActiveOrders
 {
     public class LimitOrderViewModel : INotifyPropertyChanged, IDisposable
     {
-        private readonly LimitOrder limitOrder;
+        private readonly LimitOrderDto limitOrder;
         private readonly IClient client;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -104,7 +104,7 @@ namespace MemExchange.Client.UI.Usercontrols.ActiveOrders
         public ICommand CancelOrderCommand { get; set; }
         public ICommand ModifyOrderCommand { get; set; }
 
-        public LimitOrderViewModel(LimitOrder limitOrder, IClient client)
+        public LimitOrderViewModel(LimitOrderDto limitOrder, IClient client)
         {
             this.limitOrder = limitOrder;
             this.client = client;
@@ -130,7 +130,7 @@ namespace MemExchange.Client.UI.Usercontrols.ActiveOrders
             });
         }
         
-        private void SetFields(LimitOrder limitOrder)
+        private void SetFields(LimitOrderDto limitOrder)
         {
             Symbol = limitOrder.Symbol;
             Quantity = limitOrder.Quantity;
@@ -140,7 +140,7 @@ namespace MemExchange.Client.UI.Usercontrols.ActiveOrders
             OrderId = limitOrder.ExchangeOrderId;
         }
 
-        void client_LimitOrderChanged(object sender, LimitOrder e)
+        void client_LimitOrderChanged(object sender, LimitOrderDto e)
         {
             if (e.ExchangeOrderId != limitOrder.ExchangeOrderId)
                 return;

@@ -22,7 +22,7 @@ namespace MemExchange.Tests.Core
                 var item = new ServerToClientMessage();
                 item.Message = i.ToString();
                 item.MessageType = ServerToClientMessageTypeEnum.OrderAccepted;
-                item.LimitOrder = new LimitOrder();
+                item.LimitOrder = new LimitOrderDto();
                 item.LimitOrder.ClientId = i;
                 item.LimitOrder.ExchangeOrderId = (uint)i;
 

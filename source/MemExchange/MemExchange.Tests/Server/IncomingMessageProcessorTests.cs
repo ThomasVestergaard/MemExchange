@@ -5,6 +5,8 @@ using MemExchange.Server.Common;
 using MemExchange.Server.Incoming;
 using MemExchange.Server.Outgoing;
 using MemExchange.Server.Processor;
+using MemExchange.Server.Processor.Book;
+using MemExchange.Server.Processor.Book.Orders;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -13,24 +15,26 @@ namespace MemExchange.Tests.Server
     [TestFixture]
     public class IncomingMessageProcessorTests
     {
-        private IOrderKeep orderKeepMock;
+        private IOrderRepository ordereRepositoryMock;
         private IOutgoingQueue outgoingQueueMock;
         private IDateService dateServiceMock;
+        private IOrderDispatcher orderDispatcherMock;
 
         [SetUp]
         public void Setup()
         {
-            orderKeepMock = MockRepository.GenerateMock<IOrderKeep>();
+            ordereRepositoryMock = MockRepository.GenerateMock<IOrderRepository>();
             outgoingQueueMock = MockRepository.GenerateMock<IOutgoingQueue>();
             dateServiceMock = MockRepository.GenerateMock<IDateService>();
+            orderDispatcherMock = MockRepository.GenerateMock<IOrderDispatcher>();
         }
 
         [Test]
-        public void ShouldNotCallOrderKeepIfOrderDoesNotValidate()
+        public void ShouldNotCallDispatcherIfOrderDoesNotValidate()
         {
-            var processor = new IncomingMessageProcessor(orderKeepMock, outgoingQueueMock, dateServiceMock);
+            var processor = new IncomingMessageProcessor(ordereRepositoryMock, outgoingQueueMock, dateServiceMock, orderDispatcherMock);
 
-            var invalidLimitOrder = new LimitOrder();
+            var invalidLimitOrder = new LimitOrderDto();
             invalidLimitOrder.Reeset();
 
             processor.OnNext(new ClientToServerMessageQueueItem
@@ -43,16 +47,16 @@ namespace MemExchange.Tests.Server
                 },
             }, 1, true);
 
-            orderKeepMock.AssertWasNotCalled(a => a.AddLimitOrder(Arg<LimitOrder>.Is.Anything, out Arg<LimitOrder>.Out(new LimitOrder()).Dummy));
-            outgoingQueueMock.AssertWasNotCalled(a => a.EnqueueAddedLimitOrder(Arg<LimitOrder>.Is.Anything));
+            orderDispatcherMock.AssertWasNotCalled(a => a.HandleAddOrder(Arg<ILimitOrder>.Is.Anything));
+            outgoingQueueMock.AssertWasNotCalled(a => a.EnqueueAddedLimitOrder(Arg<ILimitOrder>.Is.Anything));
         }
 
         [Test]
-        public void ShouldCallOrderKeepWhenLimitOrderValidates()
+        public void ShouldCallDispatcherWhenLimitOrderValidates()
         {
-            var processor = new IncomingMessageProcessor(orderKeepMock, outgoingQueueMock, dateServiceMock);
+            var processor = new IncomingMessageProcessor(ordereRepositoryMock, outgoingQueueMock, dateServiceMock, orderDispatcherMock);
 
-            var limitOrder = new LimitOrder();
+            var limitOrder = new LimitOrderDto();
             limitOrder.Reeset();
             limitOrder.Symbol = "QQQ";
             limitOrder.Price = 30;
@@ -72,15 +76,15 @@ namespace MemExchange.Tests.Server
                     }
             }, 1, true);
 
-            orderKeepMock.AssertWasCalled(a => a.AddLimitOrder(Arg<LimitOrder>.Is.Equal(limitOrder), out Arg<LimitOrder>.Out(new LimitOrder()).Dummy));
+            orderDispatcherMock.AssertWasCalled(a => a.HandleAddOrder(Arg<ILimitOrder>.Is.Equal(limitOrder)));
         }
 
         [Test]
-        public void ShouldNotCallOrderKeepWhenLimitOrderIsInvalid()
+        public void ShouldNotCallDispatcherWhenLimitOrderIsInvalid()
         {
-            var processor = new IncomingMessageProcessor(orderKeepMock, outgoingQueueMock, dateServiceMock);
+            var processor = new IncomingMessageProcessor(ordereRepositoryMock, outgoingQueueMock, dateServiceMock, orderDispatcherMock);
 
-            var limitOrder = new LimitOrder();
+            var limitOrder = new LimitOrderDto();
             limitOrder.Reeset();
             limitOrder.Symbol = "QQQ";
             limitOrder.Price = -1;
@@ -101,56 +105,16 @@ namespace MemExchange.Tests.Server
                         }
                 }, 1, true);
 
-            orderKeepMock.AssertWasNotCalled(a => a.AddLimitOrder(Arg<LimitOrder>.Is.Anything, out Arg<LimitOrder>.Out(new LimitOrder()).Dummy));
+            orderDispatcherMock.AssertWasNotCalled(a => a.HandleAddOrder(Arg<ILimitOrder>.Is.Anything));
         }
 
+        
         [Test]
-        public void OutputQueueShouldBeCalledWithOutputFromOrderKeepOnValidLimitOrder()
+        public void ShouldNotCallDispatcherWhenLimitOrderIsInvalidOnCancelOrder()
         {
-            var processor = new IncomingMessageProcessor(orderKeepMock, outgoingQueueMock, dateServiceMock);
-            
-            var orderKeepReturnOrder = new LimitOrder();
-            orderKeepReturnOrder.Reeset();
-            orderKeepReturnOrder.Symbol = "QQQ";
-            orderKeepReturnOrder.Price = 30;
-            orderKeepReturnOrder.Quantity = 10;
-            orderKeepReturnOrder.ClientId = 1;
-            orderKeepReturnOrder.Way = WayEnum.Sell;
-            
+            var processor = new IncomingMessageProcessor(ordereRepositoryMock, outgoingQueueMock, dateServiceMock, orderDispatcherMock);
 
-            var limitOrder = new LimitOrder();
-            limitOrder.Reeset();
-            limitOrder.Symbol = "QQQ";
-            limitOrder.Price = 30;
-            limitOrder.Quantity = 10;
-            limitOrder.ClientId = 1;
-            limitOrder.Way = WayEnum.Sell;
-
-            LimitOrder addedOrder;
-            orderKeepMock.Stub(a => a.AddLimitOrder(limitOrder, out addedOrder)).OutRef(orderKeepReturnOrder);
-
-            processor.OnNext(
-                new ClientToServerMessageQueueItem
-                {
-                    Message =
-
-                        new ClientToServerMessage
-                        {
-                            ClientId = 1,
-                            LimitOrder = limitOrder,
-                            MessageType = ClientToServerMessageTypeEnum.PlaceOrder
-                        }
-                }, 1, true);
-
-            outgoingQueueMock.AssertWasCalled(a => a.EnqueueAddedLimitOrder(Arg<LimitOrder>.Is.Equal(orderKeepReturnOrder)));
-        }
-
-        [Test]
-        public void ShouldNotCallOrderKeepWhenLimitOrderIsInvalidOnCancelOrder()
-        {
-            var processor = new IncomingMessageProcessor(orderKeepMock, outgoingQueueMock, dateServiceMock);
-
-            var limitOrder = new LimitOrder();
+            var limitOrder = new LimitOrderDto();
             limitOrder.Reeset();
 
             processor.OnNext(
@@ -165,33 +129,9 @@ namespace MemExchange.Tests.Server
                     }
                 }, 1, true);
 
-            orderKeepMock.AssertWasNotCalled(a => a.AddLimitOrder(Arg<LimitOrder>.Is.Anything, out Arg<LimitOrder>.Out(new LimitOrder()).Dummy));
+            orderDispatcherMock.AssertWasNotCalled(a => a.HandleAddOrder(Arg<ILimitOrder>.Is.Anything));
         }
 
-        [Test]
-        public void ShouldCallOrderKeepWhenLimitOrderIsValidOnCancelOrder()
-        {
-            var processor = new IncomingMessageProcessor(orderKeepMock, outgoingQueueMock, dateServiceMock);
-
-            var limitOrder = new LimitOrder();
-            limitOrder.Reeset();
-            limitOrder.ClientId = 1;
-            limitOrder.ExchangeOrderId = 50;
-
-            processor.OnNext(
-                new ClientToServerMessageQueueItem
-                {
-                    Message =
-
-                        new ClientToServerMessage
-                        {
-                            ClientId = 1,
-                            LimitOrder = limitOrder,
-                            MessageType = ClientToServerMessageTypeEnum.CancelOrder
-                        }
-                }, 1, true);
-
-            orderKeepMock.AssertWasCalled(a => a.DeleteLimitOrder(Arg<LimitOrder>.Is.Equal(limitOrder)));
-        }
+       
     }
 }

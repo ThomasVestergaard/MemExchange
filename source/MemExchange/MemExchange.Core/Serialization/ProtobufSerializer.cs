@@ -14,14 +14,13 @@ namespace MemExchange.Core.Serialization
         private int bodySize = 0;
         private MemoryStream memStream;
 
-        private MemoryStream deserializeStream;
-
         public ProtobufSerializer()
         {
             buf = new byte[bufferSize];
             memStream = new MemoryStream(buf, true);
-            deserializeStream = new MemoryStream();
-            
+
+            if (!ProtoBuf.Meta.RuntimeTypeModel.Default.CanSerializeContractType(typeof(DateTimeOffset)))
+                ProtoBuf.Meta.RuntimeTypeModel.Default.Add(typeof(DateTimeOffset), false).SetSurrogate(typeof(DateTimeOffsetSurrogate));
         }
 
         public byte[] Serialize<T>(T inputInstance)
@@ -31,19 +30,6 @@ namespace MemExchange.Core.Serialization
             bodySize = (int)memStream.Position;
             
             return buf.Take(bodySize).ToArray();
-        }
-
-        public byte[] Serialize_<T>(T inputInstance)
-        {
-            var buffer = new byte[bufferSize];
-
-            using (var ms = new MemoryStream(buffer, 0, buffer.Length, false))
-            {
-                Serializer.SerializeWithLengthPrefix(ms, inputInstance, PrefixStyle.Fixed32);
-                bodySize = (int) ms.Position;
-            }
-
-            return buffer.Take(bodySize).ToArray();
         }
 
         public T Deserialize<T>(byte[] serializedData)
