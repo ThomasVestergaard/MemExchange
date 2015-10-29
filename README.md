@@ -25,7 +25,8 @@ Running locally (blog): http://thomasvestergaard.com/blog/memexchange/getting-st
 
 #Notes about order matching algorithms
 - Limit orders are matched on best possible price. Example: If a buy side limit order comes in at a price of $10 and the only sell liquidity is available at $9, the order will be matched in the middle at $9.5 giving both parties a better execution.
-- Stop-limit orders are triggered when the order is no longer on the opposite side of the market. A limit order is placed the moment it's above (if sell) or below (if buy) the best bid or ask.
+
+- Stop-limit has two prices: The trigger price and the limit price. When the trigger price is touched or penetrated a limit order is placed. Buy stop-limit orders are always placed above the market with a trigger price lower than the limit price. Vice versa for sell stop-limit orders.
 
 #3rd party libraries
 - Castle Windsor for dependency injection
