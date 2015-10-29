@@ -5,7 +5,9 @@ This is a simple server-client library that simulates a stock exchange.
 The exchange supports market order, limit orders and stop-limit orders.
 Theres is no authentication or other security measures build in. It's made solely for research, paper-trade and showcase purposes.
 
-Project state: Early beta still in development.
+#Project state: 
+Missing implementation of stop-limit orders and market orders. Limit orders are done both on client and server.
+Performance testing and light optimization has been done, achieving message processing throughput of ~5k to ~25k / sec.
 
 Project website (blog): http://www.thomasvestergaard.com/blog/memexchange/what-is-memexchange/
 
