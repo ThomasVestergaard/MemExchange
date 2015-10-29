@@ -76,8 +76,6 @@ namespace MemExchange.Server.Processor.Book
         private void HandleDeleteOrFilled(ILimitOrder order)
         {
             RemoveOrder(order);
-            order.UnRegisterDeleteNotificationHandler(HandleDeleteOrFilled);
-            order.UnRegisterFilledNotification(HandleDeleteOrFilled);
         }
 
         public void AddOrder(ILimitOrder order)
@@ -112,6 +110,9 @@ namespace MemExchange.Server.Processor.Book
                     SellOrders.Remove(order);
                     break;
             }
+
+            order.UnRegisterDeleteNotificationHandler(HandleDeleteOrFilled);
+            order.UnRegisterFilledNotification(HandleDeleteOrFilled);
         }
     }
 }

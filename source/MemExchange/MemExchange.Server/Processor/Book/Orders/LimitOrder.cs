@@ -113,37 +113,34 @@ namespace MemExchange.Server.Processor.Book.Orders
 
         public void RegisterDeleteNotificationHandler(Action<ILimitOrder> handler)
         {
-            if (!DeletedHandlers.Contains(handler))
                 DeletedHandlers.Add(handler);
         }
 
         public void UnRegisterDeleteNotificationHandler(Action<ILimitOrder> handler)
         {
-            if (DeletedHandlers.Contains(handler))
+            //if (DeletedHandlers.Contains(handler))
                 DeletedHandlers.Remove(handler);
         }
 
         public void RegisterModifyNotificationHandler(Action<ILimitOrder, int, double> handler)
         {
-            if (!ModifiedHandlers.Contains(handler))
                 ModifiedHandlers.Add(handler);
         }
 
         public void UnRegisterModifyNotificationHandler(Action<ILimitOrder, int, double> handler)
         {
-            if (ModifiedHandlers.Contains(handler))
+            //if (ModifiedHandlers.Contains(handler))
                 ModifiedHandlers.Remove(handler);
         }
 
         public void RegisterFilledNotification(Action<ILimitOrder> handler)
         {
-            if (!FilledHandlers.Contains(handler))
                 FilledHandlers.Add(handler);
         }
 
         public void UnRegisterFilledNotification(Action<ILimitOrder> handler)
         {
-            if (FilledHandlers.Contains(handler))
+            //if (FilledHandlers.Contains(handler))
                 FilledHandlers.Remove(handler);
         }
 

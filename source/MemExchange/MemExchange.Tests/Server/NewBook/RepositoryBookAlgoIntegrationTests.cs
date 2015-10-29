@@ -28,10 +28,10 @@ namespace MemExchange.Tests.Server.NewBook
             var book = new OrderBook("ABC", algo, level1, outgoingQueueMock);
 
             var sellOrder1 = repo.NewLimitOrder("ABC", 9, 88.2d, 100, WayEnum.Sell);
-            book.HandleOrder(sellOrder1);
+            book.HandleLimitOrder(sellOrder1);
 
             var buyOrder1 = repo.NewLimitOrder("ABC", 9, 88.0d, 50, WayEnum.Buy);
-            book.HandleOrder(buyOrder1);
+            book.HandleLimitOrder(buyOrder1);
 
             Assert.AreEqual(88.2d, level1.BestAskPrice);
             Assert.AreEqual(88.0d, level1.BestBidPrice);

@@ -34,17 +34,17 @@ namespace MemExchange.Tests.Server.NewBook
             Assert.IsNull(orderBookBestBidAsk.BestBidPrice);
 
             var buyOrder1 = new LimitOrder("ABC", 10, 90.1d, WayEnum.Buy, 1);
-            book.HandleOrder(buyOrder1);
+            book.HandleLimitOrder(buyOrder1);
 
             Assert.AreEqual(90.1d, orderBookBestBidAsk.BestBidPrice);
 
             var buyOrder2 = new LimitOrder("ABC", 10, 90.2d, WayEnum.Buy, 1);
-            book.HandleOrder(buyOrder2);
+            book.HandleLimitOrder(buyOrder2);
 
             Assert.AreEqual(90.2d, orderBookBestBidAsk.BestBidPrice);
 
             var buyOrder3 = new LimitOrder("ABC", 10, 80.0d, WayEnum.Buy, 1);
-            book.HandleOrder(buyOrder3);
+            book.HandleLimitOrder(buyOrder3);
 
             Assert.AreEqual(90.2d, orderBookBestBidAsk.BestBidPrice);
         }
@@ -58,17 +58,17 @@ namespace MemExchange.Tests.Server.NewBook
             Assert.IsNull(orderBookBestBidAsk.BestAskPrice);
 
             var order1 = new LimitOrder("ABC", 10, 90.1d, WayEnum.Sell, 1);
-            book.HandleOrder(order1);
+            book.HandleLimitOrder(order1);
 
             Assert.AreEqual(90.1d, orderBookBestBidAsk.BestAskPrice);
 
             var order2 = new LimitOrder("ABC", 10, 90.0d, WayEnum.Sell, 1);
-            book.HandleOrder(order2);
+            book.HandleLimitOrder(order2);
 
             Assert.AreEqual(90.0d, orderBookBestBidAsk.BestAskPrice);
 
             var order3 = new LimitOrder("ABC", 10, 99.0d, WayEnum.Sell, 1);
-            book.HandleOrder(order3);
+            book.HandleLimitOrder(order3);
 
             Assert.AreEqual(90.0d, orderBookBestBidAsk.BestAskPrice);
         }
@@ -80,7 +80,7 @@ namespace MemExchange.Tests.Server.NewBook
             var book = new OrderBook("ABC", matchingAlgorithmMock, orderBookBestBidAsk, outgoingQueueMock);
 
             var buyOrder = new LimitOrder("ABC", 10, 90, WayEnum.Buy, 9);
-            book.HandleOrder(buyOrder);
+            book.HandleLimitOrder(buyOrder);
 
             Assert.IsTrue(book.PriceSlots.ContainsKey(90));
             Assert.AreEqual(buyOrder, book.PriceSlots[90].BuyOrders[0]);
@@ -97,7 +97,7 @@ namespace MemExchange.Tests.Server.NewBook
             var book = new OrderBook("ABC", matchingAlgorithmMock, orderBookBestBidAsk, outgoingQueueMock);
 
             var buyOrder = new LimitOrder("ABC", 10, 90, WayEnum.Buy, 9);
-            book.HandleOrder(buyOrder);
+            book.HandleLimitOrder(buyOrder);
 
             Assert.IsTrue(book.PriceSlots.ContainsKey(90));
             Assert.AreEqual(buyOrder, book.PriceSlots[90].BuyOrders[0]);
@@ -114,7 +114,7 @@ namespace MemExchange.Tests.Server.NewBook
             var book = new OrderBook("ABC", matchingAlgorithmMock, orderBookBestBidAsk, outgoingQueueMock);
 
             var buyOrder = new LimitOrder("ABC", 10, 90, WayEnum.Buy, 9);
-            book.HandleOrder(buyOrder);
+            book.HandleLimitOrder(buyOrder);
 
             Assert.AreEqual(90, orderBookBestBidAsk.BestBidPrice);
             Assert.IsNull(orderBookBestBidAsk.BestAskPrice);
@@ -127,12 +127,12 @@ namespace MemExchange.Tests.Server.NewBook
             var book = new OrderBook("ABC", matchingAlgorithmMock, orderBookBestBidAsk, outgoingQueueMock);
 
             var buyOrder1 = new LimitOrder("ABC", 10, 90, WayEnum.Buy, 9);
-            book.HandleOrder(buyOrder1);
+            book.HandleLimitOrder(buyOrder1);
 
             Assert.AreEqual(90, orderBookBestBidAsk.BestBidPrice);
 
             var buyOrder2 = new LimitOrder("ABC", 10, 91, WayEnum.Buy, 9);
-            book.HandleOrder(buyOrder2);
+            book.HandleLimitOrder(buyOrder2);
 
             Assert.AreEqual(91, orderBookBestBidAsk.BestBidPrice);
 
@@ -145,7 +145,7 @@ namespace MemExchange.Tests.Server.NewBook
             var book = new OrderBook("ABC", matchingAlgorithmMock, orderBookBestBidAsk, outgoingQueueMock);
 
             var sellOrder = new LimitOrder("ABC", 10, 90, WayEnum.Sell, 9);
-            book.HandleOrder(sellOrder);
+            book.HandleLimitOrder(sellOrder);
 
             Assert.AreEqual(90, orderBookBestBidAsk.BestAskPrice);
             Assert.IsNull(orderBookBestBidAsk.BestBidPrice);
@@ -158,12 +158,12 @@ namespace MemExchange.Tests.Server.NewBook
             var book = new OrderBook("ABC", matchingAlgorithmMock, orderBookBestBidAsk, outgoingQueueMock);
 
             var sellOrder1 = new LimitOrder("ABC", 10, 90, WayEnum.Sell, 9);
-            book.HandleOrder(sellOrder1);
+            book.HandleLimitOrder(sellOrder1);
 
             Assert.AreEqual(90, orderBookBestBidAsk.BestAskPrice);
 
             var sellOrder2 = new LimitOrder("ABC", 10, 89, WayEnum.Sell, 9);
-            book.HandleOrder(sellOrder2);
+            book.HandleLimitOrder(sellOrder2);
 
             Assert.AreEqual(89, orderBookBestBidAsk.BestAskPrice);
         }
@@ -175,10 +175,10 @@ namespace MemExchange.Tests.Server.NewBook
             var book = new OrderBook("ABC", new LimitOrderMatchingAlgorithm(new DateService()), orderBookBestBidAsk, outgoingQueueMock);
 
             var sellOrder1 = new LimitOrder("ABC", 100, 90, WayEnum.Sell, 9);
-            book.HandleOrder(sellOrder1);
+            book.HandleLimitOrder(sellOrder1);
 
             var buyOrder1 = new LimitOrder("ABC", 10, 90, WayEnum.Buy, 9);
-            book.HandleOrder(buyOrder1);
+            book.HandleLimitOrder(buyOrder1);
 
             Assert.AreEqual(0, buyOrder1.Quantity);
             Assert.AreEqual(90, sellOrder1.Quantity);
@@ -204,17 +204,17 @@ namespace MemExchange.Tests.Server.NewBook
             var sellOrder4 = new LimitOrder("ABC", 10, 93, WayEnum.Sell, 9);
             var sellOrder5 = new LimitOrder("ABC", 10, 94, WayEnum.Sell, 9);
             
-            book.HandleOrder(sellOrder1);
-            book.HandleOrder(sellOrder2);
-            book.HandleOrder(sellOrder3);
-            book.HandleOrder(sellOrder4);
-            book.HandleOrder(sellOrder5);
+            book.HandleLimitOrder(sellOrder1);
+            book.HandleLimitOrder(sellOrder2);
+            book.HandleLimitOrder(sellOrder3);
+            book.HandleLimitOrder(sellOrder4);
+            book.HandleLimitOrder(sellOrder5);
 
             Assert.AreEqual(90, orderBookBestBidAsk.BestAskPrice);
             Assert.AreEqual(10, orderBookBestBidAsk.BestAskQuantity);
 
             var buyOrder1 = new LimitOrder("ABC", 100, 93, WayEnum.Buy, 9);
-            book.HandleOrder(buyOrder1);
+            book.HandleLimitOrder(buyOrder1);
 
             Assert.AreEqual(4, executions.Count);
             Assert.AreEqual(60, buyOrder1.Quantity);

@@ -61,7 +61,7 @@ namespace MemExchange.Server.Processor.Book
                 PriceSlots.Remove(price);
         }
 
-        public void RemoveOrder(ILimitOrder order)
+        public void RemoveLimitOrder(ILimitOrder order)
         {
             if (!PriceSlots.ContainsKey(order.Price))
                 return;
@@ -69,10 +69,10 @@ namespace MemExchange.Server.Processor.Book
             PriceSlots[order.Price].RemoveOrder(order);
             RemoveSlotIfEmpty(order.Price);
 
-            order.UnRegisterDeleteNotificationHandler(RemoveOrder);
-            order.UnRegisterFilledNotification(RemoveOrder);
+            order.UnRegisterDeleteNotificationHandler(RemoveLimitOrder);
+            order.UnRegisterFilledNotification(RemoveLimitOrder);
             order.UnRegisterModifyNotificationHandler(HandleOrderModify);
-
+            
             SetBestBidAndAsk();
         }
 
@@ -82,11 +82,11 @@ namespace MemExchange.Server.Processor.Book
                 PriceSlots[oldPrice].RemoveOrder(currentOrder);
 
             RemoveSlotIfEmpty(oldPrice);
-            HandleOrder(currentOrder);
+            HandleLimitOrder(currentOrder);
             
         }
 
-        private void HandleOrderModify(ILimitOrder order, int oldQuantity, double oldPrice)
+        public void HandleOrderModify(ILimitOrder order, int oldQuantity, double oldPrice)
         {
             if (oldPrice != order.Price)
                 MoveOrder(oldPrice, order);
@@ -129,7 +129,7 @@ namespace MemExchange.Server.Processor.Book
             }
         }
 
-        public void HandleOrder(ILimitOrder limitOrder)
+        public void HandleLimitOrder(ILimitOrder limitOrder)
         {
             TryMatch(limitOrder);
 
@@ -141,14 +141,9 @@ namespace MemExchange.Server.Processor.Book
 
             if (PriceSlots[limitOrder.Price].ContainsOrder(limitOrder))
                 return;
-
-            limitOrder.RegisterDeleteNotificationHandler(RemoveOrder);
-            limitOrder.RegisterFilledNotification(RemoveOrder);
-            limitOrder.RegisterModifyNotificationHandler(HandleOrderModify);
-
+            
             PriceSlots[limitOrder.Price].AddOrder(limitOrder);
             SetBestBidAndAsk();
-            
         }
        
        

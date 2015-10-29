@@ -6,7 +6,7 @@ using MemExchange.Server.Processor.Book.Orders;
 
 namespace MemExchange.Server.Processor.Book.MatchingAlgorithms
 {
-    public class LimitOrderMatchingAlgorithm : ILimitOrderMatchingAlgorithm
+    public class LimitOrderMatchingAlgorithm : IMatchingAlgorithm
     {
         private readonly IDateService dateService;
         private List<Action<INewExecution>> executionHandlers { get; set; }

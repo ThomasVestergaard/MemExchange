@@ -9,6 +9,7 @@ namespace MemExchange.Core.SharedDto.ClientToServer
         PlaceOrder = 1,
         ModifyOrder = 2,
         CancelOrder = 3,
-        RequestOpenOrders = 4
+        RequestOpenOrders = 4,
+        BracketLimitOrder = 5
     }
 }

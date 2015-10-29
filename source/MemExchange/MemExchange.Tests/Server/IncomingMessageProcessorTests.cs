@@ -107,7 +107,6 @@ namespace MemExchange.Tests.Server
 
             orderDispatcherMock.AssertWasNotCalled(a => a.HandleAddOrder(Arg<ILimitOrder>.Is.Anything));
         }
-
         
         [Test]
         public void ShouldNotCallDispatcherWhenLimitOrderIsInvalidOnCancelOrder()

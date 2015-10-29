@@ -19,7 +19,7 @@ namespace MemExchange.Client.UI.Setup
             Container.Register(Component.For<IConfiguration>().Instance(configuration));
 
             Container.Register(Component.For<IClient>().ImplementedBy<ClientApi.Client>().LifestyleSingleton());
-            Container.Register(Component.For<ILogger>().ImplementedBy<SerilogLogger>().LifestyleSingleton());
+            Container.Register(Component.For<ILogger>().ImplementedBy<SerilogLogger>());
             Container.Register(Component.For<ISerializer>().ImplementedBy<ProtobufSerializer>());
             Container.Register(Component.For<IMessageConnection>().ImplementedBy<MessageConnection>().LifestyleSingleton());
             Container.Register(Component.For<IServerMessageSubscriber>().ImplementedBy<ServerMessageSubscriber>().LifestyleSingleton());

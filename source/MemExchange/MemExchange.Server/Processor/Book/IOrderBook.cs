@@ -7,7 +7,8 @@ namespace MemExchange.Server.Processor.Book
     {
         Dictionary<double, IPriceSlot> PriceSlots { get; }
         string Symbol { get; }
-        void HandleOrder(ILimitOrder limitOrder);
-        void RemoveOrder(ILimitOrder limitOrder);
+        void HandleLimitOrder(ILimitOrder limitOrder);
+        void RemoveLimitOrder(ILimitOrder limitOrder);
+        void HandleOrderModify(ILimitOrder order, int oldQuantity, double oldPrice);
     }
 }

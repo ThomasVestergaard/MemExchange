@@ -38,8 +38,12 @@ namespace MemExchange.Server.Processor
             }
 
             outgoingQueue.EnqueueAddedLimitOrder(limitOrder);
-            OrderBooks[symbol].HandleOrder(limitOrder);
+            limitOrder.RegisterDeleteNotificationHandler(OrderBooks[symbol].RemoveLimitOrder);
+            limitOrder.RegisterFilledNotification(OrderBooks[symbol].RemoveLimitOrder);
+            limitOrder.RegisterModifyNotificationHandler(OrderBooks[symbol].HandleOrderModify);
             
+            OrderBooks[symbol].HandleLimitOrder(limitOrder);
+
         }
 
       

@@ -15,6 +15,8 @@ namespace MemExchange.Core.SharedDto.ClientToServer
         [ProtoMember(3)]
         public LimitOrderDto LimitOrder { get; set; }
 
+        
+
         public ClientToServerMessage()
         {
             LimitOrder = new LimitOrderDto();

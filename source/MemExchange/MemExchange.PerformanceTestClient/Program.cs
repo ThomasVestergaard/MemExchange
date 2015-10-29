@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MemExchange.Client.UI.Setup;
@@ -14,6 +12,15 @@ namespace MemExchange.PerformanceTestClient
     {
         private static DependencyInjection dependencyInjection;
         private static Configuration config;
+        static Random random = new Random();
+
+        public static char GetLetter()
+        {
+            int num = random.Next(0, 26); // Zero to 25
+            char let = (char)('a' + num);
+            return let;
+        }
+       
 
         static void Main(string[] args)
         {
@@ -35,6 +42,7 @@ namespace MemExchange.PerformanceTestClient
                 prices.Add(val);
             }
 
+            string symbol = string.Format("{0}{1}{2}", GetLetter(), GetLetter(), GetLetter());
             var client = DependencyInjection.Container.Resolve<IClient>();
             client.Start(config.ClientId, config.ServerAddress, config.ServerCommandPort, config.ServerPublishPort);
             client.LimitOrderAccepted += (sender, dto) =>
@@ -44,16 +52,19 @@ namespace MemExchange.PerformanceTestClient
                     for (int c = 0; c < prices.Count; c++)
                     {
                         client.ModifyLimitOrder(dto.ExchangeOrderId, prices[c], 100);
-                        Thread.Sleep(1);
+                        Thread.Sleep(0);
                     }
                 }
             };
 
-            client.SubmitLimitOrder("qqq", 90, 90, WayEnum.Buy);
+            client.SubmitLimitOrder(symbol, 90, 90, WayEnum.Buy);
 
-            Console.WriteLine("Sending orders ...");
+            Console.WriteLine("Sending orders on symbol '{0}' ...", symbol);
             Console.ReadKey();
             client.Stop();
         }
+
+
+      
     }
 }
