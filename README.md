@@ -20,12 +20,12 @@ Running locally (blog): http://thomasvestergaard.com/blog/memexchange/getting-st
 - Client should be able to delete orders (Limit, stop-limit - Limit order is done)
 - Client should be able to reqeust snapshop of open orders (done)
 - Client should receive updates to orders when they are either modified, deleted, added (done)
-- Client should receive executions on own orders.
-- Client should receive level 1 order book data (bid/ask updates, aggregated level 1 quantities and trades made)
+- Client should receive executions on own orders. (done)
+- Client should receive level 1 order book data (bid/ask updates, aggregated level 1 quantities and trades made) (done)
 
 #Notes about order matching algorithms
 - Limit orders are matched on best possible price. Example: If a buy side limit order comes in at a price of $10 and the only sell liquidity is available at $9, the order will be matched in the middle at $9.5 giving both parties a better execution.
-- Stop-limit orders are matched at the nearest available liquidity when the trigger price is touched. The method is some times referred to as a "Market on touch" algorithm.
+- Stop-limit orders are triggered when the order is no longer on the opposite side of the market. A limit order is placed the moment it's above (if sell) or below (if buy) the best bid or ask.
 
 #3rd party libraries
 - Castle Windsor for dependency injection
