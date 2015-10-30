@@ -30,6 +30,8 @@ Running locally (blog): http://thomasvestergaard.com/blog/memexchange/getting-st
 
 - Stop-limit has two prices: The trigger price and the limit price. When the trigger price is touched or penetrated a limit order is placed. Buy stop-limit orders are always placed above the market with a trigger price lower than the limit price. Vice versa for sell stop-limit orders.
 
+- Market orders will execute it's way through the order book until either filled or no more liquidity is available. The market order will be cancelled after matching is complete. This is also true if the order is partially filled and liquidity runs dry or if there is no liquidity available at all.
+
 #3rd party libraries
 - Castle Windsor for dependency injection
 - Disruptor.net for concurrency
