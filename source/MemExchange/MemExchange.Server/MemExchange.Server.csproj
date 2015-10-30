@@ -84,6 +84,7 @@
     <Compile Include="Incoming\ClientMessagePuller.cs" />
     <Compile Include="Incoming\ClientToServerMessageQueueItem.cs" />
     <Compile Include="Incoming\IClientMessagePuller.cs" />
+    <Compile Include="Incoming\IncomingMessageQueueErrorHandler.cs" />
     <Compile Include="Incoming\Logging\IPerformanceRecorder.cs" />
     <Compile Include="Incoming\Logging\PerformanceRecorderDirectConsoleOutput.cs" />
     <Compile Include="Outgoing\IMessagePublisher.cs" />

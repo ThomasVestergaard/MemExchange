@@ -43,9 +43,9 @@ namespace MemExchange.Server.Incoming.Logging
 
         private void OutputMetrics()
         {
-            Console.Clear();
+            //Console.Clear();
             double mean = durationMeasurements.Average();
-
+            Console.WriteLine("---------");
             Console.WriteLine("Messages processed: {0}", countSinceLastOutput);
             Console.WriteLine("Average process time: {0} ms", mean.ToString("N5"));
             Console.WriteLine("Message per sec: {0}", (1000d / mean).ToString("N5"));

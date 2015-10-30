@@ -26,12 +26,15 @@ namespace MemExchange.Server.Processor.Book.MatchingAlgorithms
 
         public void TryMatch(ILimitOrder buyLimitOrder, ILimitOrder sellLimitOrder)
         {
+            /*if (buyLimitOrder.ClientId == sellLimitOrder.ClientId)
+                return;*/
+
             if (buyLimitOrder.Symbol != sellLimitOrder.Symbol)
                 return;
 
             if (buyLimitOrder.Price < sellLimitOrder.Price)
                 return;
-
+            
             if (buyLimitOrder.Quantity == 0 || sellLimitOrder.Quantity == 0)
                 return;
 

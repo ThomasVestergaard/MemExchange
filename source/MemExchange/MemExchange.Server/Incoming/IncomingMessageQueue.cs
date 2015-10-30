@@ -33,8 +33,9 @@ namespace MemExchange.Server.Incoming
             //messageDisrupter = new Disruptor<ClientToServerMessageQueueItem>(() => new ClientToServerMessageQueueItem(), new SingleThreadedClaimStrategy(ringbufferSize), new BusySpinWaitStrategy(), TaskScheduler.Default );
             
             messageDisrupter.HandleEventsWith(messageProcessor).Then(performanceRecorder);
+            messageDisrupter.HandleExceptionsWith(new IncomingMessageQueueErrorHandler());
             messageRingBuffer = messageDisrupter.Start();
-            performanceRecorder.Setup(messageRingBuffer, 5000);
+            performanceRecorder.Setup(messageRingBuffer, 10);
 
             logger.Info("Incoming message queue started.");
         }
