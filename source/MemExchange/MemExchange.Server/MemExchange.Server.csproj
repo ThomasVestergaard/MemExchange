@@ -91,6 +91,8 @@
     <Compile Include="Outgoing\IOutgoingQueue.cs" />
     <Compile Include="Outgoing\MessagePublisher.cs" />
     <Compile Include="Outgoing\OutgoingQueue.cs" />
+    <Compile Include="Processor\Book\Orders\IMarketOrder.cs" />
+    <Compile Include="Processor\Book\Orders\MarketOrder.cs" />
     <Compile Include="Processor\IIncomingMessageProcessor.cs" />
     <Compile Include="Incoming\IIncomingMessageQueue.cs" />
     <Compile Include="Processor\IncomingMessageProcessor.cs" />

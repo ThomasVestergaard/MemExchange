@@ -58,6 +58,8 @@ namespace MemExchange.Server.Processor.Book
             return LimitOrders[exchangeOrderId];
         }
 
+
+
         private void HandleOrderDeleted(ILimitOrder order)
         {
             order.UnRegisterDeleteNotificationHandler(HandleOrderDeleted);

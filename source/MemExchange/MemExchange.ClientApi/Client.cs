@@ -105,7 +105,7 @@ namespace MemExchange.ClientApi
                     Symbol = symbol,
                     Way = way
                 },
-                MessageType = ClientToServerMessageTypeEnum.PlaceOrder
+                MessageType = ClientToServerMessageTypeEnum.PlaceLimitOrder
             });
         }
 
@@ -124,7 +124,7 @@ namespace MemExchange.ClientApi
                     Price = newPrice,
                     Quantity = newQuantity
                 },
-                MessageType = ClientToServerMessageTypeEnum.ModifyOrder
+                MessageType = ClientToServerMessageTypeEnum.ModifyLimitOrder
             });
         }
 
@@ -141,7 +141,7 @@ namespace MemExchange.ClientApi
                     ClientId = clientId,
                     ExchangeOrderId = exchangeOrderId,
                 },
-                MessageType = ClientToServerMessageTypeEnum.CancelOrder
+                MessageType = ClientToServerMessageTypeEnum.CancelLimitOrder
             });
         }
 

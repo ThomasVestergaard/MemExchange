@@ -6,10 +6,10 @@ namespace MemExchange.Core.SharedDto.ClientToServer
     public enum ClientToServerMessageTypeEnum
     {
         NotSet = 0,
-        PlaceOrder = 1,
-        ModifyOrder = 2,
-        CancelOrder = 3,
+        PlaceLimitOrder = 1,
+        ModifyLimitOrder = 2,
+        CancelLimitOrder = 3,
         RequestOpenOrders = 4,
-        BracketLimitOrder = 5
+        PlaeMarketOrder = 5
     }
 }

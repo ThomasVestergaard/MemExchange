@@ -10,5 +10,6 @@ namespace MemExchange.Server.Processor.Book
         void HandleLimitOrder(ILimitOrder limitOrder);
         void RemoveLimitOrder(ILimitOrder limitOrder);
         void HandleOrderModify(ILimitOrder order, int oldQuantity, double oldPrice);
+        
     }
 }

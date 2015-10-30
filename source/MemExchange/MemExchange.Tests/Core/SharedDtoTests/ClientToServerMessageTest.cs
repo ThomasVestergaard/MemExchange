@@ -12,7 +12,7 @@ namespace MemExchange.Tests.Core.SharedDtoTests
         {
             var original = new ClientToServerMessage();
             original.ClientId = 99;
-            original.MessageType = ClientToServerMessageTypeEnum.CancelOrder;
+            original.MessageType = ClientToServerMessageTypeEnum.CancelLimitOrder;
 
             var newMessage = new ClientToServerMessage();
             newMessage.ClientId = 50;

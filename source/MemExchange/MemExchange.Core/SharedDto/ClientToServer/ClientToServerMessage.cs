@@ -15,18 +15,21 @@ namespace MemExchange.Core.SharedDto.ClientToServer
         [ProtoMember(3)]
         public LimitOrderDto LimitOrder { get; set; }
 
-        
+        [ProtoMember(4)]
+        public MarketOrderDto MarketOrder { get; set; }
 
         public ClientToServerMessage()
         {
             LimitOrder = new LimitOrderDto();
+            MarketOrder = new MarketOrderDto();
             Reset();
         }
 
         public void Reset()
         {
             MessageType = ClientToServerMessageTypeEnum.NotSet;
-            this.LimitOrder.Reeset();
+            LimitOrder.Reeset();
+            MarketOrder.Reset();
             ClientId = -1;
         }
 
@@ -35,6 +38,7 @@ namespace MemExchange.Core.SharedDto.ClientToServer
             ClientId = other.ClientId;
             MessageType = other.MessageType;
             LimitOrder.Update(other.LimitOrder);
+            MarketOrder.Update(other.MarketOrder);
 
         }
     }

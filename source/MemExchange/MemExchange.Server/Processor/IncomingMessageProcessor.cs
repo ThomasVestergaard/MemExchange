@@ -30,7 +30,7 @@ namespace MemExchange.Server.Processor
 
             switch (data.Message.MessageType)
             {
-                case ClientToServerMessageTypeEnum.PlaceOrder:
+                case ClientToServerMessageTypeEnum.PlaceLimitOrder:
                     if (!data.Message.LimitOrder.ValidatesForAdd())
                     {
                         outgoingQueue.EnqueueMessage(data.Message.ClientId, "Error: Limit order was rejected.");
@@ -46,7 +46,7 @@ namespace MemExchange.Server.Processor
                     dispatcher.HandleAddOrder(newLimitOrder);
                 break;
 
-                case ClientToServerMessageTypeEnum.CancelOrder:
+                case ClientToServerMessageTypeEnum.CancelLimitOrder:
                 if (!data.Message.LimitOrder.ValidateForDelete())
                     {
                         outgoingQueue.EnqueueMessage(data.Message.ClientId, "Error: Cancellation of limit order was rejected.");
@@ -61,7 +61,7 @@ namespace MemExchange.Server.Processor
                     }
                     break;
 
-                case ClientToServerMessageTypeEnum.ModifyOrder:
+                case ClientToServerMessageTypeEnum.ModifyLimitOrder:
                     if (!data.Message.LimitOrder.ValidatesForModify())
                     {
                         outgoingQueue.EnqueueMessage(data.Message.ClientId, "Error: Modification of limit order was rejected.");

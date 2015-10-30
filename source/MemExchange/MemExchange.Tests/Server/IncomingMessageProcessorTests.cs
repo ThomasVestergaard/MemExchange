@@ -43,7 +43,7 @@ namespace MemExchange.Tests.Server
                 {
                     ClientId = 1,
                     LimitOrder = invalidLimitOrder,
-                    MessageType = ClientToServerMessageTypeEnum.PlaceOrder
+                    MessageType = ClientToServerMessageTypeEnum.PlaceLimitOrder
                 },
             }, 1, true);
 
@@ -72,7 +72,7 @@ namespace MemExchange.Tests.Server
                     {
                         ClientId = 1,
                         LimitOrder = limitOrder,
-                        MessageType = ClientToServerMessageTypeEnum.PlaceOrder
+                        MessageType = ClientToServerMessageTypeEnum.PlaceLimitOrder
                     }
             }, 1, true);
 
@@ -101,7 +101,7 @@ namespace MemExchange.Tests.Server
                         {
                             ClientId = 1,
                             LimitOrder = limitOrder,
-                            MessageType = ClientToServerMessageTypeEnum.PlaceOrder
+                            MessageType = ClientToServerMessageTypeEnum.PlaceLimitOrder
                         }
                 }, 1, true);
 
@@ -124,7 +124,7 @@ namespace MemExchange.Tests.Server
                     {
                         ClientId = 1,
                         LimitOrder = limitOrder,
-                        MessageType = ClientToServerMessageTypeEnum.CancelOrder
+                        MessageType = ClientToServerMessageTypeEnum.CancelLimitOrder
                     }
                 }, 1, true);
 
