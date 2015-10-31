@@ -7,6 +7,7 @@ namespace MemExchange.Server.Processor
     public interface IOrderDispatcher
     {
         Dictionary<string, IOrderBook> OrderBooks { get; }
-        void HandleAddOrder(ILimitOrder limitOrder);
+        void HandleAddLimitOrder(ILimitOrder limitOrder);
+        void HandleMarketOrder(IMarketOrder marketOrder);
     }
 }

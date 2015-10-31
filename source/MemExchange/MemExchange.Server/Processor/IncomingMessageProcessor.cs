@@ -30,6 +30,14 @@ namespace MemExchange.Server.Processor
 
             switch (data.Message.MessageType)
             {
+                case ClientToServerMessageTypeEnum.PlaceMarketOrder:
+                    if (!data.Message.MarketOrder.ValidateForExecute())
+                        return;
+
+                    var newMarketOrder = ordeRepository.NewMarketOrder(data.Message.MarketOrder);
+                    dispatcher.HandleMarketOrder(newMarketOrder);
+                    break;
+
                 case ClientToServerMessageTypeEnum.PlaceLimitOrder:
                     if (!data.Message.LimitOrder.ValidatesForAdd())
                     {
@@ -43,7 +51,7 @@ namespace MemExchange.Server.Processor
                     newLimitOrder.RegisterFilledNotification(outgoingQueue.EnqueueDeletedLimitOrder);
                     newLimitOrder.RegisterFilledNotification((order) => order.Delete());
 
-                    dispatcher.HandleAddOrder(newLimitOrder);
+                    dispatcher.HandleAddLimitOrder(newLimitOrder);
                 break;
 
                 case ClientToServerMessageTypeEnum.CancelLimitOrder:

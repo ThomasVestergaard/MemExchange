@@ -47,7 +47,7 @@ namespace MemExchange.Tests.Server
                 },
             }, 1, true);
 
-            orderDispatcherMock.AssertWasNotCalled(a => a.HandleAddOrder(Arg<ILimitOrder>.Is.Anything));
+            orderDispatcherMock.AssertWasNotCalled(a => a.HandleAddLimitOrder(Arg<ILimitOrder>.Is.Anything));
             outgoingQueueMock.AssertWasNotCalled(a => a.EnqueueAddedLimitOrder(Arg<ILimitOrder>.Is.Anything));
         }
 
@@ -76,7 +76,7 @@ namespace MemExchange.Tests.Server
                     }
             }, 1, true);
 
-            orderDispatcherMock.AssertWasCalled(a => a.HandleAddOrder(Arg<ILimitOrder>.Is.Equal(limitOrder)));
+            orderDispatcherMock.AssertWasCalled(a => a.HandleAddLimitOrder(Arg<ILimitOrder>.Is.Equal(limitOrder)));
         }
 
         [Test]
@@ -105,7 +105,7 @@ namespace MemExchange.Tests.Server
                         }
                 }, 1, true);
 
-            orderDispatcherMock.AssertWasNotCalled(a => a.HandleAddOrder(Arg<ILimitOrder>.Is.Anything));
+            orderDispatcherMock.AssertWasNotCalled(a => a.HandleAddLimitOrder(Arg<ILimitOrder>.Is.Anything));
         }
         
         [Test]
@@ -128,7 +128,7 @@ namespace MemExchange.Tests.Server
                     }
                 }, 1, true);
 
-            orderDispatcherMock.AssertWasNotCalled(a => a.HandleAddOrder(Arg<ILimitOrder>.Is.Anything));
+            orderDispatcherMock.AssertWasNotCalled(a => a.HandleAddLimitOrder(Arg<ILimitOrder>.Is.Anything));
         }
 
        

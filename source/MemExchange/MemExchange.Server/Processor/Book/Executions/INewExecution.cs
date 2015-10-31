@@ -5,8 +5,8 @@ namespace MemExchange.Server.Processor.Book.Executions
 {
     public interface INewExecution
     {
-        ILimitOrder BuySideOrder { get; }
-        ILimitOrder SellSideOrder { get; }
+        IOrder BuySideOrder { get; }
+        IOrder SellSideOrder { get; }
         int MatchedQuantity { get; }
         double MatchedPrice { get; }
         DateTimeOffset ExecutionTime { get; }

@@ -23,18 +23,31 @@ namespace MemExchange.Server.Processor
             OrderBooks = new Dictionary<string, IOrderBook>();
         }
 
-        public void HandleAddOrder(ILimitOrder limitOrder)
+        public void HandleMarketOrder(IMarketOrder marketOrder)
+        {
+            string symbol = marketOrder.Symbol;
+            if (!OrderBooks.ContainsKey(symbol))
+                return;
+
+            OrderBooks[symbol].HandleMarketOrder(marketOrder);
+
+        }
+
+        public void HandleAddLimitOrder(ILimitOrder limitOrder)
         {
             string symbol = limitOrder.Symbol;
             if (!OrderBooks.ContainsKey(symbol))
             {
-                var bookMatchingAlgo = new LimitOrderMatchingAlgorithm(dateService);
-                bookMatchingAlgo.AddExecutionsHandler(outgoingQueue.EnqueueClientExecution);
+                var bookMatchingLimitAlgo = new LimitOrderMatchingAlgorithm(dateService);
+                bookMatchingLimitAlgo.AddExecutionsHandler(outgoingQueue.EnqueueClientExecution);
+
+                var bookMatchingMarketAlgo = new MarketOrderMatchingAlgorithm(dateService);
+                bookMatchingMarketAlgo.AddExecutionsHandler(outgoingQueue.EnqueueClientExecution);
 
                 var level1 = new OrderBookBestBidAsk(symbol);
                 level1.RegisterUpdateHandler(outgoingQueue.EnqueueLevel1Update);
                 
-                OrderBooks.Add(symbol, new OrderBook(symbol, bookMatchingAlgo, level1, outgoingQueue));
+                OrderBooks.Add(symbol, new OrderBook(symbol, bookMatchingLimitAlgo, bookMatchingMarketAlgo, level1, outgoingQueue));
             }
 
             outgoingQueue.EnqueueAddedLimitOrder(limitOrder);

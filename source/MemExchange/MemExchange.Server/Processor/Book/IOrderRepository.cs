@@ -10,6 +10,8 @@ namespace MemExchange.Server.Processor.Book
         ILimitOrder NewLimitOrder(LimitOrderDto dtoLimitOrder);
         ILimitOrder NewLimitOrder(string symbol, int clientId, double price, int quantity, WayEnum way);
         ILimitOrder TryGetOrder(uint exchangeOrderId);
+        IMarketOrder NewMarketOrder(string symbol, int clientId, int quantity, WayEnum way);
+        IMarketOrder NewMarketOrder(MarketOrderDto dtoMarketOrder);
         List<ILimitOrder> GetClientOrders(int clientId);
     }
 }

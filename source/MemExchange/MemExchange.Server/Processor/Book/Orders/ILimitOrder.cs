@@ -1,17 +1,13 @@
 using System;
-using MemExchange.Core.SharedDto;
 using MemExchange.Core.SharedDto.Orders;
 
 namespace MemExchange.Server.Processor.Book.Orders
 {
-    public interface ILimitOrder
+    public interface ILimitOrder : IOrder
     {
-        string Symbol { get; }
+        
         int Quantity { get; }
         double Price { get; }
-        WayEnum Way { get; }
-        uint ExchangeOrderId { get; }
-        int ClientId { get; }
         void SetExchangeOrderId(uint exchangeOrderId);
         void Modify(int newQuantity, double newPrice);
         void Modify(int newQuantity);

@@ -58,7 +58,19 @@ namespace MemExchange.Server.Processor.Book
             return LimitOrders[exchangeOrderId];
         }
 
+        public IMarketOrder NewMarketOrder(MarketOrderDto dtoMarketOrder)
+        {
+            return NewMarketOrder(dtoMarketOrder.Symbol, dtoMarketOrder.ClientId, dtoMarketOrder.Quantity, dtoMarketOrder.Way);
+        }
 
+        public IMarketOrder NewMarketOrder(string symbol, int clientId, int quantity, WayEnum way)
+        {
+            IMarketOrder toReturn = new MarketOrder(symbol, quantity, way, clientId);
+            toReturn.SetExchangeOrderId(orderIdCounter);
+
+            orderIdCounter++;
+            return toReturn;
+        }
 
         private void HandleOrderDeleted(ILimitOrder order)
         {

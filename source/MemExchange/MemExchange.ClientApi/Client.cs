@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.Remoting.Messaging;
 using MemExchange.ClientApi.Commands;
 using MemExchange.ClientApi.Stream;
 using MemExchange.Core.SharedDto;
@@ -87,6 +86,24 @@ namespace MemExchange.ClientApi
             isStarted = false;
             subscriber.Stop();
             messageConnection.Stop();
+        }
+
+        public void SubmitMarketOrder(string symbol, int quantity, WayEnum way)
+        {
+            if (!isStarted)
+                return;
+
+            messageConnection.SendMessage(new ClientToServerMessage
+            {
+                ClientId = clientId,
+                MarketOrder = new MarketOrderDto
+                {
+                    Quantity = quantity,
+                    Symbol = symbol,
+                    Way = way
+                },
+                MessageType = ClientToServerMessageTypeEnum.PlaceMarketOrder
+            });
         }
 
         public void SubmitLimitOrder(string symbol, double price, int quantity, WayEnum way)

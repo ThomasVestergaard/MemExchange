@@ -18,6 +18,7 @@ namespace MemExchange.Client.UI.Windows
         public ActiveOrdersViewModel ActiveOrdersViewModel { get; set; }
         public ClientExecutionsViewModel ExecutionsViewModel { get; set; }
         public Level1ViewModel L1ViewModel { get; set; }
+        public NewMarketOrderViewModel MarketOrderViewModel { get; set; }
 
         public MainWindowViewModel()
         {
@@ -26,6 +27,7 @@ namespace MemExchange.Client.UI.Windows
             ActiveOrdersViewModel = new ActiveOrdersViewModel(client);
             ExecutionsViewModel = new ClientExecutionsViewModel(client);
             L1ViewModel = new Level1ViewModel(client);
+            MarketOrderViewModel = new NewMarketOrderViewModel(client);
         }
 
         [NotifyPropertyChangedInvocator]

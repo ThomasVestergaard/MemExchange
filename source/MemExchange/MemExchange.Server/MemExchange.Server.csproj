@@ -91,7 +91,10 @@
     <Compile Include="Outgoing\IOutgoingQueue.cs" />
     <Compile Include="Outgoing\MessagePublisher.cs" />
     <Compile Include="Outgoing\OutgoingQueue.cs" />
+    <Compile Include="Processor\Book\MatchingAlgorithms\IMarketOrderMatchingAlgorithm.cs" />
+    <Compile Include="Processor\Book\MatchingAlgorithms\MarketOrderMatchingAlgorithm.cs" />
     <Compile Include="Processor\Book\Orders\IMarketOrder.cs" />
+    <Compile Include="Processor\Book\Orders\IOrder.cs" />
     <Compile Include="Processor\Book\Orders\MarketOrder.cs" />
     <Compile Include="Processor\IIncomingMessageProcessor.cs" />
     <Compile Include="Incoming\IIncomingMessageQueue.cs" />
@@ -104,7 +107,6 @@
     <Compile Include="Processor\Book\IOrderRepository.cs" />
     <Compile Include="Processor\Book\IPriceSlot.cs" />
     <Compile Include="Processor\Book\MatchingAlgorithms\ILimitOrderMatchingAlgorithm.cs" />
-    <Compile Include="Processor\Book\MatchingAlgorithms\IMatchingAlgorithm.cs" />
     <Compile Include="Processor\Book\MatchingAlgorithms\LimitOrderMatchingAlgorithm.cs" />
     <Compile Include="Processor\Book\Executions\NewExecution.cs" />
     <Compile Include="Processor\Book\OrderBook.cs" />

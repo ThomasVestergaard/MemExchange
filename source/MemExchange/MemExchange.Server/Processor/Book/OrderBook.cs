@@ -9,16 +9,18 @@ namespace MemExchange.Server.Processor.Book
 {
     public class OrderBook : IOrderBook
     {
-        private readonly IMatchingAlgorithm matchingAlgorithm;
+        private readonly ILimitOrderMatchingAlgorithm limitOrderMatchingAlgorithm;
+        private readonly IMarketOrderMatchingAlgorithm marketOrderMatchingAlgorithm;
         private readonly IOrderBookBestBidAsk orderBookBestBidAsk;
         private readonly IOutgoingQueue outgoingQueue;
         public string Symbol { get; private set; }
 
         public Dictionary<double, IPriceSlot> PriceSlots { get; private set; }
 
-        public OrderBook(string symbol, IMatchingAlgorithm matchingAlgorithm, IOrderBookBestBidAsk orderBookBestBidAsk, IOutgoingQueue outgoingQueue)
+        public OrderBook(string symbol, ILimitOrderMatchingAlgorithm limitOrderMatchingAlgorithm, IMarketOrderMatchingAlgorithm marketOrderMatchingAlgorithm, IOrderBookBestBidAsk orderBookBestBidAsk, IOutgoingQueue outgoingQueue)
         {
-            this.matchingAlgorithm = matchingAlgorithm;
+            this.limitOrderMatchingAlgorithm = limitOrderMatchingAlgorithm;
+            this.marketOrderMatchingAlgorithm = marketOrderMatchingAlgorithm;
             this.orderBookBestBidAsk = orderBookBestBidAsk;
             this.outgoingQueue = outgoingQueue;
             Symbol = symbol;
@@ -83,7 +85,6 @@ namespace MemExchange.Server.Processor.Book
 
             RemoveSlotIfEmpty(oldPrice);
             HandleLimitOrder(currentOrder);
-            
         }
 
         public void HandleOrderModify(ILimitOrder order, int oldQuantity, double oldPrice)
@@ -94,7 +95,7 @@ namespace MemExchange.Server.Processor.Book
             SetBestBidAndAsk();
         }
 
-        private void TryMatch(ILimitOrder limitOrder)
+        private void TryMatchLimitOrder(ILimitOrder limitOrder)
         {
             if (limitOrder.Quantity == 0)
                 return;
@@ -108,10 +109,10 @@ namespace MemExchange.Server.Processor.Book
                     if (limitOrder.Price < orderBookBestBidAsk.BestAskPrice)
                         return;
 
-                    PriceSlots[orderBookBestBidAsk.BestAskPrice.Value].TryMatch(limitOrder);
+                    PriceSlots[orderBookBestBidAsk.BestAskPrice.Value].TryMatchLimitOrder(limitOrder);
                     
                     SetBestBidAndAsk();
-                    TryMatch(limitOrder);
+                    TryMatchLimitOrder(limitOrder);
                     break;
 
                 case WayEnum.Sell:
@@ -121,23 +122,53 @@ namespace MemExchange.Server.Processor.Book
                     if (limitOrder.Price > orderBookBestBidAsk.BestBidPrice)
                         return;
 
-                    PriceSlots[orderBookBestBidAsk.BestBidPrice.Value].TryMatch(limitOrder);
+                    PriceSlots[orderBookBestBidAsk.BestBidPrice.Value].TryMatchLimitOrder(limitOrder);
 
                     SetBestBidAndAsk();
-                    TryMatch(limitOrder);
+                    TryMatchLimitOrder(limitOrder);
+                    break;
+            }
+        }
+
+        private void TryMatchMarketOrder(IMarketOrder marketOrder)
+        {
+            if (marketOrder.Quantity == 0)
+                return;
+
+            switch (marketOrder.Way)
+            {
+                case WayEnum.Buy:
+                    if (!orderBookBestBidAsk.BestAskPrice.HasValue)
+                        return;
+
+                    PriceSlots[orderBookBestBidAsk.BestAskPrice.Value].TryMatchMarketOrder(marketOrder);
+
+                    SetBestBidAndAsk();
+                    TryMatchMarketOrder(marketOrder);
+
+                    break;
+
+                case WayEnum.Sell:
+                    if (!orderBookBestBidAsk.BestBidPrice.HasValue)
+                        return;
+
+                    PriceSlots[orderBookBestBidAsk.BestBidPrice.Value].TryMatchMarketOrder(marketOrder);
+
+                    SetBestBidAndAsk();
+                    TryMatchMarketOrder(marketOrder);
                     break;
             }
         }
 
         public void HandleLimitOrder(ILimitOrder limitOrder)
         {
-            TryMatch(limitOrder);
+            TryMatchLimitOrder(limitOrder);
 
             if (limitOrder.Quantity == 0)
                 return;
 
             if (!PriceSlots.ContainsKey(limitOrder.Price))
-                PriceSlots.Add(limitOrder.Price, new PriceSlot(limitOrder.Price, matchingAlgorithm));
+                PriceSlots.Add(limitOrder.Price, new PriceSlot(limitOrder.Price, limitOrderMatchingAlgorithm, marketOrderMatchingAlgorithm));
 
             if (PriceSlots[limitOrder.Price].ContainsOrder(limitOrder))
                 return;
@@ -145,7 +176,12 @@ namespace MemExchange.Server.Processor.Book
             PriceSlots[limitOrder.Price].AddOrder(limitOrder);
             SetBestBidAndAsk();
         }
-       
+
+        public void HandleMarketOrder(IMarketOrder marketOrder)
+        {
+            TryMatchMarketOrder(marketOrder);
+            SetBestBidAndAsk();
+        }
        
     }
 }

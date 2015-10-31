@@ -9,7 +9,10 @@
     <Grid>
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
-                <usercontrols:NewLimitOrder DataContext="{Binding LimitOrderViewModel}" Margin="10" />
+                <StackPanel Orientation="Vertical">
+                    <usercontrols:NewLimitOrder DataContext="{Binding LimitOrderViewModel}" Margin="10" />
+                    <usercontrols:NewMarketOrder DataContext="{Binding MarketOrderViewModel}"/>
+                </StackPanel>
                 <executions:ClientExecutionsView DataContext="{Binding ExecutionsViewModel}" />
                 <l1:Level1View DataContext="{Binding L1ViewModel}" />
             </StackPanel>

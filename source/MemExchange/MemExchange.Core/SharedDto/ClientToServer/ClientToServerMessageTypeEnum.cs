@@ -10,6 +10,6 @@ namespace MemExchange.Core.SharedDto.ClientToServer
         ModifyLimitOrder = 2,
         CancelLimitOrder = 3,
         RequestOpenOrders = 4,
-        PlaeMarketOrder = 5
+        PlaceMarketOrder = 5
     }
 }

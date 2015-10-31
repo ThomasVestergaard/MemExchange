@@ -1,47 +1,22 @@
 ﻿using System;
 using MemExchange.Core.SharedDto;
+using MemExchange.Core.SharedDto.Orders;
 
 namespace MemExchange.Server.Processor.Book.Orders
 {
-    public class MarketOrder : IMarketOrder
+    public class MarketOrder : LimitOrder, IMarketOrder
     {
-        public int Quantity { get; private set; }
-        public WayEnum Way { get; private set; }
-        public uint ExchangeOrderId { get; private set; }
-        public int ClientId { get; private set; }
-        public void SetExchangeOrderId(uint exchangeOrderId)
+        public MarketOrder(string symbol, int quantity, WayEnum way, int clientId) : base(symbol, quantity, 0, way, clientId)
         {
-            ExchangeOrderId = exchangeOrderId;
+            if (way == WayEnum.Buy)
+                Price = double.MaxValue;
+            else if (way == WayEnum.Sell)
+                Price = double.MinValue;
         }
 
-        public void Modify(int newQuantity)
+        public MarketOrderDto ToDto()
         {
-            int oldQuantity = Quantity;
-            Quantity = newQuantity;
-
+            throw new InvalidOperationException("Should not be used");
         }
-
-        public void RegisterModifyNotificationHandler(Action<IMarketOrder, int> handler)
-        {
-        }
-
-        public void UnRegisterModifyNotificationHandler(Action<IMarketOrder, int> handler)
-        {
-        }
-
-        private void RaiseOrderModified(IMarketOrder order, int oldQuantity)
-        {
-            
-        }
-
-        public void Delete()
-        {
-        }
-
-        public void Dispose()
-        {
-        }
-
-        public string Symbol { get; private set; }
     }
 }

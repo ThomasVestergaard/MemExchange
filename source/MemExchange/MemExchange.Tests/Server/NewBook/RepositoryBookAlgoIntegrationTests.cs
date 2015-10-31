@@ -23,9 +23,10 @@ namespace MemExchange.Tests.Server.NewBook
         public void ShouldCreateNewOrderBookItMatchItAndRemoveIt()
         {
             var repo = new OrderRepository();
-            var algo = new LimitOrderMatchingAlgorithm(new DateService());
+            var limitAlgo = new LimitOrderMatchingAlgorithm(new DateService());
+            var marketAlgo = new MarketOrderMatchingAlgorithm(new DateService());
             var level1 = new OrderBookBestBidAsk("ABC");
-            var book = new OrderBook("ABC", algo, level1, outgoingQueueMock);
+            var book = new OrderBook("ABC", limitAlgo, marketAlgo, level1, outgoingQueueMock);
 
             var sellOrder1 = repo.NewLimitOrder("ABC", 9, 88.2d, 100, WayEnum.Sell);
             book.HandleLimitOrder(sellOrder1);

@@ -15,7 +15,7 @@ namespace MemExchange.Tests.Server.NewBook
         [Test]
         public void ShouldAddBuyOrder()
         {
-            IPriceSlot priceSlot = new PriceSlot(90, new LimitOrderMatchingAlgorithm(new DateService()));
+            IPriceSlot priceSlot = new PriceSlot(90, new LimitOrderMatchingAlgorithm(new DateService()), new MarketOrderMatchingAlgorithm(new DateService()));
             var buyOrder = new LimitOrder("ABC", 10, 90, WayEnum.Buy, 9);
             priceSlot.AddOrder(buyOrder);
 
@@ -26,7 +26,7 @@ namespace MemExchange.Tests.Server.NewBook
         [Test]
         public void ShouldAddSellOrder()
         {
-            IPriceSlot priceSlot = new PriceSlot(90, new LimitOrderMatchingAlgorithm(new DateService()));
+            IPriceSlot priceSlot = new PriceSlot(90, new LimitOrderMatchingAlgorithm(new DateService()), new MarketOrderMatchingAlgorithm(new DateService()));
             var sellOrder = new LimitOrder("ABC", 10, 90, WayEnum.Sell, 9);
             priceSlot.AddOrder(sellOrder);
 
@@ -37,7 +37,7 @@ namespace MemExchange.Tests.Server.NewBook
         [Test]
         public void ShouldRemoveBuyOrder()
         {
-            IPriceSlot priceSlot = new PriceSlot(90, new LimitOrderMatchingAlgorithm(new DateService()));
+            IPriceSlot priceSlot = new PriceSlot(90, new LimitOrderMatchingAlgorithm(new DateService()), new MarketOrderMatchingAlgorithm(new DateService()));
             var buyOrder = new LimitOrder("ABC", 10, 90, WayEnum.Buy, 9);
             priceSlot.AddOrder(buyOrder);
 
@@ -51,7 +51,7 @@ namespace MemExchange.Tests.Server.NewBook
         [Test]
         public void ShouldRemoveSellOrder()
         {
-            IPriceSlot priceSlot = new PriceSlot(90, new LimitOrderMatchingAlgorithm(new DateService()));
+            IPriceSlot priceSlot = new PriceSlot(90, new LimitOrderMatchingAlgorithm(new DateService()), new MarketOrderMatchingAlgorithm(new DateService()));
             var sellOrder = new LimitOrder("ABC", 10, 90, WayEnum.Sell, 9);
             priceSlot.AddOrder(sellOrder);
 
@@ -66,7 +66,7 @@ namespace MemExchange.Tests.Server.NewBook
         [Test]
         public void ShouldIgnoreOrderWithDifferentPriceOnAdd()
         {
-            IPriceSlot priceSlot = new PriceSlot(90, new LimitOrderMatchingAlgorithm(new DateService()));
+            IPriceSlot priceSlot = new PriceSlot(90, new LimitOrderMatchingAlgorithm(new DateService()), new MarketOrderMatchingAlgorithm(new DateService()));
             var buyOrder = new LimitOrder("ABC", 10, 91, WayEnum.Buy, 9);
             priceSlot.AddOrder(buyOrder);
 
@@ -80,13 +80,15 @@ namespace MemExchange.Tests.Server.NewBook
             var executionalgo = new LimitOrderMatchingAlgorithm(new DateService());
             executionalgo.AddExecutionsHandler(executions.Add);
 
-            var priceSlot = new PriceSlot(90, executionalgo);
+
+
+            var priceSlot = new PriceSlot(90, executionalgo, new MarketOrderMatchingAlgorithm(new DateService()));
 
             var sellOrder = new LimitOrder("ABC", 100, 90, WayEnum.Sell, 90);
             var buyOrder = new LimitOrder("ABC", 10, 90, WayEnum.Buy, 80);
 
             priceSlot.AddOrder(sellOrder);
-            priceSlot.TryMatch(buyOrder);
+            priceSlot.TryMatchLimitOrder(buyOrder);
 
             Assert.AreEqual(1, executions.Count);
             Assert.AreEqual(0, priceSlot.BuyOrders.Count);
@@ -101,7 +103,7 @@ namespace MemExchange.Tests.Server.NewBook
             var executionalgo = new LimitOrderMatchingAlgorithm(new DateService());
             executionalgo.AddExecutionsHandler(executions.Add);
 
-            var priceSlot = new PriceSlot(90, executionalgo);
+            var priceSlot = new PriceSlot(90, executionalgo, new MarketOrderMatchingAlgorithm(new DateService()));
 
             var sellOrder1 = new LimitOrder("ABC", 10, 90, WayEnum.Sell, 90);
             var sellOrder2 = new LimitOrder("ABC", 40, 90, WayEnum.Sell, 90);
@@ -109,7 +111,7 @@ namespace MemExchange.Tests.Server.NewBook
 
             priceSlot.AddOrder(sellOrder1);
             priceSlot.AddOrder(sellOrder2);
-            priceSlot.TryMatch(buyOrder);
+            priceSlot.TryMatchLimitOrder(buyOrder);
 
             Assert.AreEqual(2, executions.Count);
             Assert.AreEqual(0, priceSlot.BuyOrders.Count);
@@ -120,14 +122,14 @@ namespace MemExchange.Tests.Server.NewBook
         [Test]
         public void ShouldReturnFalseWhenNoOrdersArePresent()
         {
-            var slot = new PriceSlot(90, new LimitOrderMatchingAlgorithm(new DateService()));
+            var slot = new PriceSlot(90, new LimitOrderMatchingAlgorithm(new DateService()), new MarketOrderMatchingAlgorithm(new DateService()));
             Assert.IsFalse(slot.HasOrders);
         }
 
         [Test]
         public void ShouldReturnTrueWhenBuyOrdersArePresent()
         {
-            var slot = new PriceSlot(90, new LimitOrderMatchingAlgorithm(new DateService()));
+            var slot = new PriceSlot(90, new LimitOrderMatchingAlgorithm(new DateService()), new MarketOrderMatchingAlgorithm(new DateService()));
 
             var buyOrder = new LimitOrder("ABC", 50, 90, WayEnum.Buy, 80);
             slot.AddOrder(buyOrder);
@@ -140,7 +142,7 @@ namespace MemExchange.Tests.Server.NewBook
         [Test]
         public void ShouldReturnTrueWhenSellOrdersArePresent()
         {
-            var slot = new PriceSlot(90, new LimitOrderMatchingAlgorithm(new DateService()));
+            var slot = new PriceSlot(90, new LimitOrderMatchingAlgorithm(new DateService()), new MarketOrderMatchingAlgorithm(new DateService()));
 
             var sellOrder = new LimitOrder("ABC", 50, 90, WayEnum.Sell, 80);
             slot.AddOrder(sellOrder);
@@ -153,7 +155,7 @@ namespace MemExchange.Tests.Server.NewBook
         [Test]
         public void ShouldReturnTrueWhenBuyAndSellOrdersArePresent()
         {
-            var slot = new PriceSlot(90, new LimitOrderMatchingAlgorithm(new DateService()));
+            var slot = new PriceSlot(90, new LimitOrderMatchingAlgorithm(new DateService()), new MarketOrderMatchingAlgorithm(new DateService()));
 
             var buyOrder = new LimitOrder("ABC", 50, 90, WayEnum.Buy, 80);
             var sellOrder = new LimitOrder("ABC", 50, 90, WayEnum.Sell, 80);

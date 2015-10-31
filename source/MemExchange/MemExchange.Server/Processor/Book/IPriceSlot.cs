@@ -11,7 +11,8 @@ namespace MemExchange.Server.Processor.Book
         bool HasOrders { get; }
         bool HasBids { get; }
         bool HasAsks { get; }
-        void TryMatch(ILimitOrder order);
+        void TryMatchLimitOrder(ILimitOrder order);
+        void TryMatchMarketOrder(IMarketOrder order);
         bool ContainsOrder(ILimitOrder order);
         void AddOrder(ILimitOrder order);
         void RemoveOrder(ILimitOrder order);

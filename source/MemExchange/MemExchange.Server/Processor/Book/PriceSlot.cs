@@ -7,14 +7,16 @@ namespace MemExchange.Server.Processor.Book
 {
     public class PriceSlot : IPriceSlot
     {
-        private readonly IMatchingAlgorithm matchingAlgorithm;
+        private readonly ILimitOrderMatchingAlgorithm limitOrderMatchingAlgorithm;
+        private readonly IMarketOrderMatchingAlgorithm marketOrderMatchingAlgorithm;
         public double Price { get; private set; }
         public List<ILimitOrder> BuyOrders { get; private set; }
         public List<ILimitOrder> SellOrders { get; private set; }
         
-        public PriceSlot(double price, IMatchingAlgorithm matchingAlgorithm)
+        public PriceSlot(double price, ILimitOrderMatchingAlgorithm limitOrderMatchingAlgorithm, IMarketOrderMatchingAlgorithm marketOrderMatchingAlgorithm)
         {
-            this.matchingAlgorithm = matchingAlgorithm;
+            this.limitOrderMatchingAlgorithm = limitOrderMatchingAlgorithm;
+            this.marketOrderMatchingAlgorithm = marketOrderMatchingAlgorithm;
             Price = price;
             BuyOrders = new List<ILimitOrder>();
             SellOrders = new List<ILimitOrder>();
@@ -37,7 +39,7 @@ namespace MemExchange.Server.Processor.Book
             return false;
         }
 
-        public void TryMatch(ILimitOrder order)
+        public void TryMatchMarketOrder(IMarketOrder order)
         {
             switch (order.Way)
             {
@@ -46,7 +48,8 @@ namespace MemExchange.Server.Processor.Book
                         return;
 
                     while (order.Quantity > 0 && SellOrders.Count > 0)
-                        matchingAlgorithm.TryMatch(order, SellOrders[0]);
+                        marketOrderMatchingAlgorithm.TryMatch(order, SellOrders[0]);
+
                     break;
 
                 case WayEnum.Sell:
@@ -54,7 +57,30 @@ namespace MemExchange.Server.Processor.Book
                         return;
 
                     while (order.Quantity > 0 && BuyOrders.Count > 0)
-                        matchingAlgorithm.TryMatch(BuyOrders[0], order);
+                        marketOrderMatchingAlgorithm.TryMatch(BuyOrders[0], order);
+                    break;
+            }
+
+        }
+
+        public void TryMatchLimitOrder(ILimitOrder order)
+        {
+            switch (order.Way)
+            {
+                case WayEnum.Buy:
+                    if (SellOrders.Count == 0)
+                        return;
+
+                    while (order.Quantity > 0 && SellOrders.Count > 0)
+                        limitOrderMatchingAlgorithm.TryMatch(order, SellOrders[0]);
+                    break;
+
+                case WayEnum.Sell:
+                    if (BuyOrders.Count == 0)
+                        return;
+
+                    while (order.Quantity > 0 && BuyOrders.Count > 0)
+                        limitOrderMatchingAlgorithm.TryMatch(BuyOrders[0], order);
                     break;
             }
         }
