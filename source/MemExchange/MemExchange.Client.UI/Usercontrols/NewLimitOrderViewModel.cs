@@ -40,6 +40,17 @@ namespace MemExchange.Client.UI.Usercontrols
             }
         }
 
+        private string triggerPrice;
+        public string TriggerPrice
+        {
+            get { return triggerPrice; }
+            set
+            {
+                triggerPrice = value;
+                OnPropertyChanged();
+            }
+        }
+
         private string quantity;
         public string Quantity
         {
@@ -90,30 +101,74 @@ namespace MemExchange.Client.UI.Usercontrols
         {
             SendOrderCommand = new RelayCommand(() =>
             {
-                double parsedPrice;
-                int parsedQuantity;
+                if (selectedLimitOrderType == "Limit order")
+                    SendLimitOrder();
+                else if (selectedLimitOrderType == "Stop limit order")
+                    SendStopLimitOrder();
 
-                if (string.IsNullOrEmpty(symbol))
-                {
-                    MessageBox.Show("Symbol must be entered.");
-                    return;
-                }
-
-                if (!double.TryParse(price, out parsedPrice))
-                {
-                    MessageBox.Show("Price must be a double value.");
-                    return;
-                }
-
-                if (!int.TryParse(quantity, out parsedQuantity))
-                {
-                    MessageBox.Show("Quantity must be a integer value.");
-                    return;
-                }
-
-                exchangeApi.SubmitLimitOrder(symbol, parsedPrice, parsedQuantity, selectedWay);
-                Console.WriteLine("Order sent.");
+                
             });
+        }
+
+        private void SendStopLimitOrder()
+        {
+            double parsedLimitPrice;
+            double parsedTriggerPrice;
+            int parsedQuantity;
+
+            if (string.IsNullOrEmpty(symbol))
+            {
+                MessageBox.Show("Symbol must be entered.");
+                return;
+            }
+
+            if (!double.TryParse(price, out parsedLimitPrice))
+            {
+                MessageBox.Show("Price must be a double value.");
+                return;
+            }
+
+            if (!double.TryParse(triggerPrice, out parsedTriggerPrice))
+            {
+                MessageBox.Show("Trigger price must be a double value.");
+                return;
+            }
+
+            if (!int.TryParse(quantity, out parsedQuantity))
+            {
+                MessageBox.Show("Quantity must be a integer value.");
+                return;
+            }
+
+            exchangeApi.SubmitStopLimitOrder(symbol, parsedTriggerPrice, parsedLimitPrice, parsedQuantity, selectedWay);
+            Console.WriteLine("Order sent.");
+        }
+
+        private void SendLimitOrder()
+        {
+            double parsedPrice;
+            int parsedQuantity;
+
+            if (string.IsNullOrEmpty(symbol))
+            {
+                MessageBox.Show("Symbol must be entered.");
+                return;
+            }
+
+            if (!double.TryParse(price, out parsedPrice))
+            {
+                MessageBox.Show("Price must be a double value.");
+                return;
+            }
+
+            if (!int.TryParse(quantity, out parsedQuantity))
+            {
+                MessageBox.Show("Quantity must be a integer value.");
+                return;
+            }
+
+            exchangeApi.SubmitLimitOrder(symbol, parsedPrice, parsedQuantity, selectedWay);
+            Console.WriteLine("Order sent.");
         }
 
         [NotifyPropertyChangedInvocator]

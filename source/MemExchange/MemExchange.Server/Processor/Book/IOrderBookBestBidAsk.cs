@@ -13,7 +13,7 @@ namespace MemExchange.Server.Processor.Book
 
         void RegisterUpdateHandler(Action<IOrderBookBestBidAsk> handler);
         void UnRegisterUpdateHandler(Action<IOrderBookBestBidAsk> handler);
-        void Set(double? bestBid, double? bestAsk, int bestBidQuantity, int bestAskQuantity);
+        bool Set(double? bestBid, double? bestAsk, int bestBidQuantity, int bestAskQuantity);
         MarketBestBidAskDto ToDto();
     }
 }

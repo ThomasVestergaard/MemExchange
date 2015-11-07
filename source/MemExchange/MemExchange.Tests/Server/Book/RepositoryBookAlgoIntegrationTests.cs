@@ -6,7 +6,7 @@ using MemExchange.Server.Processor.Book.MatchingAlgorithms;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-namespace MemExchange.Tests.Server.NewBook
+namespace MemExchange.Tests.Server.Book
 {
     [TestFixture]
     public class RepositoryBookAlgoIntegrationTests
@@ -26,7 +26,7 @@ namespace MemExchange.Tests.Server.NewBook
             var limitAlgo = new LimitOrderMatchingAlgorithm(new DateService());
             var marketAlgo = new MarketOrderMatchingAlgorithm(new DateService());
             var level1 = new OrderBookBestBidAsk("ABC");
-            var book = new OrderBook("ABC", limitAlgo, marketAlgo, level1, outgoingQueueMock);
+            var book = new OrderBook("ABC", limitAlgo, marketAlgo, level1);
 
             var sellOrder1 = repo.NewLimitOrder("ABC", 9, 88.2d, 100, WayEnum.Sell);
             book.HandleLimitOrder(sellOrder1);
@@ -42,7 +42,7 @@ namespace MemExchange.Tests.Server.NewBook
             Assert.AreEqual(88.2d, level1.BestAskPrice);
             Assert.IsNull(level1.BestBidPrice);
 
-            var retrievedBuyOrder = repo.TryGetOrder(buyOrder1.ExchangeOrderId);
+            var retrievedBuyOrder = repo.TryGetLimitOrder(buyOrder1.ExchangeOrderId);
             Assert.IsNull(retrievedBuyOrder);
 
         }

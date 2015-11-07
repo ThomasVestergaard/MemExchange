@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:icons="clr-namespace:MemExchange.Client.UI.Resources"
-             mc:Ignorable="d" d:DesignWidth="300" Height="266">
+             mc:Ignorable="d" d:DesignWidth="300" Height="296">
     <Grid>
         <StackPanel Orientation="Vertical">
             <GroupBox Header="New limit order" Margin="5">
@@ -25,7 +25,12 @@
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal">
-                        <Label Content="Price" Width="150" Margin="5" />
+                        <Label Content="Trigger Price" Width="150" Margin="5" />
+                        <TextBox Text="{Binding TriggerPrice}" Margin="5" HorizontalAlignment="Left" Width="100" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Limit Price" Width="150" Margin="5" />
                         <TextBox Text="{Binding Price}" Margin="5" HorizontalAlignment="Left" Width="100" />
                     </StackPanel>
 

@@ -48,11 +48,11 @@ namespace MemExchange.Tests.Integration
         [Test]
         public void ClientShouldReceiveMessagesOnSubscribedClientId()
         {
-            serverPublihser.Publish(1, new ServerToClientMessage { MessageType = ServerToClientMessageTypeEnum.OrderAccepted});
-            serverPublihser.Publish(2, new ServerToClientMessage { MessageType = ServerToClientMessageTypeEnum.OrderAccepted });
-            serverPublihser.Publish(3, new ServerToClientMessage { MessageType = ServerToClientMessageTypeEnum.OrderAccepted });
-            serverPublihser.Publish(1, new ServerToClientMessage { MessageType = ServerToClientMessageTypeEnum.OrderAccepted });
-            serverPublihser.Publish(1, new ServerToClientMessage { MessageType = ServerToClientMessageTypeEnum.OrderAccepted });
+            serverPublihser.Publish(1, new ServerToClientMessage { MessageType = ServerToClientMessageTypeEnum.LimitOrderAccepted});
+            serverPublihser.Publish(2, new ServerToClientMessage { MessageType = ServerToClientMessageTypeEnum.LimitOrderAccepted });
+            serverPublihser.Publish(3, new ServerToClientMessage { MessageType = ServerToClientMessageTypeEnum.LimitOrderAccepted });
+            serverPublihser.Publish(1, new ServerToClientMessage { MessageType = ServerToClientMessageTypeEnum.LimitOrderAccepted });
+            serverPublihser.Publish(1, new ServerToClientMessage { MessageType = ServerToClientMessageTypeEnum.LimitOrderAccepted });
 
             Assert.That(() => receivedMessages.Count, Is.EqualTo(3).After(500,50));
         }

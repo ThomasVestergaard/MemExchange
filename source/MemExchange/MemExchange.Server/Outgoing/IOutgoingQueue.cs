@@ -14,8 +14,12 @@ namespace MemExchange.Server.Outgoing
         void EnqueueUpdatedLimitOrder(ILimitOrder limitOrder, int oldQuantity, double oldPrice);
         void EnqueueDeletedLimitOrder(ILimitOrder limitOrder);
         void EnqueueMessage(int clientId, string message);
-        void EnqueueOrderSnapshot(int clientId, List<ILimitOrder> orders);
+        void EnqueueLimitOrderSnapshot(int clientId, List<ILimitOrder> orders);
+        void EnqueueStopLimitOrderSnapshot(int clientId, List<IStopLimitOrder> orders);
         void EnqueueClientExecution(INewExecution execution);
         void EnqueueLevel1Update(IOrderBookBestBidAsk orderBookBestBidAsk);
+        void EnqueueAddedStopLimitOrder(IStopLimitOrder stopLimitOrder);
+        void EnqueueUpdatedStopLimitOrder(IStopLimitOrder stopLimitOrder);
+        void EnqueueDeletedStopLimitOrder(IStopLimitOrder stopLimitOrder);
     }
 }

@@ -21,7 +21,7 @@ namespace MemExchange.Tests.Core
             {
                 var item = new ServerToClientMessage();
                 item.Message = i.ToString();
-                item.MessageType = ServerToClientMessageTypeEnum.OrderAccepted;
+                item.MessageType = ServerToClientMessageTypeEnum.LimitOrderAccepted;
                 item.LimitOrder = new LimitOrderDto();
                 item.LimitOrder.ClientId = i;
                 item.LimitOrder.ExchangeOrderId = (uint)i;
@@ -32,7 +32,7 @@ namespace MemExchange.Tests.Core
                 
                 Assert.IsNotNull(deserialized);
                 Assert.AreEqual(i.ToString(), deserialized.Message );
-                Assert.AreEqual(ServerToClientMessageTypeEnum.OrderAccepted, deserialized.MessageType);
+                Assert.AreEqual(ServerToClientMessageTypeEnum.LimitOrderAccepted, deserialized.MessageType);
                 Assert.AreEqual(i, deserialized.LimitOrder.ClientId);
                 Assert.AreEqual(i, deserialized.LimitOrder.ExchangeOrderId);
             }
@@ -45,7 +45,7 @@ namespace MemExchange.Tests.Core
 
             for (int i = 0; i < 1000; i++)
             {
-                var s = serializer.Serialize(new ServerToClientMessage {MessageType = ServerToClientMessageTypeEnum.OrderAccepted});
+                var s = serializer.Serialize(new ServerToClientMessage {MessageType = ServerToClientMessageTypeEnum.LimitOrderAccepted});
 
                 Assert.IsNotNull(s);
 

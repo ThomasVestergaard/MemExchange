@@ -6,11 +6,11 @@ using MemExchange.Server.Processor.Book;
 using MemExchange.Server.Processor.Book.Executions;
 using MemExchange.Server.Processor.Book.MatchingAlgorithms;
 using MemExchange.Server.Processor.Book.Orders;
+using MemExchange.Server.Processor.Book.Triggers;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Rhino.Mocks.Constraints;
 
-namespace MemExchange.Tests.Server.NewBook
+namespace MemExchange.Tests.Server.Book
 {
     [TestFixture]
     public class OrderBookTests
@@ -31,7 +31,7 @@ namespace MemExchange.Tests.Server.NewBook
         public void BookShouldSetBestBidOnHigherBuyOrders()
         {
             var orderBookBestBidAsk = new OrderBookBestBidAsk("ABC");
-            var book = new OrderBook("ABC", limitOrderMatchingAlgorithmMock, marketOrderMatchingAlgorithmMock, orderBookBestBidAsk, outgoingQueueMock);
+            var book = new OrderBook("ABC", limitOrderMatchingAlgorithmMock, marketOrderMatchingAlgorithmMock, orderBookBestBidAsk);
 
             Assert.IsNull(orderBookBestBidAsk.BestBidPrice);
 
@@ -55,7 +55,7 @@ namespace MemExchange.Tests.Server.NewBook
         public void BookShouldSetBestAskOnLowerSellOrders()
         {
             var orderBookBestBidAsk = new OrderBookBestBidAsk("ABC");
-            var book = new OrderBook("ABC", limitOrderMatchingAlgorithmMock, marketOrderMatchingAlgorithmMock, orderBookBestBidAsk, outgoingQueueMock);
+            var book = new OrderBook("ABC", limitOrderMatchingAlgorithmMock, marketOrderMatchingAlgorithmMock, orderBookBestBidAsk);
 
             Assert.IsNull(orderBookBestBidAsk.BestAskPrice);
 
@@ -79,7 +79,7 @@ namespace MemExchange.Tests.Server.NewBook
         public void BookShouldRemoveSlotWhenOrderIsFilled()
         {
             var orderBookBestBidAsk = new OrderBookBestBidAsk("ABC");
-            var book = new OrderBook("ABC", limitOrderMatchingAlgorithmMock, marketOrderMatchingAlgorithmMock, orderBookBestBidAsk, outgoingQueueMock);
+            var book = new OrderBook("ABC", limitOrderMatchingAlgorithmMock, marketOrderMatchingAlgorithmMock, orderBookBestBidAsk);
 
             var buyOrder = new LimitOrder("ABC", 10, 90, WayEnum.Buy, 9);
             book.HandleLimitOrder(buyOrder);
@@ -96,7 +96,7 @@ namespace MemExchange.Tests.Server.NewBook
         public void BookShouldRemoveSlotWhenOrderIsDeleted()
         {
             var orderBookBestBidAsk = new OrderBookBestBidAsk("ABC");
-            var book = new OrderBook("ABC", limitOrderMatchingAlgorithmMock, marketOrderMatchingAlgorithmMock, orderBookBestBidAsk, outgoingQueueMock);
+            var book = new OrderBook("ABC", limitOrderMatchingAlgorithmMock, marketOrderMatchingAlgorithmMock, orderBookBestBidAsk);
 
             var buyOrder = new LimitOrder("ABC", 10, 90, WayEnum.Buy, 9);
             book.HandleLimitOrder(buyOrder);
@@ -113,7 +113,7 @@ namespace MemExchange.Tests.Server.NewBook
         public void BookShouldSetBestBidAndNullAskOnOneBuyOrder()
         {
             var orderBookBestBidAsk = new OrderBookBestBidAsk("ABC");
-            var book = new OrderBook("ABC", limitOrderMatchingAlgorithmMock, marketOrderMatchingAlgorithmMock, orderBookBestBidAsk, outgoingQueueMock);
+            var book = new OrderBook("ABC", limitOrderMatchingAlgorithmMock, marketOrderMatchingAlgorithmMock, orderBookBestBidAsk);
 
             var buyOrder = new LimitOrder("ABC", 10, 90, WayEnum.Buy, 9);
             book.HandleLimitOrder(buyOrder);
@@ -126,7 +126,7 @@ namespace MemExchange.Tests.Server.NewBook
         public void BookShouldUpdateBestBidWhenBetterBuyPriceComesIn()
         {
             var orderBookBestBidAsk = new OrderBookBestBidAsk("ABC");
-            var book = new OrderBook("ABC", limitOrderMatchingAlgorithmMock, marketOrderMatchingAlgorithmMock, orderBookBestBidAsk, outgoingQueueMock);
+            var book = new OrderBook("ABC", limitOrderMatchingAlgorithmMock, marketOrderMatchingAlgorithmMock, orderBookBestBidAsk);
 
             var buyOrder1 = new LimitOrder("ABC", 10, 90, WayEnum.Buy, 9);
             book.HandleLimitOrder(buyOrder1);
@@ -144,7 +144,7 @@ namespace MemExchange.Tests.Server.NewBook
         public void BookShouldSetBestAskAndNullBidOnOneSellOrder()
         {
             var orderBookBestBidAsk = new OrderBookBestBidAsk("ABC");
-            var book = new OrderBook("ABC", limitOrderMatchingAlgorithmMock, marketOrderMatchingAlgorithmMock, orderBookBestBidAsk, outgoingQueueMock);
+            var book = new OrderBook("ABC", limitOrderMatchingAlgorithmMock, marketOrderMatchingAlgorithmMock, orderBookBestBidAsk);
 
             var sellOrder = new LimitOrder("ABC", 10, 90, WayEnum.Sell, 9);
             book.HandleLimitOrder(sellOrder);
@@ -157,7 +157,7 @@ namespace MemExchange.Tests.Server.NewBook
         public void BookShouldUpdateBestAskWhenBetterSellPriceComesIn()
         {
             var orderBookBestBidAsk = new OrderBookBestBidAsk("ABC");
-            var book = new OrderBook("ABC", limitOrderMatchingAlgorithmMock, marketOrderMatchingAlgorithmMock, orderBookBestBidAsk, outgoingQueueMock);
+            var book = new OrderBook("ABC", limitOrderMatchingAlgorithmMock, marketOrderMatchingAlgorithmMock, orderBookBestBidAsk);
 
             var sellOrder1 = new LimitOrder("ABC", 10, 90, WayEnum.Sell, 9);
             book.HandleLimitOrder(sellOrder1);
@@ -174,7 +174,7 @@ namespace MemExchange.Tests.Server.NewBook
         public void IncomingBuyOrderShouldBeMatchedCompletelyAndNotBooked()
         {
             var orderBookBestBidAsk = new OrderBookBestBidAsk("ABC");
-            var book = new OrderBook("ABC", new LimitOrderMatchingAlgorithm(new DateService()), new MarketOrderMatchingAlgorithm(new DateService()),  orderBookBestBidAsk, outgoingQueueMock);
+            var book = new OrderBook("ABC", new LimitOrderMatchingAlgorithm(new DateService()), new MarketOrderMatchingAlgorithm(new DateService()),  orderBookBestBidAsk);
 
             var sellOrder1 = new LimitOrder("ABC", 100, 90, WayEnum.Sell, 9);
             book.HandleLimitOrder(sellOrder1);
@@ -198,7 +198,7 @@ namespace MemExchange.Tests.Server.NewBook
             var matchAlgo = new LimitOrderMatchingAlgorithm(new DateService());
             matchAlgo.AddExecutionsHandler(executions.Add);
 
-            var book = new OrderBook("ABC", matchAlgo, marketOrderMatchingAlgorithmMock, orderBookBestBidAsk, outgoingQueueMock);
+            var book = new OrderBook("ABC", matchAlgo, marketOrderMatchingAlgorithmMock, orderBookBestBidAsk);
 
             var sellOrder1 = new LimitOrder("ABC", 10, 90, WayEnum.Sell, 9);
             var sellOrder2 = new LimitOrder("ABC", 10, 91, WayEnum.Sell, 9);
@@ -226,6 +226,33 @@ namespace MemExchange.Tests.Server.NewBook
 
             Assert.AreEqual(93, orderBookBestBidAsk.BestBidPrice);
             Assert.AreEqual(60, orderBookBestBidAsk.BestBidQuantity);
+        }
+
+        [Test]
+        public void ShouldRemoveTriggerWhenTriggerIsExecuted()
+        {
+            var orderBookBestBidAsk = new OrderBookBestBidAsk("ABC");
+            var book = new OrderBook("ABC", limitOrderMatchingAlgorithmMock, marketOrderMatchingAlgorithmMock, orderBookBestBidAsk);
+
+
+            var trigger = new BestPriceTrigger("ABC", 10, WayEnum.Buy);
+            var stopOrder = new StopLimitOrder("abc", 10, 90, 90, WayEnum.Buy, 2, trigger);
+            
+            
+            trigger.SetTriggerAction(() =>
+            {
+                stopOrder.Delete();
+            });
+
+            book.AddStopLimitOrder(stopOrder);
+
+            Assert.AreEqual(trigger, book.BuySideStopLimitOrders[0].Trigger);
+
+            orderBookBestBidAsk.Set(11,12, 100, 100);
+            trigger.TryExecute(orderBookBestBidAsk);
+
+            Assert.AreEqual(0, book.BuySideStopLimitOrders.Count);
+
         }
 
     }

@@ -9,7 +9,7 @@ using MemExchange.Client.UI.Setup;
 using MemExchange.ClientApi;
 using MemExchange.Core.SharedDto.Orders;
 
-namespace MemExchange.Client.UI.Usercontrols.ActiveOrders
+namespace MemExchange.Client.UI.Usercontrols.ActiveLimitOrders
 {
     public class ActiveOrdersViewModel : INotifyPropertyChanged
     {

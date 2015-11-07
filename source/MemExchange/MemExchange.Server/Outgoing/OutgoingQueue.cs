@@ -68,7 +68,7 @@ namespace MemExchange.Server.Outgoing
             serverToClientMessage.Reset();
             serverToClientMessage.ReceiverClientId = limitOrder.ClientId;
             serverToClientMessage.LimitOrder.Update(limitOrder.ToDto());
-            serverToClientMessage.MessageType = ServerToClientMessageTypeEnum.OrderAccepted;
+            serverToClientMessage.MessageType = ServerToClientMessageTypeEnum.LimitOrderAccepted;
             Enqueue();
 
         }
@@ -78,7 +78,7 @@ namespace MemExchange.Server.Outgoing
             serverToClientMessage.Reset();
             serverToClientMessage.ReceiverClientId = limitOrder.ClientId;
             serverToClientMessage.LimitOrder.Update(limitOrder.ToDto());
-            serverToClientMessage.MessageType = ServerToClientMessageTypeEnum.OrderChanged;
+            serverToClientMessage.MessageType = ServerToClientMessageTypeEnum.LimitOrderChanged;
             Enqueue();
         }
 
@@ -87,16 +87,16 @@ namespace MemExchange.Server.Outgoing
             serverToClientMessage.Reset();
             serverToClientMessage.ReceiverClientId = limitOrder.ClientId;
             serverToClientMessage.LimitOrder.Update(limitOrder.ToDto());
-            serverToClientMessage.MessageType = ServerToClientMessageTypeEnum.OrderDeleted;
+            serverToClientMessage.MessageType = ServerToClientMessageTypeEnum.LimitOrderDeleted;
             Enqueue();
         }
 
-        public void EnqueueOrderSnapshot(int clientId, List<ILimitOrder> orders)
+        public void EnqueueLimitOrderSnapshot(int clientId, List<ILimitOrder> orders)
         {
             serverToClientMessage.Reset();
             serverToClientMessage.ReceiverClientId = clientId;
-            serverToClientMessage.OrderList.AddRange(orders.Select(a => a.ToDto()));
-            serverToClientMessage.MessageType = ServerToClientMessageTypeEnum.OrderSnapshot;
+            serverToClientMessage.LimitOrderList.AddRange(orders.Select(a => a.ToDto()));
+            serverToClientMessage.MessageType = ServerToClientMessageTypeEnum.LimitOrderSnapshot;
             Enqueue();
         }
 
@@ -106,6 +106,33 @@ namespace MemExchange.Server.Outgoing
             serverToClientMessage.MessageType = ServerToClientMessageTypeEnum.Level1;
             serverToClientMessage.ReceiverClientId = 0;
             serverToClientMessage.Level1.Update(orderBookBestBidAsk.ToDto());
+            Enqueue();
+        }
+
+        public void EnqueueAddedStopLimitOrder(IStopLimitOrder stopLimitOrder)
+        {
+            serverToClientMessage.Reset();
+            serverToClientMessage.ReceiverClientId = stopLimitOrder.ClientId;
+            serverToClientMessage.MessageType = ServerToClientMessageTypeEnum.StopLimitOrderAccepted;
+            serverToClientMessage.StopLimitOrder.Update(stopLimitOrder.ToDto());
+            Enqueue();
+        }
+
+        public void EnqueueUpdatedStopLimitOrder(IStopLimitOrder stopLimitOrder)
+        {
+            serverToClientMessage.Reset();
+            serverToClientMessage.ReceiverClientId = stopLimitOrder.ClientId;
+            serverToClientMessage.MessageType = ServerToClientMessageTypeEnum.StopLimitOrderChanged;
+            serverToClientMessage.StopLimitOrder.Update(stopLimitOrder.ToDto());
+            Enqueue();
+        }
+
+        public void EnqueueDeletedStopLimitOrder(IStopLimitOrder stopLimitOrder)
+        {
+            serverToClientMessage.Reset();
+            serverToClientMessage.ReceiverClientId = stopLimitOrder.ClientId;
+            serverToClientMessage.MessageType = ServerToClientMessageTypeEnum.StopLimitOrderDeleted;
+            serverToClientMessage.StopLimitOrder.Update(stopLimitOrder.ToDto());
             Enqueue();
         }
 
@@ -139,6 +166,15 @@ namespace MemExchange.Server.Outgoing
             serverToClientMessage.ReceiverClientId = execution.SellSideOrder.ClientId;
             serverToClientMessage.Execution.Update(sellSideExecution);
             serverToClientMessage.MessageType = ServerToClientMessageTypeEnum.Execution;
+            Enqueue();
+        }
+
+        public void EnqueueStopLimitOrderSnapshot(int clientId, List<IStopLimitOrder> orders)
+        {
+            serverToClientMessage.Reset();
+            serverToClientMessage.ReceiverClientId = clientId;
+            serverToClientMessage.StopLimitOrderList.AddRange(orders.Select(a => a.ToDto()));
+            serverToClientMessage.MessageType = ServerToClientMessageTypeEnum.StopLimitOrderSnapshot;
             Enqueue();
         }
     }

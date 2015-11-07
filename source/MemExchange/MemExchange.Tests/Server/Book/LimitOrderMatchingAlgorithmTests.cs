@@ -8,7 +8,7 @@ using MemExchange.Server.Processor.Book.Orders;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-namespace MemExchange.Tests.Server.NewBook
+namespace MemExchange.Tests.Server.Book
 {
     
     [TestFixture]

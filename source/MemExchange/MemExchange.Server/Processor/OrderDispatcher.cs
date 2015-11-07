@@ -5,6 +5,7 @@ using MemExchange.Server.Outgoing;
 using MemExchange.Server.Processor.Book;
 using MemExchange.Server.Processor.Book.MatchingAlgorithms;
 using MemExchange.Server.Processor.Book.Orders;
+using MemExchange.Server.Processor.Book.Triggers;
 
 namespace MemExchange.Server.Processor
 {
@@ -13,13 +14,15 @@ namespace MemExchange.Server.Processor
         private readonly IOutgoingQueue outgoingQueue;
         private readonly ILogger logger;
         private readonly IDateService dateService;
+        private readonly IOrderRepository orderRepository;
         public Dictionary<string, IOrderBook> OrderBooks { get; private set; }
 
-        public OrderDispatcher(IOutgoingQueue outgoingQueue, ILogger logger, IDateService dateService)
+        public OrderDispatcher(IOutgoingQueue outgoingQueue, ILogger logger, IDateService dateService, IOrderRepository orderRepository)
         {
             this.outgoingQueue = outgoingQueue;
             this.logger = logger;
             this.dateService = dateService;
+            this.orderRepository = orderRepository;
             OrderBooks = new Dictionary<string, IOrderBook>();
         }
 
@@ -30,7 +33,28 @@ namespace MemExchange.Server.Processor
                 return;
 
             OrderBooks[symbol].HandleMarketOrder(marketOrder);
+        }
 
+        public void HandleStopLimitOrder(IStopLimitOrder stopLimitOrder)
+        {
+            string symbol = stopLimitOrder.Symbol;
+            if (!OrderBooks.ContainsKey(symbol))
+                return;
+            
+            stopLimitOrder.RegisterOutgoingQueueDeleteHandler(outgoingQueue.EnqueueDeletedStopLimitOrder);
+            outgoingQueue.EnqueueAddedStopLimitOrder(stopLimitOrder);
+            stopLimitOrder.Trigger.SetTriggerAction(() =>
+            {
+                stopLimitOrder.Delete();
+                var newLimitOrder = orderRepository.NewLimitOrder(stopLimitOrder);
+                newLimitOrder.RegisterDeleteNotificationHandler(outgoingQueue.EnqueueDeletedLimitOrder);
+                newLimitOrder.RegisterModifyNotificationHandler(outgoingQueue.EnqueueUpdatedLimitOrder);
+                newLimitOrder.RegisterFilledNotification(outgoingQueue.EnqueueDeletedLimitOrder);
+                newLimitOrder.RegisterFilledNotification((order) => order.Delete());
+                HandleAddLimitOrder(newLimitOrder);
+            });
+
+            OrderBooks[symbol].AddStopLimitOrder(stopLimitOrder);
         }
 
         public void HandleAddLimitOrder(ILimitOrder limitOrder)
@@ -46,8 +70,9 @@ namespace MemExchange.Server.Processor
 
                 var level1 = new OrderBookBestBidAsk(symbol);
                 level1.RegisterUpdateHandler(outgoingQueue.EnqueueLevel1Update);
-                
-                OrderBooks.Add(symbol, new OrderBook(symbol, bookMatchingLimitAlgo, bookMatchingMarketAlgo, level1, outgoingQueue));
+
+                var book = new OrderBook(symbol, bookMatchingLimitAlgo, bookMatchingMarketAlgo, level1);
+                OrderBooks.Add(symbol, book);
             }
 
             outgoingQueue.EnqueueAddedLimitOrder(limitOrder);
@@ -56,9 +81,6 @@ namespace MemExchange.Server.Processor
             limitOrder.RegisterModifyNotificationHandler(OrderBooks[symbol].HandleOrderModify);
             
             OrderBooks[symbol].HandleLimitOrder(limitOrder);
-
         }
-
-      
     }
 }

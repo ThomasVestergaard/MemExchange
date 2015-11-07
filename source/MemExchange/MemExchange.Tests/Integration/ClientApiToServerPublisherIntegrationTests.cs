@@ -78,7 +78,7 @@ namespace MemExchange.Tests.Integration
             messagePublisher.Publish(88, new ServerToClientMessage
             {
                 LimitOrder = newLimitOrder,
-                MessageType = ServerToClientMessageTypeEnum.OrderAccepted,
+                MessageType = ServerToClientMessageTypeEnum.LimitOrderAccepted,
                 ReceiverClientId = 88
             });
 
@@ -110,7 +110,7 @@ namespace MemExchange.Tests.Integration
             messagePublisher.Publish(88, new ServerToClientMessage
             {
                 LimitOrder = newLimitOrder,
-                MessageType = ServerToClientMessageTypeEnum.OrderChanged,
+                MessageType = ServerToClientMessageTypeEnum.LimitOrderChanged,
                 ReceiverClientId = 88
             });
 
@@ -136,7 +136,7 @@ namespace MemExchange.Tests.Integration
             messagePublisher.Publish(88, new ServerToClientMessage
             {
                 LimitOrder = newLimitOrder,
-                MessageType = ServerToClientMessageTypeEnum.OrderDeleted,
+                MessageType = ServerToClientMessageTypeEnum.LimitOrderDeleted,
                 ReceiverClientId = 88
             });
 

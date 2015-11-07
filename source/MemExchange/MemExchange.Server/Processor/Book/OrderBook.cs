@@ -12,19 +12,21 @@ namespace MemExchange.Server.Processor.Book
         private readonly ILimitOrderMatchingAlgorithm limitOrderMatchingAlgorithm;
         private readonly IMarketOrderMatchingAlgorithm marketOrderMatchingAlgorithm;
         private readonly IOrderBookBestBidAsk orderBookBestBidAsk;
-        private readonly IOutgoingQueue outgoingQueue;
         public string Symbol { get; private set; }
+        public List<IStopLimitOrder> BuySideStopLimitOrders { get; private set; }
+        public List<IStopLimitOrder> SellSideStopLimitOrders { get; private set; }
 
         public Dictionary<double, IPriceSlot> PriceSlots { get; private set; }
 
-        public OrderBook(string symbol, ILimitOrderMatchingAlgorithm limitOrderMatchingAlgorithm, IMarketOrderMatchingAlgorithm marketOrderMatchingAlgorithm, IOrderBookBestBidAsk orderBookBestBidAsk, IOutgoingQueue outgoingQueue)
+        public OrderBook(string symbol, ILimitOrderMatchingAlgorithm limitOrderMatchingAlgorithm, IMarketOrderMatchingAlgorithm marketOrderMatchingAlgorithm, IOrderBookBestBidAsk orderBookBestBidAsk)
         {
             this.limitOrderMatchingAlgorithm = limitOrderMatchingAlgorithm;
             this.marketOrderMatchingAlgorithm = marketOrderMatchingAlgorithm;
             this.orderBookBestBidAsk = orderBookBestBidAsk;
-            this.outgoingQueue = outgoingQueue;
             Symbol = symbol;
             PriceSlots = new Dictionary<double, IPriceSlot>();
+            BuySideStopLimitOrders = new List<IStopLimitOrder>();
+            SellSideStopLimitOrders = new List<IStopLimitOrder>();
         }
 
         private void SetBestBidAndAsk()
@@ -53,8 +55,17 @@ namespace MemExchange.Server.Processor.Book
                 askQuantity = ask.SellOrders.Sum(a => a.Quantity);
             }
             
-            orderBookBestBidAsk.Set(bestBid, bestAsk, bidQuantity, askQuantity);
+            if (orderBookBestBidAsk.Set(bestBid, bestAsk, bidQuantity, askQuantity))
+                TryExecuteTriggers();
+        }
 
+        private void TryExecuteTriggers()
+        {
+            for (int i = BuySideStopLimitOrders.Count - 1; i >= 0; i--)
+                BuySideStopLimitOrders[i].Trigger.TryExecute(orderBookBestBidAsk);
+
+            for (int i = SellSideStopLimitOrders.Count - 1; i >= 0; i--)
+                SellSideStopLimitOrders[i].Trigger.TryExecute(orderBookBestBidAsk);
         }
         
         private void RemoveSlotIfEmpty(double price)
@@ -182,6 +193,37 @@ namespace MemExchange.Server.Processor.Book
             TryMatchMarketOrder(marketOrder);
             SetBestBidAndAsk();
         }
-       
+
+        public void AddStopLimitOrder(IStopLimitOrder stopLimitOrder)
+        {
+            switch (stopLimitOrder.Way)
+            {
+                case WayEnum.Buy:
+                    BuySideStopLimitOrders.Insert(0, stopLimitOrder);
+                    break;
+
+                case WayEnum.Sell:
+                    SellSideStopLimitOrders.Insert(0, stopLimitOrder);
+                    break;
+            }
+
+            stopLimitOrder.RegisterOrderBookDeleteHandler(RemoveStopLimitOrder);
+            TryExecuteTriggers();
+        }
+
+        public void RemoveStopLimitOrder(IStopLimitOrder stopLimitOrder)
+        {
+            switch (stopLimitOrder.Way)
+            {
+                case WayEnum.Buy:
+                    BuySideStopLimitOrders.Remove(stopLimitOrder);
+                    break;
+
+                case WayEnum.Sell:
+                    SellSideStopLimitOrders.Remove(stopLimitOrder);
+                    break;
+            }
+        }
+
     }
 }

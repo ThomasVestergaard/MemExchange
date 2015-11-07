@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MemExchange.Client.UI.Usercontrols.ActiveOrders
+namespace MemExchange.Client.UI.Usercontrols.ActiveStopLimitOrders
 {
     /// <summary>
-    /// Interaction logic for ActiveLimitOrdersView.xaml
+    /// Interaction logic for ActiveStopLimitOrdersView.xaml
     /// </summary>
-    public partial class ActiveLimitOrdersView : UserControl
+    public partial class ActiveStopLimitOrdersView : UserControl
     {
-        public ActiveLimitOrdersView()
+        public ActiveStopLimitOrdersView()
         {
             InitializeComponent();
         }

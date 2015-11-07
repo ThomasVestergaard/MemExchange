@@ -95,7 +95,11 @@
     <Compile Include="Processor\Book\MatchingAlgorithms\MarketOrderMatchingAlgorithm.cs" />
     <Compile Include="Processor\Book\Orders\IMarketOrder.cs" />
     <Compile Include="Processor\Book\Orders\IOrder.cs" />
+    <Compile Include="Processor\Book\Orders\IStopLimitOrder.cs" />
     <Compile Include="Processor\Book\Orders\MarketOrder.cs" />
+    <Compile Include="Processor\Book\Orders\StopLimitOrder.cs" />
+    <Compile Include="Processor\Book\Triggers\BestPriceTrigger.cs" />
+    <Compile Include="Processor\Book\Triggers\IBestPriceTrigger.cs" />
     <Compile Include="Processor\IIncomingMessageProcessor.cs" />
     <Compile Include="Incoming\IIncomingMessageQueue.cs" />
     <Compile Include="Processor\IncomingMessageProcessor.cs" />

@@ -18,6 +18,10 @@ namespace MemExchange.ClientApi
         public event EventHandler<List<LimitOrderDto>> LimitOrderSnapshot;
         public event EventHandler<ExecutionDto> NewExecution;
         public event EventHandler<MarketBestBidAskDto> Level1Updated;
+        public event EventHandler<StopLimitOrderDto> StopLimitOrderAccepted;
+        public event EventHandler<StopLimitOrderDto> StopLimitOrderChanged;
+        public event EventHandler<StopLimitOrderDto> StopLimitOrderDeleted;
+        public event EventHandler<List<StopLimitOrderDto>> StopLimitOrderSnapshot;
 
         private IMessageConnection messageConnection;
         private readonly IServerMessageSubscriber subscriber;
@@ -43,28 +47,52 @@ namespace MemExchange.ClientApi
         {
             switch (message.MessageType)
             {
-                case ServerToClientMessageTypeEnum.OrderAccepted:
+                case ServerToClientMessageTypeEnum.StopLimitOrderSnapshot:
+                    EventHandler<List<StopLimitOrderDto>> stopLimitOrderSnapshotHandler = StopLimitOrderSnapshot;
+                    if (stopLimitOrderSnapshotHandler != null)
+                        stopLimitOrderSnapshotHandler(this, message.StopLimitOrderList);
+                    break;
+
+                case ServerToClientMessageTypeEnum.StopLimitOrderAccepted:
+                    EventHandler<StopLimitOrderDto> stopLimitOrderAcceptedHandler = StopLimitOrderAccepted;
+                    if (stopLimitOrderAcceptedHandler != null)
+                        stopLimitOrderAcceptedHandler(this, message.StopLimitOrder);
+                    break;
+
+                case ServerToClientMessageTypeEnum.StopLimitOrderChanged:
+                    EventHandler<StopLimitOrderDto> stopLimitOrderChangedHandler = StopLimitOrderChanged;
+                    if (stopLimitOrderChangedHandler != null)
+                        stopLimitOrderChangedHandler(this, message.StopLimitOrder);
+                    break;
+
+                case ServerToClientMessageTypeEnum.StopLimitOrderDeleted:
+                    EventHandler<StopLimitOrderDto> stopLimitOrderDeletedHandler = StopLimitOrderDeleted;
+                    if (stopLimitOrderDeletedHandler != null)
+                        stopLimitOrderDeletedHandler(this, message.StopLimitOrder);
+                    break;
+
+                case ServerToClientMessageTypeEnum.LimitOrderAccepted:
                     EventHandler<LimitOrderDto> acceptedHandler = LimitOrderAccepted;
                     if (acceptedHandler != null)
                         acceptedHandler(this, message.LimitOrder);
                     break;
 
-                case ServerToClientMessageTypeEnum.OrderDeleted:
+                case ServerToClientMessageTypeEnum.LimitOrderDeleted:
                     EventHandler<LimitOrderDto> deletedHandler = LimitOrderDeleted;
                     if (deletedHandler != null)
                         deletedHandler(this, message.LimitOrder);
                     break;
 
-                case ServerToClientMessageTypeEnum.OrderChanged:
+                case ServerToClientMessageTypeEnum.LimitOrderChanged:
                     EventHandler<LimitOrderDto> changedHandler = LimitOrderChanged;
                     if (changedHandler != null)
                         changedHandler(this, message.LimitOrder);
                     break;
 
-                case ServerToClientMessageTypeEnum.OrderSnapshot:
+                case ServerToClientMessageTypeEnum.LimitOrderSnapshot:
                     EventHandler<List<LimitOrderDto>> snapshotHandler = LimitOrderSnapshot;
                     if (snapshotHandler != null)
-                        snapshotHandler(this, message.OrderList);
+                        snapshotHandler(this, message.LimitOrderList);
                     break;
 
                 case ServerToClientMessageTypeEnum.Execution:
@@ -86,6 +114,45 @@ namespace MemExchange.ClientApi
             isStarted = false;
             subscriber.Stop();
             messageConnection.Stop();
+        }
+
+        public void SubmitStopLimitOrder(string symbol, double triggerPrice, double limitPrice, int quantity, WayEnum way)
+        {
+            if (!isStarted)
+                return;
+
+            messageConnection.SendMessage(new ClientToServerMessage
+            {
+                ClientId = clientId,
+                StopLimitOrder = new StopLimitOrderDto
+                {
+                    Symbol = symbol,
+                    Quantity = quantity,
+                    Way = way,
+                    TriggerPrice = triggerPrice,
+                    LimitPrice = limitPrice,
+                    ClientId = clientId
+
+                },
+                MessageType = ClientToServerMessageTypeEnum.PlaceStopLimitOrder
+            });
+        }
+
+        public void CancelStopLimitOrder(uint exchangeOrderId)
+        {
+            if (!isStarted)
+                return;
+
+            messageConnection.SendMessage(new ClientToServerMessage
+            {
+                ClientId = clientId,
+                StopLimitOrder = new StopLimitOrderDto
+                {
+                    ClientId = clientId,
+                    ExchangeOrderId = exchangeOrderId,
+                },
+                MessageType = ClientToServerMessageTypeEnum.CancelStopLimitOrder
+            });
         }
 
         public void SubmitMarketOrder(string symbol, int quantity, WayEnum way)
@@ -170,7 +237,19 @@ namespace MemExchange.ClientApi
             messageConnection.SendMessage(new ClientToServerMessage
             {
                 ClientId = clientId,
-                MessageType = ClientToServerMessageTypeEnum.RequestOpenOrders
+                MessageType = ClientToServerMessageTypeEnum.RequestOpenLimitOrders
+            });
+        }
+
+        public void RequestOpenStopLimitOrders()
+        {
+            if (!isStarted)
+                return;
+
+            messageConnection.SendMessage(new ClientToServerMessage
+            {
+                ClientId = clientId,
+                MessageType = ClientToServerMessageTypeEnum.RequestOpenStopLimitOrders
             });
         }
     }

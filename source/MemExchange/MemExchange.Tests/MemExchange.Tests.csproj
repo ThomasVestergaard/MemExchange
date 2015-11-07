@@ -74,14 +74,15 @@
     <Compile Include="Server\ClientRepositoryTests.cs" />
     <Compile Include="Server\DependencyInjectionResolveTest.cs" />
     <Compile Include="Server\IncomingMessageProcessorTests.cs" />
-    <Compile Include="Server\NewBook\LimitOrderMatchingAlgorithmTests.cs" />
-    <Compile Include="Server\NewBook\NewLimitOrderTests.cs" />
-    <Compile Include="Server\NewBook\OrderBookTests.cs" />
-    <Compile Include="Server\NewBook\OrderRepositoryTests.cs" />
-    <Compile Include="Server\NewBook\PriceSlotTests.cs" />
-    <Compile Include="Server\NewBook\RepositoryBookAlgoIntegrationTests.cs" />
+    <Compile Include="Server\Book\LimitOrderMatchingAlgorithmTests.cs" />
+    <Compile Include="Server\Book\NewLimitOrderTests.cs" />
+    <Compile Include="Server\Book\OrderBookTests.cs" />
+    <Compile Include="Server\Book\OrderRepositoryTests.cs" />
+    <Compile Include="Server\Book\PriceSlotTests.cs" />
+    <Compile Include="Server\Book\RepositoryBookAlgoIntegrationTests.cs" />
     <Compile Include="Server\OrderDispatcherTests.cs" />
     <Compile Include="Server\OutgoingQueueTests.cs" />
+    <Compile Include="Server\Triggers\BestPriceTriggerTests.cs" />
     <Compile Include="Tools\DependencyInjectionResolveTester.cs" />
     <Compile Include="Tools\TcpHelper.cs" />
   </ItemGroup>

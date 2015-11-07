@@ -3,7 +3,8 @@ using System.Runtime.CompilerServices;
 using MemExchange.Client.UI.Annotations;
 using MemExchange.Client.UI.Setup;
 using MemExchange.Client.UI.Usercontrols;
-using MemExchange.Client.UI.Usercontrols.ActiveOrders;
+using MemExchange.Client.UI.Usercontrols.ActiveLimitOrders;
+using MemExchange.Client.UI.Usercontrols.ActiveStopLimitOrders;
 using MemExchange.Client.UI.Usercontrols.Executions;
 using MemExchange.Client.UI.Usercontrols.Level1;
 using MemExchange.ClientApi;
@@ -19,6 +20,7 @@ namespace MemExchange.Client.UI.Windows
         public ClientExecutionsViewModel ExecutionsViewModel { get; set; }
         public Level1ViewModel L1ViewModel { get; set; }
         public NewMarketOrderViewModel MarketOrderViewModel { get; set; }
+        public ActiveStopLimitOrdersViewModel StopLimitOrdersViewModel { get; set; }
 
         public MainWindowViewModel()
         {
@@ -28,6 +30,7 @@ namespace MemExchange.Client.UI.Windows
             ExecutionsViewModel = new ClientExecutionsViewModel(client);
             L1ViewModel = new Level1ViewModel(client);
             MarketOrderViewModel = new NewMarketOrderViewModel(client);
+            StopLimitOrdersViewModel = new ActiveStopLimitOrdersViewModel(client);
         }
 
         [NotifyPropertyChangedInvocator]

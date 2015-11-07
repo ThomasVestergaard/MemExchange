@@ -42,7 +42,7 @@ namespace MemExchange.Server.Processor.Book
                 updateHandlers[i].Invoke(this);
         }
 
-        public void Set(double? bestBid, double? bestAsk, int bestBidQuantity, int bestAskQuantity)
+        public bool Set(double? bestBid, double? bestAsk, int bestBidQuantity, int bestAskQuantity)
         {
             bool isUpdated = false;
 
@@ -73,6 +73,7 @@ namespace MemExchange.Server.Processor.Book
             if (isUpdated)
                 NotifyHandlers();
 
+            return isUpdated;
         }
 
         public MarketBestBidAskDto ToDto()

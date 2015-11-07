@@ -6,13 +6,16 @@ namespace MemExchange.Core.SharedDto.ServerToClient
     public enum ServerToClientMessageTypeEnum
     {
         NotSet = 1,
-        OrderAccepted = 2,
-        OrderChanged = 3,
-        OrderDeleted = 4,
+        LimitOrderAccepted = 2,
+        LimitOrderChanged = 3,
+        LimitOrderDeleted = 4,
         Message = 5,
-        OrderSnapshot = 6,
+        LimitOrderSnapshot = 6,
         Execution = 7,
-        Level1 = 8
-
+        Level1 = 8,
+        StopLimitOrderAccepted = 9,
+        StopLimitOrderChanged = 10,
+        StopLimitOrderDeleted = 11,
+        StopLimitOrderSnapshot = 12
     }
 }

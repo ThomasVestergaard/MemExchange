@@ -16,7 +16,7 @@ namespace MemExchange.Tests.Core.SharedDtoTests
 
             var newMessage = new ClientToServerMessage();
             newMessage.ClientId = 50;
-            newMessage.MessageType = ClientToServerMessageTypeEnum.RequestOpenOrders;
+            newMessage.MessageType = ClientToServerMessageTypeEnum.RequestOpenLimitOrders;
 
             original.Update(newMessage);
 

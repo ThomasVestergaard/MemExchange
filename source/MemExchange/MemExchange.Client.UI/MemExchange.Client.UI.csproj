@@ -66,10 +66,15 @@
     <Compile Include="Setup\DependencyInjection.cs" />
     <Compile Include="Setup\IConfiguration.cs" />
     <Compile Include="Setup\UiDispatcher.cs" />
-    <Compile Include="Usercontrols\ActiveOrders\ActiveLimitOrdersView.xaml.cs">
+    <Compile Include="Usercontrols\ActiveLimitOrders\ActiveLimitOrdersView.xaml.cs">
       <DependentUpon>ActiveLimitOrdersView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Usercontrols\ActiveOrders\ActiveOrdersViewModel.cs" />
+    <Compile Include="Usercontrols\ActiveLimitOrders\ActiveOrdersViewModel.cs" />
+    <Compile Include="Usercontrols\ActiveStopLimitOrders\ActiveStopLimitOrdersView.xaml.cs">
+      <DependentUpon>ActiveStopLimitOrdersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Usercontrols\ActiveStopLimitOrders\ActiveStopLimitOrdersViewModel.cs" />
+    <Compile Include="Usercontrols\ActiveStopLimitOrders\StopLimitOrderViewModel.cs" />
     <Compile Include="Usercontrols\Executions\ClientExecutionsView.xaml.cs">
       <DependentUpon>ClientExecutionsView.xaml</DependentUpon>
     </Compile>
@@ -84,7 +89,7 @@
     </Compile>
     <Compile Include="Usercontrols\NewMarketOrderViewModel.cs" />
     <Compile Include="Windows\EditLimitOrderViewModel.cs" />
-    <Compile Include="Usercontrols\ActiveOrders\LimitOrderViewModel.cs" />
+    <Compile Include="Usercontrols\ActiveLimitOrders\LimitOrderViewModel.cs" />
     <Compile Include="Usercontrols\NewLimitOrder.xaml.cs">
       <DependentUpon>NewLimitOrder.xaml</DependentUpon>
     </Compile>
@@ -104,7 +109,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Usercontrols\ActiveOrders\ActiveLimitOrdersView.xaml">
+    <Page Include="Usercontrols\ActiveLimitOrders\ActiveLimitOrdersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Usercontrols\ActiveStopLimitOrders\ActiveStopLimitOrdersView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

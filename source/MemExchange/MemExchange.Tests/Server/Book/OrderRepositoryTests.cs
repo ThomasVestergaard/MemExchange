@@ -2,7 +2,7 @@
 using MemExchange.Server.Processor.Book;
 using NUnit.Framework;
 
-namespace MemExchange.Tests.Server.NewBook
+namespace MemExchange.Tests.Server.Book
 {
     [TestFixture]
     public class OrderRepositoryTests
@@ -37,7 +37,7 @@ namespace MemExchange.Tests.Server.NewBook
         {
             var repo = new OrderRepository();
             var order = repo.NewLimitOrder("ABC", 12, 200.45d, 90, WayEnum.Buy);
-            var retrievedOrder = repo.TryGetOrder(order.ExchangeOrderId);
+            var retrievedOrder = repo.TryGetLimitOrder(order.ExchangeOrderId);
             Assert.AreEqual(order, retrievedOrder);
         }
 
@@ -46,7 +46,7 @@ namespace MemExchange.Tests.Server.NewBook
         {
             var repo = new OrderRepository();
             var order = repo.NewLimitOrder("ABC", 12, 200.45d, 90, WayEnum.Buy);
-            var retrievedOrder = repo.TryGetOrder(666);
+            var retrievedOrder = repo.TryGetLimitOrder(666);
             Assert.IsNull(retrievedOrder);
         }
 
@@ -57,10 +57,9 @@ namespace MemExchange.Tests.Server.NewBook
             var order = repo.NewLimitOrder("ABC", 12, 200.45d, 90, WayEnum.Buy);
             order.Delete();
 
-            var retrievedOrder = repo.TryGetOrder(order.ExchangeOrderId);
+            var retrievedOrder = repo.TryGetLimitOrder(order.ExchangeOrderId);
             Assert.IsNull(retrievedOrder);
         }
-
 
         [Test]
         public void ShouldReturnAllClientOrders()
@@ -72,9 +71,9 @@ namespace MemExchange.Tests.Server.NewBook
             var order3 = repo.NewLimitOrder("ABC", 13, 200.45d, 90, WayEnum.Buy);
             var order4 = repo.NewLimitOrder("ABC", 14, 200.45d, 90, WayEnum.Buy);
 
-            var client12 = repo.GetClientOrders(12);
-            var client13 = repo.GetClientOrders(13);
-            var client14 = repo.GetClientOrders(14);
+            var client12 = repo.GetClientLimitOrders(12);
+            var client13 = repo.GetClientLimitOrders(13);
+            var client14 = repo.GetClientLimitOrders(14);
 
             Assert.AreEqual(2, client12.Count);
             Assert.AreEqual(1, client13.Count);
@@ -84,6 +83,17 @@ namespace MemExchange.Tests.Server.NewBook
             Assert.AreEqual(order2, client12[1]);
             Assert.AreEqual(order3, client13[0]);
             Assert.AreEqual(order4, client14[0]);
+        }
+
+        [Test]
+        public void RepositoryShouldRemoveStopLimitOrderWhenOrderIsDeleted()
+        {
+            var repo = new OrderRepository();
+            var order = repo.NewStopLimitOrder("abc", 1, 12, 12, 100, WayEnum.Buy);
+            order.Delete();
+            var retrievedOrder = repo.TryGetStopLimitOrder(order.ExchangeOrderId);
+            Assert.IsNull(retrievedOrder);
+
         }
 
     }

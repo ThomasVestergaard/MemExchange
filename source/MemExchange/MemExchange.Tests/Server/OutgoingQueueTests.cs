@@ -1,7 +1,6 @@
 ﻿using System.Threading;
 using MemExchange.Core.Logging;
 using MemExchange.Core.SharedDto;
-using MemExchange.Core.SharedDto.Orders;
 using MemExchange.Core.SharedDto.ServerToClient;
 using MemExchange.Server.Outgoing;
 using MemExchange.Server.Processor.Book.Orders;
@@ -42,7 +41,7 @@ namespace MemExchange.Tests.Server
 
             Thread.Sleep(100);
             messagePublisherMock.AssertWasCalled(a => a.OnNext(Arg<ServerToClientMessage>.Matches(b => 
-                b.MessageType == ServerToClientMessageTypeEnum.OrderAccepted
+                b.MessageType == ServerToClientMessageTypeEnum.LimitOrderAccepted
                 && b.LimitOrder.ClientId == 90
                 && b.LimitOrder.Price == 20d
                 && b.LimitOrder.Quantity == 21
@@ -61,7 +60,7 @@ namespace MemExchange.Tests.Server
 
             Thread.Sleep(100);
             messagePublisherMock.AssertWasCalled(a => a.OnNext(Arg<ServerToClientMessage>.Matches(b =>
-                b.MessageType == ServerToClientMessageTypeEnum.OrderChanged
+                b.MessageType == ServerToClientMessageTypeEnum.LimitOrderChanged
                 && b.LimitOrder.ClientId == 90
                 && b.LimitOrder.Price == 20d
                 && b.LimitOrder.Quantity == 21
@@ -80,7 +79,7 @@ namespace MemExchange.Tests.Server
 
             Thread.Sleep(100);
             messagePublisherMock.AssertWasCalled(a => a.OnNext(Arg<ServerToClientMessage>.Matches(b =>
-                b.MessageType == ServerToClientMessageTypeEnum.OrderDeleted
+                b.MessageType == ServerToClientMessageTypeEnum.LimitOrderDeleted
                 && b.LimitOrder.ClientId == 90
                 && b.LimitOrder.Price == 20d
                 && b.LimitOrder.Quantity == 21

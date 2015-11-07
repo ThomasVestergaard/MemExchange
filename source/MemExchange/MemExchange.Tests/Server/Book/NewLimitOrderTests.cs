@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MemExchange.Core.SharedDto;
-using NUnit.Framework;
-using System;
 using MemExchange.Server.Processor.Book.Orders;
+using NUnit.Framework;
 
-namespace MemExchange.Tests.Server.NewBook
+namespace MemExchange.Tests.Server.Book
 {
     [TestFixture]
     public class NewLimitOrderTests
