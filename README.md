@@ -6,20 +6,68 @@ The exchange supports market order, limit orders and stop-limit orders.
 Theres is no authentication or other security measures build in. It's made solely for research, paper-trade and showcase purposes.
 
 #Project state: 
-Missing implementation of stop-limit orders and market orders. Limit orders are done both on client and server.
-Performance testing and light optimization has been done, achieving message processing throughput of ~5k to ~25k / sec.
+Feature complete beta is released. There are probably a few issues here and there which I hope to discover over time while using it. Once these have been idntified and fixed, a stable release 1.0 will be issued.
 
 Project website (blog): http://www.thomasvestergaard.com/blog/memexchange/what-is-memexchange/
-
 Running locally (blog): http://thomasvestergaard.com/blog/memexchange/getting-started-with-memexchange/
+
+#Getting started
+
+- Get the source code
+- Run the MemExchange.Server project or install it as a windows service
+- Find a way to execute this code:
+
+```
+using MemExchange.ClientApi;
+using MemExchange.Core.SharedDto;
+
+// Instantiate dependencies
+var logger = new SerilogLogger();
+var serializer = new ProtobufSerializer();
+var connection = new MessageConnection(logger, serializer);
+var messageSubscriber = new ServerMessageSubscriber(logger, serializer);
+
+// Create the client
+var exchangeClient = new ClientApi.Client(connection, messageSubscriber);
+
+// Hook up to some events
+exchangeClient.Level1Updated += (sender, dto) =>
+{
+	Console.WriteLine("Level 1 update: {0}, Best bid: {1}, Best ask: {2}", dto.Symbol, dto.BestBidPrice, dto.BestAskPrice);
+};
+
+exchangeClient.LimitOrderAccepted += (sender, dto) =>
+{
+	Console.WriteLine("Limit order accepted.");
+};
+
+// Start and connecto the the server. Unless you changed something in the server, these port numbers should not be changed.
+// 42 is your client id.
+exchangeClient.Start(42, "localhost", 9192, 9193);
+
+Console.WriteLine("Client started. Hit any key to submit order.");
+Console.ReadKey();
+
+// Submit a buy limit order for symbol AAPL, with e price of 50 on quantity 100
+exchangeClient.SubmitLimitOrder("APPL", 50, 100, WayEnum.Buy);
+
+Console.WriteLine("Hit any key to stop.");
+Console.ReadKey();
+
+// Stop the client
+exchangeClient.Stop();
+
+```
+
+
 
 #High level architechture.
 ![alt tag](http://thomasvestergaard.com/media/1010/memexchange_high_level_architechture.jpg)
 
 #Client side features
-- Client should be able to post orders (Limit, stop-limit, market - Limit order is done)
-- Client should be able to modify orders (Limit, stop-limit - Limit order is done)
-- Client should be able to delete orders (Limit, stop-limit - Limit order is done)
+- Client should be able to post orders (Limit, stop-limit, market - done
+- Client should be able to modify orders (done - Market orders cannot be modified)
+- Client should be able to delete orders (done)
 - Client should be able to reqeust snapshop of open orders (done)
 - Client should receive updates to orders when they are either modified, deleted, added (done)
 - Client should receive executions on own orders. (done)
