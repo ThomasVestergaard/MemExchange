@@ -208,6 +208,7 @@ namespace MemExchange.Server.Processor.Book
             }
 
             stopLimitOrder.RegisterOrderBookDeleteHandler(RemoveStopLimitOrder);
+            stopLimitOrder.RegisterOrderBookModifyHandler(StopLimitOrderModified);
             TryExecuteTriggers();
         }
 
@@ -223,6 +224,11 @@ namespace MemExchange.Server.Processor.Book
                     SellSideStopLimitOrders.Remove(stopLimitOrder);
                     break;
             }
+        }
+
+        private void StopLimitOrderModified(IStopLimitOrder modifiedStopLimitOrder)
+        {
+            TryExecuteTriggers();
         }
 
     }

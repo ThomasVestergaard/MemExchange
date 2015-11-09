@@ -30,9 +30,28 @@ namespace MemExchange.Server.Processor
 
             switch (data.Message.MessageType)
             {
+               case ClientToServerMessageTypeEnum.ModifyStopLimitOrder:
+                    if (data.Message.ClientId <= 0)
+                        break;
+
+                    var stopLimitOrderToModify = ordeRepository.TryGetStopLimitOrder(data.Message.StopLimitOrder.ExchangeOrderId);
+                    if (stopLimitOrderToModify == null)
+                        return;
+
+                    stopLimitOrderToModify.Modify(data.Message.StopLimitOrder.TriggerPrice, data.Message.StopLimitOrder.LimitPrice, data.Message.StopLimitOrder.Quantity);
+                    outgoingQueue.EnqueueUpdatedStopLimitOrder(stopLimitOrderToModify);
+
+                    break;
+
                case ClientToServerMessageTypeEnum.RequestOpenStopLimitOrders:
+                    if (data.Message.ClientId <= 0)
+                        break;
 
+                    var orders = ordeRepository.GetClientStopLimitOrders(data.Message.ClientId);
+                    if (orders.Count == 0)
+                        return;
 
+                    outgoingQueue.EnqueueStopLimitOrderSnapshot(data.Message.ClientId, orders);
                     break;
 
                 case ClientToServerMessageTypeEnum.CancelStopLimitOrder:
@@ -50,7 +69,7 @@ namespace MemExchange.Server.Processor
                         return;
 
                     var newStopLimitOrder = ordeRepository.NewStopLimitOrder(data.Message.StopLimitOrder);
-                    dispatcher.HandleStopLimitOrder(newStopLimitOrder);
+                    dispatcher.HandleAddStopLimitOrder(newStopLimitOrder);
                     break;
 
 

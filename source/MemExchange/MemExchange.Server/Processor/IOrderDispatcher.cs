@@ -8,7 +8,7 @@ namespace MemExchange.Server.Processor
     {
         Dictionary<string, IOrderBook> OrderBooks { get; }
 
-        void HandleStopLimitOrder(IStopLimitOrder stopLimitOrder);
+        void HandleAddStopLimitOrder(IStopLimitOrder stopLimitOrder);
         void HandleAddLimitOrder(ILimitOrder limitOrder);
         void HandleMarketOrder(IMarketOrder marketOrder);
     }

@@ -6,6 +6,7 @@ using System.Windows.Input;
 using MemExchange.Client.UI.Annotations;
 using MemExchange.Client.UI.Resources;
 using MemExchange.Client.UI.Setup;
+using MemExchange.Client.UI.Windows;
 using MemExchange.ClientApi;
 
 namespace MemExchange.Client.UI.Usercontrols.ActiveStopLimitOrders
@@ -15,7 +16,7 @@ namespace MemExchange.Client.UI.Usercontrols.ActiveStopLimitOrders
         private readonly IClient client;
         public event PropertyChangedEventHandler PropertyChanged;
         public ICommand RefreshCommand { get; set; }
-
+        
         public ObservableCollection<StopLimitOrderViewModel> ActiveStopLimitOrders { get; set; } 
 
         public ActiveStopLimitOrdersViewModel(IClient client)
@@ -32,12 +33,8 @@ namespace MemExchange.Client.UI.Usercontrols.ActiveStopLimitOrders
         {
             UiDispatcher.Dispatcher.Invoke(() =>
             {
-                for(int i=ActiveStopLimitOrders.Count-1; i>=0; i-- )
-                {
-                    var order = ActiveStopLimitOrders[i];
-                    ActiveStopLimitOrders.Remove(order);
-                    order.Dispose();
-                }
+              
+                ActiveStopLimitOrders.Clear();
 
                 foreach (var stopLimitOrderDto in e)
                     ActiveStopLimitOrders.Add(new StopLimitOrderViewModel(stopLimitOrderDto, client));
@@ -50,6 +47,8 @@ namespace MemExchange.Client.UI.Usercontrols.ActiveStopLimitOrders
             {
                 client.RequestOpenStopLimitOrders();
             });
+
+           
         }
 
         void client_StopLimitOrderDeleted(object sender, Core.SharedDto.Orders.StopLimitOrderDto e)

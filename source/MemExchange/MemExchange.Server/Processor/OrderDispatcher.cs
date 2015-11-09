@@ -35,7 +35,7 @@ namespace MemExchange.Server.Processor
             OrderBooks[symbol].HandleMarketOrder(marketOrder);
         }
 
-        public void HandleStopLimitOrder(IStopLimitOrder stopLimitOrder)
+        public void HandleAddStopLimitOrder(IStopLimitOrder stopLimitOrder)
         {
             string symbol = stopLimitOrder.Symbol;
             if (!OrderBooks.ContainsKey(symbol))

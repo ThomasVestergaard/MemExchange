@@ -212,6 +212,26 @@ namespace MemExchange.ClientApi
             });
         }
 
+        public void ModifyStopLimitOrder(uint exchangeOrderId, double newTriggerPrice, double newLimitPrice, int newQuantity)
+        {
+            if (!isStarted)
+                return;
+
+            messageConnection.SendMessage(new ClientToServerMessage
+            {
+                ClientId = clientId,
+                StopLimitOrder = new StopLimitOrderDto()
+                {
+                    ClientId = clientId,
+                    ExchangeOrderId = exchangeOrderId,
+                    LimitPrice = newLimitPrice,
+                    TriggerPrice = newTriggerPrice,
+                    Quantity = newQuantity
+                },
+                MessageType = ClientToServerMessageTypeEnum.ModifyStopLimitOrder
+            });
+        }
+
         public void CancelLimitOrder(uint exchangeOrderId)
         {
             if (!isStarted)

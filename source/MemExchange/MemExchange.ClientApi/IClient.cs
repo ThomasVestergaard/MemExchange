@@ -28,6 +28,7 @@ namespace MemExchange.ClientApi
         void SubmitLimitOrder(string symbol, double price, int quantity, WayEnum way);
         void SubmitMarketOrder(string symbol, int quantity, WayEnum way);
         void ModifyLimitOrder(uint exchangeOrderId, double newPrice, int newQuantity);
+        void ModifyStopLimitOrder(uint exchangeOrderId, double newTriggerPrice, double newLimitPrice, int newQuantity);
         void CancelLimitOrder(uint exchangeOrderId);
         void RequestOpenLimitOrders();
         void RequestOpenStopLimitOrders();

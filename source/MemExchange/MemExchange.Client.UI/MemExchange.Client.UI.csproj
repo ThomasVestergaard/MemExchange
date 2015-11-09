@@ -97,6 +97,10 @@
     <Compile Include="Windows\EditLimitOrderView.xaml.cs">
       <DependentUpon>EditLimitOrderView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\EditStopLimitOrderViewModel.cs" />
+    <Compile Include="Windows\EditStopLimitOrderWindow.xaml.cs">
+      <DependentUpon>EditStopLimitOrderWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -134,6 +138,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\EditLimitOrderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\EditStopLimitOrderWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

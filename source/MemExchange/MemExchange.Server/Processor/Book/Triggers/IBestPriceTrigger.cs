@@ -10,8 +10,8 @@ namespace MemExchange.Server.Processor.Book.Triggers
         double TriggerPrice { get; }
         bool TryExecute(IOrderBookBestBidAsk bestBidAsk);
         void SetTriggerAction(Action action);
+        void ModifyTriggerPrice(double newTriggerPrice);
 
-        
-        
+
     }
 }

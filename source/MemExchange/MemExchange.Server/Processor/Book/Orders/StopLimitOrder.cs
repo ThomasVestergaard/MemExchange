@@ -35,22 +35,23 @@ namespace MemExchange.Server.Processor.Book.Orders
         public double TriggerPrice
         {
             get { return triggerPrice; }
-            set { triggerPrice = value; }
+            private set { triggerPrice = value; }
         }
         public IBestPriceTrigger Trigger { get; private set; }
         public double LimitPrice
         {
             get { return limitPrice; }
-            set { limitPrice = value; }
+            private set { limitPrice = value; }
         }
         public int Quantity
         {
             get { return quantity; }
-            set { quantity = value; }
+            private set { quantity = value; }
         }
 
         private Action<IStopLimitOrder> RepositoryDeleteHandler { get; set; }
         private Action<IStopLimitOrder> OrderBookDeleteHandler { get; set; }
+        private Action<IStopLimitOrder> OrderBookModifyHandler { get; set; }
         private Action<IStopLimitOrder> OutgoingQueueDeleteHandler { get; set; }
 
         public StopLimitOrder(string symbol, int quantity, double limitPrice, double triggerPrice, WayEnum way, int clientId, IBestPriceTrigger trigger)
@@ -94,6 +95,11 @@ namespace MemExchange.Server.Processor.Book.Orders
             OrderBookDeleteHandler = deleteHandler;
         }
 
+        public void RegisterOrderBookModifyHandler(Action<IStopLimitOrder> modifyHandler)
+        {
+            OrderBookModifyHandler = modifyHandler;
+        }
+
         public void RegisterOutgoingQueueDeleteHandler(Action<IStopLimitOrder> deleteHandler)
         {
             OutgoingQueueDeleteHandler = deleteHandler;
@@ -107,6 +113,11 @@ namespace MemExchange.Server.Processor.Book.Orders
         public void UnRegisterOrderBookDeleteHandler()
         {
             OrderBookDeleteHandler = null;
+        }
+
+        public void UnRegisterOrderBookModifyHandler()
+        {
+            OrderBookModifyHandler = null;
         }
 
         public void UnRegisterOutgoingQueueDeleteHandler()
@@ -125,11 +136,23 @@ namespace MemExchange.Server.Processor.Book.Orders
             if (OutgoingQueueDeleteHandler != null)
                 OutgoingQueueDeleteHandler(this);
 
+            
             UnRegisterOrderRepositoryDeleteHandler();
             UnRegisterOrderBookDeleteHandler();
             UnRegisterOutgoingQueueDeleteHandler();
+            UnRegisterOrderBookModifyHandler();
             Dispose();
-            
+        }
+
+        public void Modify(double newTriggerPrice, double newLimitPrice, int newQuantity)
+        {
+            Trigger.ModifyTriggerPrice(newTriggerPrice);
+            TriggerPrice = newTriggerPrice;
+            LimitPrice = newLimitPrice;
+            Quantity = newQuantity;
+
+            if (OrderBookModifyHandler != null)
+                OrderBookModifyHandler(this);
         }
 
         public void Dispose()

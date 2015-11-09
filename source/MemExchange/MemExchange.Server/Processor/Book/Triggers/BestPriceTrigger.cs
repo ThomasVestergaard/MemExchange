@@ -11,15 +11,12 @@ namespace MemExchange.Server.Processor.Book.Triggers
         private Action TriggerAction { get; set; }
         private bool TriggerHasFired { get; set; }
 
-
         public BestPriceTrigger(string symbol, double triggerPrice, WayEnum way)
         {
             Symbol = symbol;
             TriggerPrice = triggerPrice;
             Way = way;
         }
-
-     
 
         private void Execute()
         {
@@ -79,6 +76,11 @@ namespace MemExchange.Server.Processor.Book.Triggers
             TriggerAction = action;
             TriggerHasFired = false;
         }
-        
+
+        public void ModifyTriggerPrice(double newTriggerPrice)
+        {
+            TriggerPrice = newTriggerPrice;
+        }
+
     }
 }
