@@ -43,7 +43,7 @@ namespace MemExchange.Server.Incoming.Logging
 
         private void OutputMetrics()
         {
-            //Console.Clear();
+            Console.Clear();
             double mean = durationMeasurements.Average();
             Console.WriteLine("---------");
             Console.WriteLine("Messages processed: {0}", countSinceLastOutput);

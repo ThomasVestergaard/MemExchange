@@ -4,6 +4,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using MemExchange.Client.UI.Setup;
 using MemExchange.ClientApi;
+using MemExchange.ClientApi.Commands;
+using MemExchange.ClientApi.Stream;
+using MemExchange.Core.Logging;
+using MemExchange.Core.Serialization;
 using MemExchange.Core.SharedDto;
 
 namespace MemExchange.PerformanceTestClient
@@ -24,6 +28,8 @@ namespace MemExchange.PerformanceTestClient
 
         static void Main(string[] args)
         {
+            
+
             config = new Configuration
             {
                 ClientId = 99,

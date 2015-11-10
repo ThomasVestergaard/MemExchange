@@ -35,7 +35,7 @@ namespace MemExchange.Server.Incoming
             messageDisrupter.HandleEventsWith(messageProcessor).Then(performanceRecorder);
             messageDisrupter.HandleExceptionsWith(new IncomingMessageQueueErrorHandler());
             messageRingBuffer = messageDisrupter.Start();
-            performanceRecorder.Setup(messageRingBuffer, 10);
+            performanceRecorder.Setup(messageRingBuffer, 5000);
 
             logger.Info("Incoming message queue started.");
         }
