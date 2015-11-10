@@ -84,7 +84,7 @@ namespace MemExchange.Server.Processor.Book
 
             order.UnRegisterDeleteNotificationHandler(RemoveLimitOrder);
             order.UnRegisterFilledNotification(RemoveLimitOrder);
-            order.UnRegisterModifyNotificationHandler(HandleOrderModify);
+            order.UnRegisterModifyNotificationHandler(HandleLimitOrderModify);
             
             SetBestBidAndAsk();
         }
@@ -95,10 +95,10 @@ namespace MemExchange.Server.Processor.Book
                 PriceSlots[oldPrice].RemoveOrder(currentOrder);
 
             RemoveSlotIfEmpty(oldPrice);
-            HandleLimitOrder(currentOrder);
+            AddLimitOrder(currentOrder);
         }
 
-        public void HandleOrderModify(ILimitOrder order, int oldQuantity, double oldPrice)
+        public void HandleLimitOrderModify(ILimitOrder order, int oldQuantity, double oldPrice)
         {
             if (oldPrice != order.Price)
                 MoveOrder(oldPrice, order);
@@ -171,7 +171,7 @@ namespace MemExchange.Server.Processor.Book
             }
         }
 
-        public void HandleLimitOrder(ILimitOrder limitOrder)
+        public void AddLimitOrder(ILimitOrder limitOrder)
         {
             TryMatchLimitOrder(limitOrder);
 

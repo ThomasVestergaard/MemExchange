@@ -87,6 +87,7 @@
     <Compile Include="Incoming\IncomingMessageQueueErrorHandler.cs" />
     <Compile Include="Incoming\Logging\IPerformanceRecorder.cs" />
     <Compile Include="Incoming\Logging\PerformanceRecorderDirectConsoleOutput.cs" />
+    <Compile Include="Incoming\RingbufferByteArray.cs" />
     <Compile Include="Outgoing\IMessagePublisher.cs" />
     <Compile Include="Outgoing\IOutgoingQueue.cs" />
     <Compile Include="Outgoing\MessagePublisher.cs" />

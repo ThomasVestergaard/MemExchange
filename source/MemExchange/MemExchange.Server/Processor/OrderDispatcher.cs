@@ -78,9 +78,9 @@ namespace MemExchange.Server.Processor
             outgoingQueue.EnqueueAddedLimitOrder(limitOrder);
             limitOrder.RegisterDeleteNotificationHandler(OrderBooks[symbol].RemoveLimitOrder);
             limitOrder.RegisterFilledNotification(OrderBooks[symbol].RemoveLimitOrder);
-            limitOrder.RegisterModifyNotificationHandler(OrderBooks[symbol].HandleOrderModify);
+            limitOrder.RegisterModifyNotificationHandler(OrderBooks[symbol].HandleLimitOrderModify);
             
-            OrderBooks[symbol].HandleLimitOrder(limitOrder);
+            OrderBooks[symbol].AddLimitOrder(limitOrder);
         }
     }
 }

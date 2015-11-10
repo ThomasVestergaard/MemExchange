@@ -82,7 +82,9 @@
     <Compile Include="Server\Book\RepositoryBookAlgoIntegrationTests.cs" />
     <Compile Include="Server\OrderDispatcherTests.cs" />
     <Compile Include="Server\OutgoingQueueTests.cs" />
+    <Compile Include="Server\RingbufferByteArrayTests.cs" />
     <Compile Include="Server\Triggers\BestPriceTriggerTests.cs" />
+    <Compile Include="Tools\ArrayComparer.cs" />
     <Compile Include="Tools\DependencyInjectionResolveTester.cs" />
     <Compile Include="Tools\TcpHelper.cs" />
   </ItemGroup>
