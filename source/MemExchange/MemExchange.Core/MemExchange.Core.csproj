@@ -79,7 +79,7 @@
     <Compile Include="SharedDto\ClientToServer\ClientToServerMessageTypeEnum.cs" />
     <Compile Include="SharedDto\ClientToServer\IClientToServerMessage.cs" />
     <Compile Include="SharedDto\Level1\MarketBestBidAskDto.cs" />
-    <Compile Include="SharedDto\Orders\BidAskBracketLimitOrderDto.cs" />
+    <Compile Include="SharedDto\Orders\DuoLimitOrderDto.cs" />
     <Compile Include="SharedDto\Orders\ExecutionDto.cs" />
     <Compile Include="SharedDto\Orders\LimitOrderDto.cs" />
     <Compile Include="SharedDto\Orders\MarketOrderDto.cs" />

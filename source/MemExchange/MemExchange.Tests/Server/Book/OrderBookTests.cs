@@ -256,7 +256,7 @@ namespace MemExchange.Tests.Server.Book
         }
 
         [Test]
-        public void ShouldNotMatchOrderWhenMatchingIsSuspendedBut()
+        public void ShouldNotMatchOrderWhenMatchingIsSuspendedButMatchWhenSuspensionsIsCancelled()
         {
             var executions = new List<INewExecution>();
 

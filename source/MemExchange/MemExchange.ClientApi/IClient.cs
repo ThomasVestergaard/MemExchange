@@ -30,6 +30,7 @@ namespace MemExchange.ClientApi
         void ModifyLimitOrder(uint exchangeOrderId, double newPrice, int newQuantity);
         void ModifyStopLimitOrder(uint exchangeOrderId, double newTriggerPrice, double newLimitPrice, int newQuantity);
         void CancelLimitOrder(uint exchangeOrderId);
+        void ModifyDuoLimitOrders(uint order1OrderId, double order1NewPrice, int order1NewQuantity, uint order2OrderId, double order2NewPrice, int order2NewQuantity);
         void RequestOpenLimitOrders();
         void RequestOpenStopLimitOrders();
     }

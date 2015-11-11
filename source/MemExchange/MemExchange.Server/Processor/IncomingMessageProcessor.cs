@@ -140,6 +140,27 @@ namespace MemExchange.Server.Processor
                     var orderList = ordeRepository.GetClientStopLimitOrders(deserializedMessage.ClientId);
                     outgoingQueue.EnqueueStopLimitOrderSnapshot(deserializedMessage.ClientId, orderList);
                     break;
+
+
+                case ClientToServerMessageTypeEnum.DuoLimitOrderUpdate:
+                    var order1ToModify = ordeRepository.TryGetLimitOrder(deserializedMessage.DuoLimitOrder.LimitOrder1.ExchangeOrderId);
+                    var order2ToModify = ordeRepository.TryGetLimitOrder(deserializedMessage.DuoLimitOrder.LimitOrder2.ExchangeOrderId);
+
+                    if (order1ToModify == null || order2ToModify == null)
+                        return;
+
+                    if (order1ToModify.Symbol != order2ToModify.Symbol)
+                        return;
+
+                    dispatcher.HandDuoLimitOrderUpdate(
+                        order1ToModify, 
+                        deserializedMessage.DuoLimitOrder.LimitOrder1.Price,
+                        deserializedMessage.DuoLimitOrder.LimitOrder1.Quantity,
+                        order2ToModify,
+                        deserializedMessage.DuoLimitOrder.LimitOrder2.Price,
+                        deserializedMessage.DuoLimitOrder.LimitOrder2.Quantity);
+
+                    break;
             }
 
             deserializedMessage.Reset();

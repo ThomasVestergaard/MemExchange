@@ -272,5 +272,35 @@ namespace MemExchange.ClientApi
                 MessageType = ClientToServerMessageTypeEnum.RequestOpenStopLimitOrders
             });
         }
+
+        public void ModifyDuoLimitOrders(uint order1OrderId, double order1NewPrice, int order1NewQuantity, uint order2OrderId, double order2NewPrice, int order2NewQuantity)
+        {
+            if (!isStarted)
+                return;
+
+            messageConnection.SendMessage(new ClientToServerMessage
+            {
+                ClientId = clientId,
+                DuoLimitOrder = new DuoLimitOrderDto
+                {
+                    ClientId = clientId,
+                    LimitOrder1 = new LimitOrderDto
+                    {
+                        ClientId = clientId,
+                        ExchangeOrderId = order1OrderId,
+                        Price = order1NewPrice,
+                        Quantity = order1NewQuantity
+                    },
+                    LimitOrder2 = new LimitOrderDto
+                    {
+                        ClientId = clientId,
+                        ExchangeOrderId = order2OrderId,
+                        Price = order2NewPrice,
+                        Quantity = order2NewQuantity
+                    }
+                },
+                MessageType = ClientToServerMessageTypeEnum.DuoLimitOrderUpdate
+            });
+        }
     }
 }

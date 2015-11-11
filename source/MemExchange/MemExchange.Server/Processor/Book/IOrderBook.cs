@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using MemExchange.Server.Processor.Book.Orders;
-using MemExchange.Server.Processor.Book.Triggers;
 
 namespace MemExchange.Server.Processor.Book
 {
@@ -19,6 +18,6 @@ namespace MemExchange.Server.Processor.Book
         void HandleLimitOrderModify(ILimitOrder order, int oldQuantity, double oldPrice);
 
         void SetSuspendLimitOrderMatchingStatus(bool isSuspended);
-
+        void TryMatchLimitOrder(ILimitOrder limitOrder);
     }
 }
