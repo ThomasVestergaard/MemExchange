@@ -78,9 +78,24 @@ namespace MemExchange.Server.Processor
             outgoingQueue.EnqueueAddedLimitOrder(limitOrder);
             limitOrder.RegisterDeleteNotificationHandler(OrderBooks[symbol].RemoveLimitOrder);
             limitOrder.RegisterFilledNotification(OrderBooks[symbol].RemoveLimitOrder);
-            limitOrder.RegisterModifyNotificationHandler(OrderBooks[symbol].HandleOrderModify);
+            limitOrder.RegisterModifyNotificationHandler(OrderBooks[symbol].HandleLimitOrderModify);
             
-            OrderBooks[symbol].HandleLimitOrder(limitOrder);
+            OrderBooks[symbol].AddLimitOrder(limitOrder);
+        }
+
+        public void HandDuoLimitOrderUpdate(ILimitOrder limitOrder1, double limitOrder1NewPrice, int limitOrder1NewQuantity, ILimitOrder limitOrder2, double limitOrder2NewPrice, int limitOrder2NewQuantity)
+        {
+            if (!OrderBooks.ContainsKey(limitOrder1.Symbol))
+                return;
+
+            OrderBooks[limitOrder1.Symbol].SetSuspendLimitOrderMatchingStatus(true);
+
+            limitOrder1.Modify(limitOrder1NewQuantity, limitOrder1NewPrice);
+            limitOrder2.Modify(limitOrder2NewQuantity, limitOrder2NewPrice);
+
+            OrderBooks[limitOrder1.Symbol].SetSuspendLimitOrderMatchingStatus(false);
+            OrderBooks[limitOrder1.Symbol].TryMatchLimitOrder(limitOrder1);
+            OrderBooks[limitOrder1.Symbol].TryMatchLimitOrder(limitOrder2);
         }
     }
 }

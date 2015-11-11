@@ -14,6 +14,7 @@ namespace MemExchange.Core.SharedDto.ClientToServer
         PlaceStopLimitOrder = 6,
         ModifyStopLimitOrder = 7,
         CancelStopLimitOrder = 8,
-        RequestOpenStopLimitOrders = 9
+        RequestOpenStopLimitOrders = 9,
+        DuoLimitOrderUpdate = 10
     }
 }

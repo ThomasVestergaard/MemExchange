@@ -11,5 +11,6 @@ namespace MemExchange.Server.Processor
         void HandleAddStopLimitOrder(IStopLimitOrder stopLimitOrder);
         void HandleAddLimitOrder(ILimitOrder limitOrder);
         void HandleMarketOrder(IMarketOrder marketOrder);
+        void HandDuoLimitOrderUpdate(ILimitOrder limitOrder1, double limitOrder1NewPrice, int limitOrder1NewQuantity, ILimitOrder limitOrder2, double limitOrder2NewPrice, int limitOrder2NewQuantity);
     }
 }

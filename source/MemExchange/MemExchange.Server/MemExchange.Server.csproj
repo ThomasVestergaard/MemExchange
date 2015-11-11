@@ -87,12 +87,15 @@
     <Compile Include="Incoming\IncomingMessageQueueErrorHandler.cs" />
     <Compile Include="Incoming\Logging\IPerformanceRecorder.cs" />
     <Compile Include="Incoming\Logging\PerformanceRecorderDirectConsoleOutput.cs" />
+    <Compile Include="Incoming\RingbufferByteArray.cs" />
     <Compile Include="Outgoing\IMessagePublisher.cs" />
     <Compile Include="Outgoing\IOutgoingQueue.cs" />
     <Compile Include="Outgoing\MessagePublisher.cs" />
     <Compile Include="Outgoing\OutgoingQueue.cs" />
     <Compile Include="Processor\Book\MatchingAlgorithms\IMarketOrderMatchingAlgorithm.cs" />
     <Compile Include="Processor\Book\MatchingAlgorithms\MarketOrderMatchingAlgorithm.cs" />
+    <Compile Include="Processor\Book\Orders\DuoLimitOrder.cs" />
+    <Compile Include="Processor\Book\Orders\IDuoLimitOrder.cs" />
     <Compile Include="Processor\Book\Orders\IMarketOrder.cs" />
     <Compile Include="Processor\Book\Orders\IOrder.cs" />
     <Compile Include="Processor\Book\Orders\IStopLimitOrder.cs" />

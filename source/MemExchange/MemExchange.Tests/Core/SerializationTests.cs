@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using MemExchange.Core.Serialization;
+using MemExchange.Core.SharedDto.ClientToServer;
 using MemExchange.Core.SharedDto.Orders;
 using MemExchange.Core.SharedDto.ServerToClient;
 using NUnit.Framework;
@@ -93,6 +94,8 @@ namespace MemExchange.Tests.Core
             Console.WriteLine("Total ms: " + elapsed);
             Console.WriteLine("Per item: " + perItem);
         }
+
+        
 
     }
 }

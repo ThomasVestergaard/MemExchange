@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using MemExchange.Server.Processor.Book.Orders;
-using MemExchange.Server.Processor.Book.Triggers;
 
 namespace MemExchange.Server.Processor.Book
 {
@@ -13,10 +12,12 @@ namespace MemExchange.Server.Processor.Book
 
         Dictionary<double, IPriceSlot> PriceSlots { get; }
         string Symbol { get; }
-        void HandleLimitOrder(ILimitOrder limitOrder);
+        void AddLimitOrder(ILimitOrder limitOrder);
         void HandleMarketOrder(IMarketOrder marketOrder);
         void RemoveLimitOrder(ILimitOrder limitOrder);
-        void HandleOrderModify(ILimitOrder order, int oldQuantity, double oldPrice);
-        
+        void HandleLimitOrderModify(ILimitOrder order, int oldQuantity, double oldPrice);
+
+        void SetSuspendLimitOrderMatchingStatus(bool isSuspended);
+        void TryMatchLimitOrder(ILimitOrder limitOrder);
     }
 }

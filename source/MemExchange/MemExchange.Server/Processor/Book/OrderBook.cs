@@ -15,6 +15,7 @@ namespace MemExchange.Server.Processor.Book
         public string Symbol { get; private set; }
         public List<IStopLimitOrder> BuySideStopLimitOrders { get; private set; }
         public List<IStopLimitOrder> SellSideStopLimitOrders { get; private set; }
+        private bool LimitOrderMatchingIsSuspended { get; set; }
 
         public Dictionary<double, IPriceSlot> PriceSlots { get; private set; }
 
@@ -84,7 +85,7 @@ namespace MemExchange.Server.Processor.Book
 
             order.UnRegisterDeleteNotificationHandler(RemoveLimitOrder);
             order.UnRegisterFilledNotification(RemoveLimitOrder);
-            order.UnRegisterModifyNotificationHandler(HandleOrderModify);
+            order.UnRegisterModifyNotificationHandler(HandleLimitOrderModify);
             
             SetBestBidAndAsk();
         }
@@ -95,10 +96,10 @@ namespace MemExchange.Server.Processor.Book
                 PriceSlots[oldPrice].RemoveOrder(currentOrder);
 
             RemoveSlotIfEmpty(oldPrice);
-            HandleLimitOrder(currentOrder);
+            AddLimitOrder(currentOrder);
         }
 
-        public void HandleOrderModify(ILimitOrder order, int oldQuantity, double oldPrice)
+        public void HandleLimitOrderModify(ILimitOrder order, int oldQuantity, double oldPrice)
         {
             if (oldPrice != order.Price)
                 MoveOrder(oldPrice, order);
@@ -106,8 +107,16 @@ namespace MemExchange.Server.Processor.Book
             SetBestBidAndAsk();
         }
 
-        private void TryMatchLimitOrder(ILimitOrder limitOrder)
+        public void SetSuspendLimitOrderMatchingStatus(bool isSuspended)
         {
+            LimitOrderMatchingIsSuspended = isSuspended;
+        }
+
+        public void TryMatchLimitOrder(ILimitOrder limitOrder)
+        {
+            if (LimitOrderMatchingIsSuspended)
+                return;
+
             if (limitOrder.Quantity == 0)
                 return;
 
@@ -171,7 +180,7 @@ namespace MemExchange.Server.Processor.Book
             }
         }
 
-        public void HandleLimitOrder(ILimitOrder limitOrder)
+        public void AddLimitOrder(ILimitOrder limitOrder)
         {
             TryMatchLimitOrder(limitOrder);
 

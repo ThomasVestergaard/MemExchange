@@ -36,7 +36,12 @@ namespace MemExchange.Core.Serialization
         {
             using (var stream = new MemoryStream(serializedData, 0, serializedData.Length, false))
                 return (T)RuntimeTypeModel.Default.DeserializeWithLengthPrefix(stream, null, typeof(T), PrefixStyle.Fixed32, 0);
-            
+        }
+
+        public T Deserialize<T>(byte[] serializedData, int length)
+        {
+            using (var stream = new MemoryStream(serializedData, 0, length, false))
+                return (T)RuntimeTypeModel.Default.DeserializeWithLengthPrefix(stream, null, typeof(T), PrefixStyle.Fixed32, 0);
         }
     }
 }

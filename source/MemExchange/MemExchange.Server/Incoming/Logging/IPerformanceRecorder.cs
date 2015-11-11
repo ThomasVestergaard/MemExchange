@@ -2,8 +2,8 @@
 
 namespace MemExchange.Server.Incoming.Logging
 {
-    public interface IPerformanceRecorder : IEventHandler<ClientToServerMessageQueueItem>
+    public interface IPerformanceRecorder : IEventHandler<RingbufferByteArray>
     {
-        void Setup(RingBuffer<ClientToServerMessageQueueItem> ringBuffer, int outputMetricsPerCount);
+        void Setup(RingBuffer<RingbufferByteArray> ringBuffer, int outputMetricsPerCount);
     }
 }

@@ -42,23 +42,20 @@ namespace MemExchange.Server.Incoming
 
         private void ListenForMessages()
         {
+            bool hasMore;
+            byte[] receiedBuffer;
             while (isRunning)
             {
                 try
                 {
-                    bool hasMore;
-                    var receiedBuffer = responseSocket.Receive(out hasMore);
-
+                    responseSocket.TryReceiveFrameBytes(out receiedBuffer, out hasMore);
                     if (!hasMore && receiedBuffer != null && receiedBuffer.Length > 0)
-                    {
-                        var deserialized = serializer.Deserialize<ClientToServerMessage>(receiedBuffer);
-                        if (deserialized != null)
-                            incomingMessageQueue.Enqueue(deserialized);
-                    }
+                        incomingMessageQueue.Enqueue(receiedBuffer);
+                    
                 }
                 catch(Exception ex)
                 {
-                    int derp = 0;
+                    Console.WriteLine("Exception cought in message puller: {0}", ex.Message);
                 }
             }
         }

@@ -15,8 +15,8 @@ namespace MemExchange.Server.Incoming
         private readonly ILogger logger;
         private readonly IIncomingMessageProcessor messageProcessor;
         private readonly IPerformanceRecorder performanceRecorder;
-        private Disruptor<ClientToServerMessageQueueItem> messageDisrupter;
-        private RingBuffer<ClientToServerMessageQueueItem> messageRingBuffer;
+        private Disruptor<RingbufferByteArray> messageDisrupter;
+        private RingBuffer<RingbufferByteArray> messageRingBuffer;
         
         public IncomingMessageQueue(ILogger logger, IIncomingMessageProcessor messageProcessor, IPerformanceRecorder performanceRecorder)
         {
@@ -27,15 +27,15 @@ namespace MemExchange.Server.Incoming
 
         public void Start()
         {
-            messageDisrupter = new Disruptor<ClientToServerMessageQueueItem>(() => new ClientToServerMessageQueueItem(), new SingleThreadedClaimStrategy(ringbufferSize), new SleepingWaitStrategy(), TaskScheduler.Default);
+            messageDisrupter = new Disruptor<RingbufferByteArray>(() => new RingbufferByteArray(), new SingleThreadedClaimStrategy(ringbufferSize), new SleepingWaitStrategy(), TaskScheduler.Default);
             
             // Switch to this line to use busy spin input queue
-            //messageDisrupter = new Disruptor<ClientToServerMessageQueueItem>(() => new ClientToServerMessageQueueItem(), new SingleThreadedClaimStrategy(ringbufferSize), new BusySpinWaitStrategy(), TaskScheduler.Default );
+            //messageDisrupter = new Disruptor<RingbufferByteArray>(() => new RingbufferByteArray(), new SingleThreadedClaimStrategy(ringbufferSize), new BusySpinWaitStrategy(), TaskScheduler.Default);
             
             messageDisrupter.HandleEventsWith(messageProcessor).Then(performanceRecorder);
             messageDisrupter.HandleExceptionsWith(new IncomingMessageQueueErrorHandler());
             messageRingBuffer = messageDisrupter.Start();
-            performanceRecorder.Setup(messageRingBuffer, 10);
+            performanceRecorder.Setup(messageRingBuffer, 5000);
 
             logger.Info("Incoming message queue started.");
         }
@@ -46,11 +46,11 @@ namespace MemExchange.Server.Incoming
             logger.Info("Incoming message queue stopped.");
         }
 
-        public void Enqueue(ClientToServerMessage clientToServerMessage)
+        public void Enqueue(byte[] incomingBytes)
         {
             var next = messageRingBuffer.Next();
             var entry = messageRingBuffer[next];
-            entry.Update(clientToServerMessage);
+            entry.Set(incomingBytes);
             messageRingBuffer.Publish(next);
         }
     }

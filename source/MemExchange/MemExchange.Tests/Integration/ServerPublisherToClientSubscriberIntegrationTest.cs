@@ -67,9 +67,7 @@ namespace MemExchange.Tests.Integration
             clientMessageConnection.SendMessage(newMessage);
 
             Thread.Sleep(150);
-            incomingMessageQueueMock.AssertWasCalled(a => a.Enqueue((Arg<ClientToServerMessage>.Matches(b => 
-                b.ClientId == 90 &&
-                b.MessageType == ClientToServerMessageTypeEnum.NotSet))),
+            incomingMessageQueueMock.AssertWasCalled(a => a.Enqueue(Arg<byte[]>.Is.Anything),
                 options => options.Repeat.Once());
 
         }

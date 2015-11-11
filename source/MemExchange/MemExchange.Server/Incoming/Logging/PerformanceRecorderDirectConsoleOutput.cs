@@ -10,16 +10,18 @@ namespace MemExchange.Server.Incoming.Logging
     {
         private readonly IDateService dateService;
         private int outputMetricsPerCount { get; set; }
-        private RingBuffer<ClientToServerMessageQueueItem> ringBuffer { get; set; }
+        private RingBuffer<RingbufferByteArray> ringBuffer { get; set; }
 
         private List<double> durationMeasurements { get; set; }
         private int countSinceLastOutput;
 
+        private long totalBytesReceived { get; set; }
         public PerformanceRecorderDirectConsoleOutput(IDateService dateService)
         {
             this.dateService = dateService;
             durationMeasurements = new List<double>();
             countSinceLastOutput = 0;
+            totalBytesReceived = 0;
         }
 
         private int GetAvailableRingbufferPercentage()
@@ -35,7 +37,12 @@ namespace MemExchange.Server.Incoming.Logging
             return 100;
         }
 
-        public void Setup(RingBuffer<ClientToServerMessageQueueItem> ringBuffer, int outputMetricsPerCount)
+        private double GetTotalReceivedMb()
+        {
+            return Math.Round((double)totalBytesReceived / 1048576d, 2);
+        }
+
+        public void Setup(RingBuffer<RingbufferByteArray> ringBuffer, int outputMetricsPerCount)
         {
             this.ringBuffer = ringBuffer;
             this.outputMetricsPerCount = outputMetricsPerCount;
@@ -43,19 +50,21 @@ namespace MemExchange.Server.Incoming.Logging
 
         private void OutputMetrics()
         {
-            //Console.Clear();
+            Console.Clear();
             double mean = durationMeasurements.Average();
             Console.WriteLine("---------");
             Console.WriteLine("Messages processed: {0}", countSinceLastOutput);
             Console.WriteLine("Average process time: {0} ms", mean.ToString("N5"));
             Console.WriteLine("Message per sec: {0}", (1000d / mean).ToString("N5"));
             Console.WriteLine("Available input buffer: {0}", GetAvailableRingbufferPercentage());
+            Console.WriteLine("Total data received: {0} mb.", GetTotalReceivedMb());
         }
 
-        public void OnNext(ClientToServerMessageQueueItem data, long sequence, bool endOfBatch)
+        public void OnNext(RingbufferByteArray data, long sequence, bool endOfBatch)
         {
             durationMeasurements.Add((dateService.UtcNow() - data.StartProcessTime).TotalMilliseconds);
             countSinceLastOutput ++;
+            totalBytesReceived += data.ContentLength;
 
             if (countSinceLastOutput >= outputMetricsPerCount)
             {
@@ -63,6 +72,8 @@ namespace MemExchange.Server.Incoming.Logging
                 countSinceLastOutput = 0;
                 durationMeasurements.Clear();
             }
+
+            data.Reset();
         }
     }
 }
