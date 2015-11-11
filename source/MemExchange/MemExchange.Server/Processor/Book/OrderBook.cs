@@ -15,6 +15,7 @@ namespace MemExchange.Server.Processor.Book
         public string Symbol { get; private set; }
         public List<IStopLimitOrder> BuySideStopLimitOrders { get; private set; }
         public List<IStopLimitOrder> SellSideStopLimitOrders { get; private set; }
+        private bool LimitOrderMatchingIsSuspended { get; set; }
 
         public Dictionary<double, IPriceSlot> PriceSlots { get; private set; }
 
@@ -106,8 +107,16 @@ namespace MemExchange.Server.Processor.Book
             SetBestBidAndAsk();
         }
 
-        private void TryMatchLimitOrder(ILimitOrder limitOrder)
+        public void SetSuspendLimitOrderMatchingStatus(bool isSuspended)
         {
+            LimitOrderMatchingIsSuspended = isSuspended;
+        }
+
+        public void TryMatchLimitOrder(ILimitOrder limitOrder)
+        {
+            if (LimitOrderMatchingIsSuspended)
+                return;
+
             if (limitOrder.Quantity == 0)
                 return;
 

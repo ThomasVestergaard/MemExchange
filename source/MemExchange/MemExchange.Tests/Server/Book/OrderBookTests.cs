@@ -255,5 +255,39 @@ namespace MemExchange.Tests.Server.Book
 
         }
 
+        [Test]
+        public void ShouldNotMatchOrderWhenMatchingIsSuspendedBut()
+        {
+            var executions = new List<INewExecution>();
+
+            var orderBookBestBidAsk = new OrderBookBestBidAsk("ABC");
+            var matchAlgo = new LimitOrderMatchingAlgorithm(new DateService());
+            matchAlgo.AddExecutionsHandler(executions.Add);
+
+            var book = new OrderBook("ABC", matchAlgo, marketOrderMatchingAlgorithmMock, orderBookBestBidAsk);
+
+            var sellOrder1 = new LimitOrder("ABC", 10, 90, WayEnum.Sell, 9);
+            var buyOrder1 = new LimitOrder("ABC", 10, 80, WayEnum.Buy, 9);
+
+            sellOrder1.RegisterModifyNotificationHandler(book.HandleLimitOrderModify);
+            buyOrder1.RegisterModifyNotificationHandler(book.HandleLimitOrderModify);
+
+            book.AddLimitOrder(sellOrder1);
+            book.AddLimitOrder(buyOrder1);
+
+            Assert.AreEqual(0, executions.Count);
+            book.SetSuspendLimitOrderMatchingStatus(true);
+
+            sellOrder1.Modify(10,70);
+            Assert.AreEqual(0, executions.Count);
+
+            book.SetSuspendLimitOrderMatchingStatus(true);
+
+            book.TryMatchLimitOrder(sellOrder1);
+            book.TryMatchLimitOrder(buyOrder1);
+
+            Assert.AreEqual(1, executions.Count);
+        }
+
     }
 }

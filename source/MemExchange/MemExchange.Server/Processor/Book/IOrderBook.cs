@@ -17,6 +17,8 @@ namespace MemExchange.Server.Processor.Book
         void HandleMarketOrder(IMarketOrder marketOrder);
         void RemoveLimitOrder(ILimitOrder limitOrder);
         void HandleLimitOrderModify(ILimitOrder order, int oldQuantity, double oldPrice);
-        
+
+        void SetSuspendLimitOrderMatchingStatus(bool isSuspended);
+
     }
 }

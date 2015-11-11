@@ -94,6 +94,8 @@
     <Compile Include="Outgoing\OutgoingQueue.cs" />
     <Compile Include="Processor\Book\MatchingAlgorithms\IMarketOrderMatchingAlgorithm.cs" />
     <Compile Include="Processor\Book\MatchingAlgorithms\MarketOrderMatchingAlgorithm.cs" />
+    <Compile Include="Processor\Book\Orders\DuoLimitOrder.cs" />
+    <Compile Include="Processor\Book\Orders\IDuoLimitOrder.cs" />
     <Compile Include="Processor\Book\Orders\IMarketOrder.cs" />
     <Compile Include="Processor\Book\Orders\IOrder.cs" />
     <Compile Include="Processor\Book\Orders\IStopLimitOrder.cs" />
