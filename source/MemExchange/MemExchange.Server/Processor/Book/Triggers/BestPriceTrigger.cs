@@ -39,28 +39,20 @@ namespace MemExchange.Server.Processor.Book.Triggers
             {
                 case WayEnum.Buy:
                     
-                    if (bestBidAsk.BestBidPrice.HasValue && bestBidAsk.BestBidPrice.Value >= TriggerPrice)
+                    if ((bestBidAsk.BestBidPrice.HasValue && bestBidAsk.BestBidPrice.Value >= TriggerPrice) ||
+                        (bestBidAsk.BestAskPrice.HasValue && bestBidAsk.BestAskPrice.Value >= TriggerPrice))
                     {
                         Execute();   
                         return true;
                     }
 
-                    if (bestBidAsk.BestAskPrice.HasValue && bestBidAsk.BestAskPrice.Value <= TriggerPrice)
-                    {
-                        Execute();
-                        return true;
-                    }
+                    
                     break;
 
                 case WayEnum.Sell:
                     
-                    if (bestBidAsk.BestAskPrice.HasValue && bestBidAsk.BestAskPrice.Value <= TriggerPrice)
-                    {
-                        Execute();
-                        return true;
-                    }
-
-                    if (bestBidAsk.BestBidPrice.HasValue && bestBidAsk.BestBidPrice.Value >= TriggerPrice)
+                    if ((bestBidAsk.BestAskPrice.HasValue && bestBidAsk.BestAskPrice.Value <= TriggerPrice) ||
+                        (bestBidAsk.BestBidPrice.HasValue && bestBidAsk.BestBidPrice.Value <= TriggerPrice))
                     {
                         Execute();
                         return true;

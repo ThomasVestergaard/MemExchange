@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MemExchange.Core.SharedDto;
 using MemExchange.Server.Common;
 using MemExchange.Server.Outgoing;
@@ -289,5 +290,36 @@ namespace MemExchange.Tests.Server.Book
             Assert.AreEqual(1, executions.Count);
         }
 
+        [Test]
+        public void ShouldNotMatchSellStopLimitOrderLowerThanMarket()
+        {
+            var executions = new List<INewExecution>();
+
+            var orderBookBestBidAsk = new OrderBookBestBidAsk("ABC");
+            var matchAlgo = new LimitOrderMatchingAlgorithm(new DateService());
+            matchAlgo.AddExecutionsHandler(executions.Add);
+
+            var book = new OrderBook("ABC", matchAlgo, marketOrderMatchingAlgorithmMock, orderBookBestBidAsk);
+
+            var sellOrder1 = new LimitOrder("ABC", 10, 1161.8d, WayEnum.Sell, 9);
+            book.AddLimitOrder(sellOrder1);
+
+            var buyOrder1 = new LimitOrder("ABC", 10, 1161.7d, WayEnum.Buy, 9);
+            book.AddLimitOrder(buyOrder1);
+
+            var trigger = new BestPriceTrigger("ABC", 1160, WayEnum.Sell);
+            trigger.SetTriggerAction(() =>
+            {
+                Console.WriteLine("Boom!");
+                int i = 0;
+                
+            });
+
+            var sellStopLimit = new StopLimitOrder("ABC", 1, 1160,1160, WayEnum.Sell, 5, trigger);
+
+            book.AddStopLimitOrder(sellStopLimit);
+
+            Assert.AreEqual(0, executions.Count);
+        }
     }
 }
