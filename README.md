@@ -3,10 +3,10 @@ C# in-memory stock exchange. Client-Server architecture.
 
 This is a simple server-client library that simulates a stock exchange.
 The exchange supports market order, limit orders and stop-limit orders.
-Theres is no authentication or other security measures build in. It's made solely for research, paper-trade and showcase purposes.
+There is no authentication or other security measures build in. It's made solely for research, paper-trade and showcase purposes.
 
 #Project state: 
-Feature complete beta is released. There are probably a few issues here and there which I hope to discover over time while using it. Once these have been idntified and fixed, a stable release 1.0 will be issued.
+Feature complete beta is released. There are probably a few issues here and there which I hope to discover over time while using it. Once these have been identified and fixed, a stable release 1.0 will be issued.
 
 Project website (blog): http://www.thomasvestergaard.com/blog/memexchange/what-is-memexchange/
 Running locally (blog): http://thomasvestergaard.com/blog/memexchange/getting-started-with-memexchange/
@@ -41,7 +41,7 @@ exchangeClient.LimitOrderAccepted += (sender, dto) =>
 	Console.WriteLine("Limit order accepted.");
 };
 
-// Start and connecto the the server. Unless you changed something in the server, these port numbers should not be changed.
+// Start and connect to the server. Unless you changed something in the server, these port numbers should not have changed.
 // 42 is your client id.
 exchangeClient.Start(42, "localhost", 9192, 9193);
 
