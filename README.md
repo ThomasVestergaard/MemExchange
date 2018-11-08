@@ -10,8 +10,8 @@ There is no authentication or other security measures build in. It's made solely
 #Project state: 
 Feature complete beta is released. There are probably a few issues here and there which I hope to discover over time while using it. Once these have been identified and fixed, a stable release 1.0 will be issued.
 
-Project website (blog): http://www.thomasvestergaard.com/blog/memexchange/what-is-memexchange/
-Running locally (blog): http://thomasvestergaard.com/blog/memexchange/getting-started-with-memexchange/
+Project website (blog): http://thomasvestergaard.com/thomas-vestergaard-blog/memexchange/what-is-memexchange/
+Running locally (blog): http://thomasvestergaard.com/thomas-vestergaard-blog/memexchange/getting-started-with-memexchange/
 
 ## Getting started
 
