@@ -11,7 +11,7 @@ Feature complete beta is released. There are probably a few issues here and ther
 Project website (blog): http://www.thomasvestergaard.com/blog/memexchange/what-is-memexchange/
 Running locally (blog): http://thomasvestergaard.com/blog/memexchange/getting-started-with-memexchange/
 
-#Getting started
+## Getting started
 
 - Get the source code
 - Run the MemExchange.Server project or install it as a windows service
@@ -61,10 +61,10 @@ exchangeClient.Stop();
 
 
 
-#High level architechture.
+## High level architechture.
 ![alt tag](http://thomasvestergaard.com/media/1010/memexchange_high_level_architechture.jpg)
 
-#Client side features
+## Client side features
 - Client should be able to post orders (Limit, stop-limit, market - done
 - Client should be able to modify orders (done - Market orders cannot be modified)
 - Client should be able to delete orders (done)
@@ -73,14 +73,14 @@ exchangeClient.Stop();
 - Client should receive executions on own orders. (done)
 - Client should receive level 1 order book data (bid/ask updates, aggregated level 1 quantities and trades made) (done)
 
-#Notes about order matching algorithms
+## Notes about order matching algorithms
 - Limit orders are matched on best possible price. Example: If a buy side limit order comes in at a price of $10 and the only sell liquidity is available at $9, the order will be matched in the middle at $9.5 giving both parties a better execution.
 
 - Stop-limit has two prices: The trigger price and the limit price. When the trigger price is touched or penetrated a limit order is placed. Buy stop-limit orders are always placed above the market with a trigger price lower than the limit price. Vice versa for sell stop-limit orders.
 
 - Market orders will execute it's way through the order book until either filled or no more liquidity is available. The market order will be cancelled after matching is complete. This is also true if the order is partially filled and liquidity runs dry or if there is no liquidity available at all.
 
-#3rd party libraries
+## 3rd party libraries
 - Castle Windsor for dependency injection
 - Disruptor.net for concurrency
 - NetMQ for network communication
@@ -90,5 +90,5 @@ exchangeClient.Stop();
 - Serilog for logging
 - Topshelf for windows services
 
-#License
+## License
 See the [LICENSE](https://github.com/ThomasVestergaard/MemExchange/blob/master/LICENSE.md) file for license rights and limitations (MIT).
