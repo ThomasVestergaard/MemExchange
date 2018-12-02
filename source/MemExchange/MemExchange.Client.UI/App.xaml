@@ -1,9 +1,0 @@
-﻿<Application x:Class="MemExchange.Client.UI.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             Startup="App_OnStartup"
-             Exit="App_OnExit">
-    <Application.Resources>
-         
-    </Application.Resources>
-</Application>
